@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency Pricing Planner</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f5f3;--surface:#ffffff;--surface2:#fbfaf8;--border:#ebe9e5;--text:#1c1c1e;--muted:#8b8a85;--muted2:#a8a6a0;--accent:#183EFA;--accent-soft:#e8edfe;--accent-soft2:#cdd9fc;--red:#e0594b;--red-soft:#fbece9;--green:#2fa872;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh;}
+.wrap{max-width:1560px;margin:0 auto;padding:40px 28px 100px;}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:32px;margin-bottom:32px;flex-wrap:wrap;background:var(--accent);border-radius:24px;padding:36px 40px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60%;right:-10%;width:380px;height:380px;background:rgba(255,255,255,0.08);border-radius:50%;}
+.hero::after{content:'';position:absolute;bottom:-70%;right:18%;width:280px;height:280px;background:rgba(255,255,255,0.06);border-radius:50%;}
+.hero-text{position:relative;z-index:1;flex:1;min-width:280px;}
+.currency-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px;position:relative;z-index:1;}
+.currency-wrap label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.75);font-weight:600;}
+.currency-wrap select{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;padding:8px 14px;outline:none;cursor:pointer;transition:border-color 0.2s, background 0.2s;backdrop-filter:blur(4px);}
+.currency-wrap select:hover,.currency-wrap select:focus{border-color:#fff;background:rgba(255,255,255,0.2);}
+.currency-wrap select option{color:#1c1c1e;}
+h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.5px;color:#fff;}
+.sub{color:rgba(255,255,255,0.85);font-size:14px;line-height:1.6;margin-top:8px;max-width:none;}
+.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,0.8fr);gap:24px;align-items:start;}
+.dash-pane{position:sticky;top:24px;}
+.section{background:var(--surface);border:1px solid var(--border);border-radius:20px;margin-bottom:14px;overflow:hidden;transition:border-color 0.3s, box-shadow 0.3s;}
+.section.open{border:2px solid var(--accent);box-shadow:0 4px 24px rgba(24,62,250,0.08);}
+.section-head{display:flex;align-items:center;gap:18px;padding:22px 26px;cursor:pointer;user-select:none;}
+.section-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;}
+.section.open .section-num,.section.done .section-num{color:var(--accent);background:var(--accent-soft);border-color:var(--accent-soft2);}
+.section-titles{flex:1;}
+.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:600;margin-bottom:2px;color:var(--text);}
+.section-desc{font-size:12.5px;color:var(--muted);}
+.section-chevron{color:var(--muted2);transition:transform 0.3s;font-size:14px;flex-shrink:0;}
+.section.open .section-chevron{transform:rotate(180deg);color:var(--accent);}
+.section-body{max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1);}
+.section.open .section-body{max-height:4000px;overflow:visible;}
+.section-inner{padding:4px 26px 28px;}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+.tbl th{font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
+.tbl td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl input[type=number],.tbl input[type=text],.tbl select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:12.5px;padding:7px 9px;width:100%;outline:none;transition:border-color 0.2s, box-shadow 0.2s;}
+.tbl input:hover,.tbl input:focus,.tbl select:hover,.tbl select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.calc-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;color:var(--accent);white-space:nowrap;}
+.del-btn{background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:14px;padding:4px 8px;border-radius:6px;transition:all 0.2s;}
+.del-btn:hover{color:var(--red);background:var(--red-soft);}
+.add-btn{margin-top:14px;background:transparent;border:1.5px dashed var(--border);border-radius:12px;color:var(--muted);font-family:'Inter',sans-serif;font-weight:500;font-size:12.5px;padding:12px 20px;width:100%;cursor:pointer;transition:all 0.2s;}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+.continue-block{margin-top:20px;}
+.continue-btn{background:var(--text);border:none;border-radius:12px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;padding:13px 28px;cursor:pointer;transition:all 0.2s;}
+.continue-btn:hover{background:var(--accent);}
+.continue-cta{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5;}
+.grid-hint{font-size:11.5px;color:var(--muted);margin-bottom:10px;}
+.grid-scroll{overflow-x:auto;margin:0 -8px;padding:0 8px;}
+.grid-table{border-collapse:separate;border-spacing:0;font-size:12px;min-width:760px;width:100%;}
+.grid-table th,.grid-table td{padding:7px 5px;text-align:center;border-bottom:1px solid var(--border);}
+.grid-table th{font-size:8px;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);font-weight:600;vertical-align:bottom;padding-bottom:10px;max-width:64px;white-space:normal;line-height:1.3;}
+.grid-table th .hrs-tag{display:block;font-size:8px;color:var(--muted2);text-transform:lowercase;letter-spacing:0;margin-top:2px;font-weight:400;}
+.grid-table th.lcol,.grid-table td.lcol{text-align:left;position:sticky;left:0;background:var(--surface);min-width:170px;z-index:2;}
+.grid-table td.lcol input[type=text]{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;padding:6px 9px;width:100%;outline:none;}
+.grid-table td.lcol input[type=text]:focus{border-color:var(--accent);}
+.grid-table th.ccol,.grid-table td.ccol{background:var(--accent-soft);min-width:84px;}
+.grid-table td.ccol{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:12.5px;color:var(--accent);}
+.grid-table input.hrs{width:42px;padding:5px 3px;text-align:center;font-size:12px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);color:var(--text);outline:none;}
+.grid-table input.hrs:focus{border-color:var(--accent);}
+.grid-table input.hrs.filled{border-color:var(--accent-soft2);color:var(--accent);background:var(--accent-soft);font-weight:500;}
+.prod-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:12px;}
+.prod-head{display:flex;gap:12px;align-items:center;margin-bottom:12px;}
+.prod-head input[type=text]{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13.5px;font-weight:600;padding:9px 12px;outline:none;}
+.prod-head input[type=text]:focus{border-color:var(--accent);}
+.prod-cost{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:15px;color:var(--accent);white-space:nowrap;}
+.cost-tag{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);margin-right:8px;vertical-align:middle;font-weight:500;}
+.prod-items{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:5px 6px 5px 12px;font-size:12px;}
+.chip .qty{color:var(--accent);font-weight:700;}
+.chip button{background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:13px;padding:1px 5px;border-radius:99px;}
+.chip button:hover{color:var(--red);}
+.chip .stepper{display:inline-flex;gap:1px;}
+.chip .stepper button{font-size:11px;padding:1px 4px;color:var(--muted);}
+.chip .stepper button:hover{color:var(--accent);}
+.add-item-row{display:flex;gap:8px;align-items:center;}
+.add-item-row select{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;padding:7px 10px;outline:none;}
+.add-item-row button{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;font-weight:500;padding:7px 14px;cursor:pointer;transition:all 0.2s;}
+.add-item-row button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
+.price-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:10px;}
+.price-card .row1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:10px 18px;}
+.price-card .pname{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;flex:1 1 140px;min-width:0;}
+.price-card .pcost{font-size:12px;color:var(--muted);white-space:nowrap;}
+.price-card .pcost b{color:var(--text);font-weight:600;}
+.price-card .prod-cost{font-size:14px;}
+.price-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:end;}
+.price-inputs label{display:block;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.price-inputs input{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 10px;width:100%;outline:none;transition:border-color 0.2s, box-shadow 0.2s;}
+.price-inputs input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:16px;}
+.dash-greeting{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;}
+.dash-greeting span{color:var(--accent);}
+.dash-sub{font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.kpi-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:600;}
+.kpi-value{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.5px;color:var(--text);}
+.kpi-value.accent{color:var(--accent);}
+.kpi-value.red{color:var(--red);}
+.kpi-delta{font-size:11px;font-weight:600;margin-top:4px;}
+.kpi-delta.pos{color:var(--green);}
+.kpi-delta.neg{color:var(--red);}
+.chart-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-weight:600;}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:16px;}
+.legend-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:4px;font-size:11.5px;color:var(--muted);}
+.legend-row span{display:flex;align-items:center;gap:5px;}
+.legend-row .dot{width:9px;height:9px;border-radius:3px;}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;width:60%;}
+.donut-center .val{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:var(--text);line-height:1.2;}
+.donut-center .unit{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:2px;}
+.footer{margin-top:40px;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);text-align:center;}
+@media (max-width:980px){.layout{grid-template-columns:1fr;}.dash-pane{position:static;}h1{font-size:26px;}.hero{padding:28px 24px;}.currency-wrap{align-items:flex-start;width:100%;}}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+<div class="hero-text">
+<h1>Agency Pricing Planner</h1>
+<p class="sub">Build your team, cost your deliverables, and bundle products into packages — your dashboard reacts live as you go.</p>
+</div>
+<div class="currency-wrap">
+<label for="currency-select">Currency</label>
+<select id="currency-select" onchange="setCurrency(this.value)">
+<option value="QAR" selected>QAR — Qatari Riyal</option>
+<option value="AED">AED — UAE Dirham</option>
+<option value="SAR">SAR — Saudi Riyal</option>
+<option value="KWD">KWD — Kuwaiti Dinar</option>
+<option value="BHD">BHD — Bahraini Dinar</option>
+<option value="OMR">OMR — Omani Rial</option>
+<option value="USD">USD — US Dollar</option>
+<option value="EUR">EUR — Euro</option>
+<option value="GBP">GBP — British Pound</option>
+<option value="INR">INR — Indian Rupee</option>
+<option value="PKR">PKR — Pakistani Rupee</option>
+<option value="BDT">BDT — Bangladeshi Taka</option>
+<option value="NPR">NPR — Nepalese Rupee</option>
+<option value="LKR">LKR — Sri Lankan Rupee</option>
+</select>
+</div>
+</div>
+
+<div class="layout">
+
+<div class="accordion-pane">
+
+<div class="section open" id="sec-0">
+<div class="section-head" onclick="toggleSection(0)">
+<div class="section-num">01</div>
+<div class="section-titles">
+<div class="section-title">Team &amp; rates</div>
+<div class="section-desc">Define your roles, salaries, and hiring modes</div>
+</div>
+<div class="section-chevron">▾</div>
+</div>
+<div class="section-body">
+<div class="section-inner">
+<div class="grid-scroll">
+<table class="tbl" id="roles-tbl">
+<thead>
+<tr>
+<th style="min-width:200px">Role</th>
+<th style="min-width:90px">Monthly Salary<br>Local Hire</th>
+<th style="min-width:90px">Monthly Salary<br>Remote Hire</th>
+<th style="min-width:90px">Hourly Cost<br>Freelancer</th>
+<th style="min-width:130px">Mode</th>
+<th style="min-width:60px">Qty</th>
+<th style="min-width:90px" id="hourly-cost-header">Hourly Cost<br>(QAR)</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="roles-body"></tbody>
+</table>
+</div>
+<button class="add-btn" onclick="addRole()">+ Add a role</button>
+<div class="continue-block">
+<button class="continue-btn" onclick="completeAndNext(0)">Continue to deliverables →</button>
+<p class="continue-cta">With these team costs set, find out how much it actually takes to produce each deliverable.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="sec-1">
+<div class="section-head" onclick="toggleSection(1)">
+<div class="section-num">02</div>
+<div class="section-titles">
+<div class="section-title">Deliverables</div>
+<div class="section-desc">Calculate how much producing anything actually costs you</div>
+</div>
+<div class="section-chevron">▾</div>
+</div>
+<div class="section-body">
+<div class="section-inner">
+<div id="deliv-grid"></div>
+<button class="add-btn" onclick="addDeliverable()">+ Add a deliverable</button>
+<div class="continue-block">
+<button class="continue-btn" onclick="completeAndNext(1)">Continue to products →</button>
+<p class="continue-cta">With deliverable costs known, bundle them into the products you actually sell.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="sec-2">
+<div class="section-head" onclick="toggleSection(2)">
+<div class="section-num">03</div>
+<div class="section-titles">
+<div class="section-title">Products</div>
+<div class="section-desc">Combine deliverables to build products and packages that customers will sign up for</div>
+</div>
+<div class="section-chevron">▾</div>
+</div>
+<div class="section-body">
+<div class="section-inner">
+<div id="prod-list"></div>
+<button class="add-btn" onclick="addProduct()">+ Add a product</button>
+<div class="continue-block">
+<button class="continue-btn" onclick="completeAndNext(2)">Continue to pricing →</button>
+<p class="continue-cta">With product costs known, set prices and volumes to see your live profitability.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="sec-3">
+<div class="section-head" onclick="toggleSection(3)">
+<div class="section-num">04</div>
+<div class="section-titles">
+<div class="section-title">Pricing &amp; profitability</div>
+<div class="section-desc">Set prices for your products and calculate expected revenue and costs</div>
+</div>
+<div class="section-chevron">▾</div>
+</div>
+<div class="section-body">
+<div class="section-inner">
+<div id="price-list"></div>
+</div>
+</div>
+</div>
+
+<div class="footer">
+Interactive pricing &amp; profitability planner
+</div>
+
+</div>
+
+<div class="dash-pane">
+
+<div class="dash-card">
+<div class="dash-greeting"><span>Profitability</span></div>
+<div class="kpi-grid">
+<div class="kpi-card">
+<div class="kpi-label">Monthly Revenue</div>
+<div class="kpi-value" id="kpi-revenue">—</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Monthly Cost</div>
+<div class="kpi-value" id="kpi-cost">—</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Gross Profit</div>
+<div class="kpi-value accent" id="kpi-profit">—</div>
+<div class="kpi-delta" id="kpi-margin-delta"></div>
+</div>
+<div class="kpi-card">
+<div class="kpi-label">Margin</div>
+<div class="kpi-value accent" id="kpi-margin">—</div>
+</div>
+</div>
+</div>
+
+<div class="chart-card">
+<div class="chart-title">Where your team cost goes</div>
+<div style="position:relative;height:220px;">
+<canvas id="chart-team" role="img" aria-label="Doughnut chart showing monthly cost contribution of each team role">Team cost composition</canvas>
+<div class="donut-center" id="donut-center-team"></div>
+</div>
+</div>
+
+<div class="chart-card">
+<div class="chart-title">Revenue distribution by product</div>
+<div style="position:relative;height:220px;">
+<canvas id="chart-revenue-dist" role="img" aria-label="Doughnut chart showing monthly revenue contribution of each product">Revenue distribution by product</canvas>
+<div class="donut-center" id="donut-center-rev"></div>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<script>
+const MONTHLY_HOURS = 176;
+let uid = 100;
+
+let ROLES = [
+{id:'cd', name:'Creative Director', localSalary:22000, overseasSalary:9000, freelanceRate:850, mode:'local', qty:1},
+{id:'gd', name:'Graphic Designer', localSalary:12000, overseasSalary:5500, freelanceRate:180, mode:'local', qty:1},
+{id:'ve', name:'Video Editor', localSalary:13000, overseasSalary:6000, freelanceRate:200, mode:'freelance', qty:1},
+{id:'cw', name:'Copywriter / Strategist', localSalary:11000, overseasSalary:5000, freelanceRate:160, mode:'local', qty:1},
+{id:'pm', name:'Performance Media Specialist', localSalary:13500, overseasSalary:6500, freelanceRate:220, mode:'overseas', qty:1},
+{id:'wd', name:'Web Developer', localSalary:14000, overseasSalary:7000, freelanceRate:250, mode:'local', qty:1},
+{id:'ad', name:'App Developer', localSalary:16000, overseasSalary:8000, freelanceRate:300, mode:'overseas', qty:1},
+{id:'am', name:'Account Manager', localSalary:12000, overseasSalary:5500, freelanceRate:150, mode:'local', qty:1},
+{id:'pjm', name:'Project Manager', localSalary:13000, overseasSalary:6000, freelanceRate:170, mode:'local', qty:1},
+{id:'smm', name:'Social Media Manager', localSalary:10000, overseasSalary:4500, freelanceRate:140, mode:'freelance', qty:1},
+];
+
+let DELIVERABLES = [
+{id:'brand', name:'Brand Guidelines Doc', hours:{cd:8,gd:4,cw:6,am:2,pjm:2}},
+{id:'heavy', name:'Heavy Edits Reel', hours:{gd:2,ve:8,cw:2,smm:2}},
+{id:'light', name:'Light Edits Reel', hours:{gd:1,ve:3,cw:1,smm:1}},
+{id:'longform', name:'Long Form Video', hours:{cd:2,gd:2,ve:16,cw:4,am:1,pjm:1,smm:1}},
+{id:'seo', name:'SEO Campaign (monthly)', hours:{cw:4,pm:6,pjm:1,smm:2}},
+{id:'websitedesign', name:'Website Design', hours:{cd:2,gd:8,cw:2,am:1,pjm:1}},
+{id:'websitedev', name:'Website Development', hours:{wd:24,pjm:2}},
+{id:'appdesign', name:'App Design (UI/UX)', hours:{cd:2,gd:12,cw:2,am:1,pjm:2}},
+{id:'appdev', name:'App Development', hours:{ad:80,pjm:4}},
+];
+
+let PRODUCTS = [
+{id:'social', name:'Social Media Package', items:{heavy:10, longform:1}, price:30000, qty:2},
+{id:'mass', name:'Mass Content Package', items:{light:50}, price:50000, qty:3},
+{id:'brandlaunch', name:'Brand Launch Package', items:{brand:1, websitedesign:1, websitedev:1}, price:25000, qty:1},
+{id:'website', name:'Website Product', items:{websitedesign:1, websitedev:1}, price:12000, qty:2},
+{id:'meta', name:'Meta Campaign', items:{heavy:4}, price:10000, qty:4},
+{id:'fullapp', name:'Full App Build', items:{appdesign:1, appdev:1}, price:85000, qty:1},
+{id:'seoretainer', name:'SEO Retainer (monthly)', items:{seo:1}, price:4500, qty:3},
+];
+
+function hourlyRate(role){
+if(role.mode==='local') return (role.localSalary||0)/MONTHLY_HOURS;
+if(role.mode==='overseas') return (role.overseasSalary||0)/MONTHLY_HOURS;
+return role.freelanceRate||0;
+}
+
+function deliverableCost(deliv){
+let total = 0;
+for(const roleId in deliv.hours){
+const role = ROLES.find(r=>r.id===roleId);
+if(role) total += deliv.hours[roleId] * hourlyRate(role);
+}
+return total;
+}
+
+function productCost(prod){
+let total = 0;
+for(const dId in prod.items){
+const deliv = DELIVERABLES.find(d=>d.id===dId);
+if(deliv) total += deliverableCost(deliv) * prod.items[dId];
+}
+return total;
+}
+
+function fmt(n){ return Math.round(n).toLocaleString(); }
+
+let CURRENCY = 'QAR';
+function setCurrency(val){
+CURRENCY = val;
+const hch = document.getElementById('hourly-cost-header');
+if(hch) hch.innerHTML = 'Hourly Cost<br>('+CURRENCY+')';
+renderDeliverables();
+renderProducts();
+renderPricing();
+renderDashboard();
+}
+
+function toggleSection(i){
+document.getElementById('sec-'+i).classList.toggle('open');
+}
+
+function completeAndNext(i){
+const cur = document.getElementById('sec-'+i);
+cur.classList.remove('open');
+cur.classList.add('done');
+const next = document.getElementById('sec-'+(i+1));
+if(next){
+next.classList.add('open');
+setTimeout(()=>next.scrollIntoView({behavior:'smooth', block:'start'}), 250);
+}
+}
+
+function renderRoles(){
+const body = document.getElementById('roles-body');
+body.innerHTML = '';
+ROLES.forEach(role=>{
+const tr = document.createElement('tr');
+
+const tdName = document.createElement('td');
+const nameIn = document.createElement('input');
+nameIn.type = 'text';
+nameIn.value = role.name;
+nameIn.placeholder = 'Role name';
+nameIn.addEventListener('input', e=>{ role.name = e.target.value; softRefresh(); });
+tdName.appendChild(nameIn);
+tr.appendChild(tdName);
+
+tr.appendChild(numCell(role, 'localSalary', 500, ()=>{ updateRateCell(role); fullRefresh(); }));
+tr.appendChild(numCell(role, 'overseasSalary', 500, ()=>{ updateRateCell(role); fullRefresh(); }));
+tr.appendChild(numCell(role, 'freelanceRate', 10, ()=>{ updateRateCell(role); fullRefresh(); }));
+
+const tdMode = document.createElement('td');
+const sel = document.createElement('select');
+const MODE_LABELS = {local:'Local', overseas:'Remote', freelance:'Freelance'};
+['local','overseas','freelance'].forEach(m=>{
+const opt = document.createElement('option');
+opt.value = m;
+opt.textContent = MODE_LABELS[m];
+if(m===role.mode) opt.selected = true;
+sel.appendChild(opt);
+});
+sel.addEventListener('change', e=>{
+role.mode = e.target.value;
+updateRateCell(role);
+fullRefresh();
+});
+tdMode.appendChild(sel);
+tr.appendChild(tdMode);
+
+tr.appendChild(numCell(role, 'qty', 1, ()=>{}));
+
+const tdRate = document.createElement('td');
+tdRate.className = 'calc-val';
+tdRate.id = 'rate-'+role.id;
+tdRate.textContent = fmt(hourlyRate(role));
+tr.appendChild(tdRate);
+
+const tdDel = document.createElement('td');
+const delBtn = document.createElement('button');
+delBtn.className = 'del-btn';
+delBtn.innerHTML = '✕';
+delBtn.title = 'Delete role';
+delBtn.addEventListener('click', ()=>{
+ROLES = ROLES.filter(r=>r.id!==role.id);
+DELIVERABLES.forEach(d=>{ delete d.hours[role.id]; });
+renderRoles();
+renderDeliverables();
+fullRefresh();
+});
+tdDel.appendChild(delBtn);
+tr.appendChild(tdDel);
+
+body.appendChild(tr);
+});
+}
+
+function numCell(obj, key, step, onChange){
+const td = document.createElement('td');
+const input = document.createElement('input');
+input.type = 'number';
+input.min = 0;
+input.step = step;
+input.value = obj[key] ?? '';
+input.addEventListener('input', e=>{
+obj[key] = Number(e.target.value)||0;
+onChange();
+});
+td.appendChild(input);
+return td;
+}
+
+function updateRateCell(role){
+const el = document.getElementById('rate-'+role.id);
+if(el) el.textContent = fmt(hourlyRate(role));
+}
+
+function addRole(){
+const id = 'r'+(uid++);
+ROLES.push({id, name:'', localSalary:0, overseasSalary:0, freelanceRate:0, mode:'local', qty:1});
+renderRoles();
+renderDeliverables();
+}
+
+function renderDeliverables(){
+const container = document.getElementById('deliv-grid');
+container.innerHTML = '';
+
+const hint = document.createElement('div');
+hint.className = 'grid-hint';
+hint.textContent = 'Enter hours required from each role — cost ('+CURRENCY+') calculates on the right';
+container.appendChild(hint);
+
+const scrollWrap = document.createElement('div');
+scrollWrap.className = 'grid-scroll';
+
+const table = document.createElement('table');
+table.className = 'grid-table';
+
+const thead = document.createElement('thead');
+const headRow = document.createElement('tr');
+const corner = document.createElement('th');
+corner.className = 'lcol';
+corner.textContent = 'Deliverable';
+headRow.appendChild(corner);
+
+ROLES.forEach(role=>{
+const th = document.createElement('th');
+th.innerHTML = (role.name || '—') + '<span class="hrs-tag">hrs</span>';
+headRow.appendChild(th);
+});
+
+const costHead = document.createElement('th');
+costHead.className = 'ccol';
+costHead.textContent = 'Cost ('+CURRENCY+')';
+headRow.appendChild(costHead);
+
+const delHead = document.createElement('th');
+headRow.appendChild(delHead);
+
+thead.appendChild(headRow);
+table.appendChild(thead);
+
+const tbody = document.createElement('tbody');
+DELIVERABLES.forEach(deliv=>{
+const row = document.createElement('tr');
+
+const nameCell = document.createElement('td');
+nameCell.className = 'lcol';
+const nameIn = document.createElement('input');
+nameIn.type = 'text';
+nameIn.value = deliv.name;
+nameIn.placeholder = 'Deliverable name';
+nameIn.addEventListener('input', e=>{ deliv.name = e.target.value; renderProducts(); renderPricing(); });
+nameCell.appendChild(nameIn);
+row.appendChild(nameCell);
+
+ROLES.forEach(role=>{
+const cell = document.createElement('td');
+const input = document.createElement('input');
+input.type = 'number';
+input.min = 0;
+input.className = 'hrs' + ((deliv.hours[role.id]||0) > 0 ? ' filled' : '');
+input.value = deliv.hours[role.id] || 0;
+input.addEventListener('input', e=>{
+const val = Number(e.target.value)||0;
+if(val>0){ deliv.hours[role.id]=val; input.classList.add('filled'); }
+else { delete deliv.hours[role.id]; input.classList.remove('filled'); }
+updateDelivCost(deliv);
+fullRefresh();
+});
+cell.appendChild(input);
+row.appendChild(cell);
+});
+
+const costCell = document.createElement('td');
+costCell.className = 'ccol';
+costCell.id = 'dcost-'+deliv.id;
+costCell.textContent = fmt(deliverableCost(deliv));
+row.appendChild(costCell);
+
+const delCell = document.createElement('td');
+const delBtn = document.createElement('button');
+delBtn.className = 'del-btn';
+delBtn.innerHTML = '✕';
+delBtn.title = 'Delete deliverable';
+delBtn.addEventListener('click', ()=>{
+DELIVERABLES = DELIVERABLES.filter(d=>d.id!==deliv.id);
+PRODUCTS.forEach(p=>{ delete p.items[deliv.id]; });
+renderDeliverables();
+renderProducts();
+fullRefresh();
+});
+delCell.appendChild(delBtn);
+row.appendChild(delCell);
+
+tbody.appendChild(row);
+});
+table.appendChild(tbody);
+
+scrollWrap.appendChild(table);
+container.appendChild(scrollWrap);
+}
+
+function updateDelivCost(deliv){
+const el = document.getElementById('dcost-'+deliv.id);
+if(el) el.textContent = fmt(deliverableCost(deliv));
+}
+
+function addDeliverable(){
+const id = 'd'+(uid++);
+DELIVERABLES.push({id, name:'', hours:{}});
+renderDeliverables();
+renderProducts();
+}
+
+function renderProducts(){
+const container = document.getElementById('prod-list');
+container.innerHTML = '';
+
+PRODUCTS.forEach(prod=>{
+const card = document.createElement('div');
+card.className = 'prod-card';
+
+const head = document.createElement('div');
+head.className = 'prod-head';
+const nameIn = document.createElement('input');
+nameIn.type = 'text';
+nameIn.value = prod.name;
+nameIn.placeholder = 'Product name';
+nameIn.addEventListener('input', e=>{ prod.name = e.target.value; renderPricing(); });
+head.appendChild(nameIn);
+
+const costSpan = document.createElement('span');
+costSpan.className = 'prod-cost';
+costSpan.id = 'pcost-'+prod.id;
+costSpan.innerHTML = '<span class="cost-tag">Cost</span>'+fmt(productCost(prod))+' '+CURRENCY;
+head.appendChild(costSpan);
+
+const delBtn = document.createElement('button');
+delBtn.className = 'del-btn';
+delBtn.innerHTML = '✕';
+delBtn.title = 'Delete product';
+delBtn.addEventListener('click', ()=>{
+PRODUCTS = PRODUCTS.filter(p=>p.id!==prod.id);
+renderProducts();
+renderPricing();
+renderDashboard();
+});
+head.appendChild(delBtn);
+card.appendChild(head);
+
+const itemsDiv = document.createElement('div');
+itemsDiv.className = 'prod-items';
+for(const did in prod.items){
+const deliv = DELIVERABLES.find(d=>d.id===did);
+if(!deliv) continue;
+const chip = document.createElement('span');
+chip.className = 'chip';
+
+const qtySpan = document.createElement('span');
+qtySpan.className = 'qty';
+qtySpan.textContent = prod.items[did]+'×';
+chip.appendChild(qtySpan);
+
+const nameSpan = document.createElement('span');
+nameSpan.textContent = deliv.name || '—';
+chip.appendChild(nameSpan);
+
+const stepper = document.createElement('span');
+stepper.className = 'stepper';
+const minus = document.createElement('button');
+minus.textContent = '−';
+minus.addEventListener('click', ()=>{
+prod.items[did]--;
+if(prod.items[did]<=0) delete prod.items[did];
+renderProducts();
+fullRefresh();
+});
+const plus = document.createElement('button');
+plus.textContent = '+';
+plus.addEventListener('click', ()=>{
+prod.items[did]++;
+renderProducts();
+fullRefresh();
+});
+stepper.appendChild(minus);
+stepper.appendChild(plus);
+chip.appendChild(stepper);
+
+const rm = document.createElement('button');
+rm.innerHTML = '✕';
+rm.addEventListener('click', ()=>{
+delete prod.items[did];
+renderProducts();
+fullRefresh();
+});
+chip.appendChild(rm);
+
+itemsDiv.appendChild(chip);
+}
+card.appendChild(itemsDiv);
+
+const addRow = document.createElement('div');
+addRow.className = 'add-item-row';
+const sel = document.createElement('select');
+const placeholder = document.createElement('option');
+placeholder.value = '';
+placeholder.textContent = 'Choose a deliverable to add…';
+sel.appendChild(placeholder);
+DELIVERABLES.forEach(d=>{
+const opt = document.createElement('option');
+opt.value = d.id;
+opt.textContent = (d.name || '—') + '  ·  ' + fmt(deliverableCost(d)) + ' ' + CURRENCY;
+sel.appendChild(opt);
+});
+addRow.appendChild(sel);
+
+const addB = document.createElement('button');
+addB.textContent = '+ Add';
+addB.addEventListener('click', ()=>{
+if(!sel.value) return;
+prod.items[sel.value] = (prod.items[sel.value]||0) + 1;
+renderProducts();
+fullRefresh();
+});
+addRow.appendChild(addB);
+card.appendChild(addRow);
+
+container.appendChild(card);
+});
+}
+
+function addProduct(){
+const id = 'p'+(uid++);
+PRODUCTS.push({id, name:'', items:{}, price:0, qty:1});
+renderProducts();
+renderPricing();
+}
+
+function renderPricing(){
+const container = document.getElementById('price-list');
+container.innerHTML = '';
+
+PRODUCTS.forEach(prod=>{
+const card = document.createElement('div');
+card.className = 'price-card';
+
+const row1 = document.createElement('div');
+row1.className = 'row1';
+const nameDiv = document.createElement('div');
+nameDiv.className = 'pname';
+nameDiv.textContent = prod.name || 'Unnamed product';
+row1.appendChild(nameDiv);
+const costDiv = document.createElement('div');
+costDiv.className = 'pcost';
+costDiv.id = 'unit-cost-'+prod.id;
+costDiv.innerHTML = 'Unit cost: <b>'+fmt(productCost(prod))+' '+CURRENCY+'</b>';
+row1.appendChild(costDiv);
+const revDiv = document.createElement('div');
+revDiv.className = 'prod-cost';
+revDiv.id = 'rev-'+prod.id;
+revDiv.innerHTML = '<span class="cost-tag">Revenue</span>'+fmt(prod.price*prod.qty)+' '+CURRENCY;
+row1.appendChild(revDiv);
+card.appendChild(row1);
+
+const inputs = document.createElement('div');
+inputs.className = 'price-inputs';
+
+const priceWrap = document.createElement('div');
+const priceLabel = document.createElement('label');
+priceLabel.textContent = 'Price ('+CURRENCY+')';
+priceWrap.appendChild(priceLabel);
+const priceIn = document.createElement('input');
+priceIn.type = 'number';
+priceIn.min = 0;
+priceIn.step = 500;
+priceIn.value = prod.price;
+priceIn.addEventListener('input', e=>{
+prod.price = Number(e.target.value)||0;
+updateRevDisplay(prod);
+renderDashboard();
+});
+priceWrap.appendChild(priceIn);
+inputs.appendChild(priceWrap);
+
+const qtyWrap = document.createElement('div');
+const qtyLabel = document.createElement('label');
+qtyLabel.textContent = 'Qty / month';
+qtyWrap.appendChild(qtyLabel);
+const qtyIn = document.createElement('input');
+qtyIn.type = 'number';
+qtyIn.min = 0;
+qtyIn.value = prod.qty;
+qtyIn.addEventListener('input', e=>{
+prod.qty = Number(e.target.value)||0;
+updateRevDisplay(prod);
+renderDashboard();
+});
+qtyWrap.appendChild(qtyIn);
+inputs.appendChild(qtyWrap);
+
+card.appendChild(inputs);
+container.appendChild(card);
+});
+}
+
+let charts = {};
+
+function renderDashboard(){
+let totalRevenue=0, totalCost=0;
+const labels=[], revenues=[], costs=[];
+
+PRODUCTS.forEach(prod=>{
+const cost = productCost(prod);
+const rev = prod.price * prod.qty;
+totalRevenue += rev;
+totalCost += cost * prod.qty;
+labels.push(prod.name || '—');
+revenues.push(Math.round(rev));
+costs.push(Math.round(cost * prod.qty));
+});
+
+const profit = totalRevenue - totalCost;
+const marginPct = totalRevenue>0 ? (profit/totalRevenue*100) : 0;
+
+document.getElementById('kpi-revenue').textContent = fmt(totalRevenue);
+document.getElementById('kpi-cost').textContent = fmt(totalCost);
+const profitEl = document.getElementById('kpi-profit');
+profitEl.textContent = fmt(profit);
+profitEl.className = 'kpi-value ' + (profit<0 ? 'red' : 'accent');
+const marginEl = document.getElementById('kpi-margin');
+marginEl.textContent = marginPct.toFixed(0)+'%';
+marginEl.className = 'kpi-value ' + (marginPct<0 ? 'red' : 'accent');
+
+const deltaEl = document.getElementById('kpi-margin-delta');
+if(totalRevenue>0){
+deltaEl.textContent = (marginPct>=0?'↑ ':'↓ ')+Math.abs(marginPct).toFixed(0)+'% margin';
+deltaEl.className = 'kpi-delta ' + (marginPct>=0?'pos':'neg');
+} else {
+deltaEl.textContent = '';
+}
+
+const roleCosts = {};
+ROLES.forEach(r=>roleCosts[r.id]=0);
+PRODUCTS.forEach(prod=>{
+for(const did in prod.items){
+const deliv = DELIVERABLES.find(d=>d.id===did);
+if(!deliv) continue;
+for(const rid in deliv.hours){
+const role = ROLES.find(r=>r.id===rid);
+if(!role) continue;
+roleCosts[rid] += deliv.hours[rid]*hourlyRate(role)*prod.items[did]*prod.qty;
+}
+}
+});
+const roleEntries = ROLES.map(r=>({name:r.name||'—', val:Math.round(roleCosts[r.id])}))
+.filter(e=>e.val>0)
+.sort((a,b)=>b.val-a.val);
+
+const palette = ['#183EFA','#5468fb','#2fa872','#8c9bfc','#7cc9a8','#0a2bb0','#a8d8c4','#bcc6fd','#1a7a50','#cfd6fe'];
+
+if(charts.team) charts.team.destroy();
+charts.team = new Chart(document.getElementById('chart-team'), {
+type:'doughnut',
+data:{labels:roleEntries.map(e=>e.name), datasets:[{
+data:roleEntries.map(e=>e.val),
+backgroundColor:palette,
+borderWidth:0
+}]},
+options:{
+responsive:true, maintainAspectRatio:false, cutout:'62%',
+plugins:{
+legend:{display:false},
+tooltip:{
+backgroundColor:'#1c1c1e', titleColor:'#fff', bodyColor:'#d4d4d4',
+padding:10, cornerRadius:8,
+callbacks:{label: c=>` ${c.label}: ${fmt(c.raw)} ${CURRENCY}`}
+}
+}
+}
+});
+document.getElementById('donut-center-team').innerHTML =
+'<div class="val">'+fmt(totalCost)+'</div><div class="unit">'+CURRENCY+'</div>';
+
+const revEntries = PRODUCTS.map((p,i)=>({name:p.name||'—', val:revenues[i]}))
+.filter(e=>e.val>0)
+.sort((a,b)=>b.val-a.val);
+
+if(charts.revdist) charts.revdist.destroy();
+charts.revdist = new Chart(document.getElementById('chart-revenue-dist'), {
+type:'doughnut',
+data:{labels:revEntries.map(e=>e.name), datasets:[{
+data:revEntries.map(e=>e.val),
+backgroundColor:palette,
+borderWidth:0
+}]},
+options:{
+responsive:true, maintainAspectRatio:false, cutout:'62%',
+plugins:{
+legend:{display:false},
+tooltip:{
+backgroundColor:'#1c1c1e', titleColor:'#fff', bodyColor:'#d4d4d4',
+padding:10, cornerRadius:8,
+callbacks:{label: c=>` ${c.label}: ${fmt(c.raw)} ${CURRENCY}`}
+}
+}
+}
+});
+document.getElementById('donut-center-rev').innerHTML =
+'<div class="val">'+fmt(totalRevenue)+'</div><div class="unit">'+CURRENCY+'</div>';
+}
+
+function softRefresh(){
+renderDeliverables();
+renderDashboard();
+}
+
+function updateRevDisplay(prod){
+const el = document.getElementById('rev-'+prod.id);
+if(el) el.innerHTML = '<span class="cost-tag">Revenue</span>'+fmt(prod.price*prod.qty)+' '+CURRENCY;
+}
+
+function fullRefresh(){
+DELIVERABLES.forEach(d=>updateDelivCost(d));
+PRODUCTS.forEach(prod=>{
+const el = document.getElementById('pcost-'+prod.id);
+if(el) el.innerHTML = '<span class="cost-tag">Cost</span>'+fmt(productCost(prod))+' '+CURRENCY;
+const uc = document.getElementById('unit-cost-'+prod.id);
+if(uc) uc.innerHTML = 'Unit cost: <b>'+fmt(productCost(prod))+' '+CURRENCY+'</b>';
+updateRevDisplay(prod);
+});
+renderDashboard();
+}
+
+renderRoles();
+renderDeliverables();
+renderProducts();
+renderPricing();
+renderDashboard();
+</script>
+</body>
+</html>
