@@ -476,6 +476,7 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 .res-card h3{font-size:clamp(19px,2.2vw,23px);font-weight:800;margin:14px 0 6px}
 .res-card p{color:var(--ink-2);font-size:15px}
 .res-open{display:inline-block;margin-top:16px;font-weight:700;color:var(--accent)}
+.res-all{display:block;text-align:center;margin-top:26px;font-weight:700;color:var(--accent);font-size:15.5px}
 @media(max-width:720px){.res-grid{grid-template-columns:1fr;max-width:440px}}
 @media(min-width:960px) and (min-height:560px) and (max-height:700px){.res-grid{margin-top:18px;gap:16px}.res-card{padding:20px 22px}}
 
@@ -540,7 +541,7 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   <nav class="nav">
     <div class="wrap">
       <img src="assets/logo-light.png" alt="Hashir Faraz">
-      <a class="btn btn-ghost" href="resources.html">Free Resources</a>
+      <a class="btn btn-ghost" href="/free-resources/">Free Resources</a>
     </div>
   </nav>
   <div class="wrap">
@@ -918,19 +919,20 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
     <div class="fill">
       <p class="res-sub">Interactive tools that read your numbers. Free, no sign-up.</p>
       <div class="res-grid">
-        <a class="res-card" data-tool="pricing_planner" href="agency-pricing-planner/">
+        <a class="res-card" data-tool="pricing_planner" href="/tools/agency-pricing-planner/">
           <span class="res-tag">Interactive tool</span>
           <h3>Agency Pricing Planner</h3>
-          <p>Price your services and see your revenue ceiling.</p>
+          <p>Cost your team and deliverables, then price what you sell.</p>
           <span class="res-open">Open &rarr;</span>
         </a>
-        <a class="res-card" data-tool="revenue_analysis" href="revenue-analysis.html">
+        <a class="res-card" data-tool="revenue_analysis" href="/tools/revenue-analysis/">
           <span class="res-tag">Interactive tool</span>
           <h3>Revenue Analysis</h3>
-          <p>Enter your numbers, see where your revenue really comes from.</p>
+          <p>See where your revenue really comes from, and your growth ceiling.</p>
           <span class="res-open">Open &rarr;</span>
         </a>
       </div>
+      <a class="res-all" href="/free-resources/">See all free resources &rarr;</a>
     </div>
   </div>
 </section>
