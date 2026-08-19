@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Resources — Hashir Faraz</title>
+<meta name="description" content="Free interactive tools for SME owners: pricing planners and revenue analysis. No sign-up required.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Free tools for business owners">
+<meta property="og:description" content="Interactive tools that read your numbers. Free, no sign-up.">
+<meta property="og:url" content="https://hashirfaraz.com/free-resources/">
+<meta property="og:image" content="https://hashirfaraz.com/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3533CD;
+  --ink:#101018; --ink-2:#4A4A5A; --ink-3:#75758A;
+  --line:#E7E7EC; --paper:#F7F7F2; --card:#FFFFFF;
+  --font-display:'Manrope',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-display);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px;width:100%}
+
+/* ---------- nav ---------- */
+.nav{padding:22px 0}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between}
+.nav img{height:38px;width:auto;display:block}
+.nav .back{font-weight:700;color:var(--accent);font-size:15px}
+
+/* ---------- head ---------- */
+main{padding:34px 0 20px}
+h1{font-size:clamp(30px,5.2vw,54px);font-weight:800;letter-spacing:-.02em}
+.sub{color:var(--ink-2);margin-top:12px;font-size:clamp(15px,1.9vw,18px);max-width:620px}
+
+/* ---------- tiles ---------- */
+.tiles{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  margin-top:44px;
+  justify-items:stretch;
+}
+.tile{
+  display:flex;flex-direction:column;
+  background:var(--card);border:1px solid var(--line);border-radius:22px;
+  padding:26px 26px 22px;
+  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;
+}
+.tile:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(20,20,40,.10);border-color:#D9D9E4}
+.tile-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);background:rgba(53,51,205,.08);padding:4px 10px;border-radius:999px;align-self:flex-start}
+.tile h2{font-size:21px;font-weight:800;letter-spacing:-.015em;margin:15px 0 12px;line-height:1.25}
+.tile ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.tile li{position:relative;padding-left:18px;font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.tile li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--accent);opacity:.75}
+.tile .open{margin-top:auto;padding-top:20px;font-weight:700;font-size:14.5px;color:var(--accent)}
+
+@media(max-width:900px){.tiles{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.tiles{grid-template-columns:1fr;gap:16px;margin-top:32px}.tile{padding:22px 22px 20px}}
+
+/* ---------- footer ---------- */
+.foot{margin:64px 0 34px;padding-top:26px;border-top:1px solid var(--line);text-align:center}
+.foot img{height:22px;display:inline-block;margin-bottom:8px;opacity:.9}
+.foot p{font-size:12.5px;color:var(--ink-3)}
+.foot a{color:var(--accent);font-weight:600}
+
+/* ---------- floating whatsapp ---------- */
+.float-wa{position:fixed;right:22px;bottom:22px;width:56px;height:56px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(53,51,205,.38);z-index:50}
+.float-wa svg{width:28px;height:28px;color:#fff}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="/" aria-label="Hashir Faraz"><img src="/assets/logo-dark.png" alt="Hashir Faraz"></a>
+    <a class="back" href="/">&larr; Home</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <h1>Free Resources</h1>
+    <p class="sub">Interactive tools that read your numbers. Free, no sign-up.</p>
+
+    <div class="tiles">
+
+      <a class="tile" data-tool="pricing_planner" href="/tools/agency-pricing-planner/">
+        <span class="tile-tag">Interactive tool</span>
+        <h2>Agency Pricing Planner</h2>
+        <ul>
+          <li>Costs your team and deliverables, then prices the packages you actually sell</li>
+          <li>Shows live profitability as you change prices and volumes</li>
+        </ul>
+        <span class="open">Open &rarr;</span>
+      </a>
+
+      <a class="tile" data-tool="revenue_analysis" href="/tools/revenue-analysis/">
+        <span class="tile-tag">Interactive tool</span>
+        <h2>Revenue Analysis</h2>
+        <ul>
+          <li>Breaks your revenue down by service and shows where it really comes from</li>
+          <li>Flags your growth ceiling and the gaps your figures don't account for</li>
+        </ul>
+        <span class="open">Open &rarr;</span>
+      </a>
+
+    </div>
+
+    <div class="foot">
+      <a href="/" aria-label="Hashir Faraz"><img src="/assets/logo-dark.png" alt="Hashir Faraz"></a>
+      <p>Performance tracking for SME owners — <a href="/">hashirfaraz.com</a></p>
+    </div>
+  </div>
+</main>
+
+<a class="float-wa" data-wa="resources_pill" aria-label="Message on WhatsApp" href="https://wa.me/97455299831?text=Hi%20Hashir%2C%20I%20used%20one%20of%20your%20free%20tools%20%E2%80%94%20quick%20question." target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5.2-.4c.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.2 2-.8 3.2.5 1.4 1.5 2.8 2.9 4 1.9 1.6 3.4 2.1 4.5 2.3 1 .2 1.8 0 2.4-.5.4-.4.7-1 .8-1.5.1-.4 0-.6-.2-.8-.1 0-.3-.1-.6-.2Z"/></svg>
+</a>
+
+<script>
+(function(){
+  const GA_ID='G-LQL6JN983Z';
+  const META_PIXEL_ID='868248209477462';
+  const live=id=>!/X{4,}/.test(id);
+  if(live(GA_ID)){
+    const s=document.createElement('script');s.async=true;
+    s.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=function(){dataLayer.push(arguments);};
+    gtag('js',new Date());gtag('config',GA_ID);
+  }
+  if(live(META_PIXEL_ID)){
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init',META_PIXEL_ID);fbq('track','PageView');
+  }
+  document.querySelectorAll('a[data-tool]').forEach(a=>{
+    a.addEventListener('click',()=>{ if(window.gtag)gtag('event','tool_open',{tool:a.dataset.tool}); });
+  });
+  document.querySelectorAll('a[href*="wa.me"]').forEach(a=>{
+    const label=a.dataset.wa || 'whatsapp';
+    a.addEventListener('click',()=>{
+      if(window.gtag)gtag('event','whatsapp_click',{button:label});
+      if(window.fbq)fbq('track','Contact',{content_name:label});
+    });
+  });
+})();
+</script>
+</body>
+</html>
