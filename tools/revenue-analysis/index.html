@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revenue Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --b:#3533CD; --b-900:#14136B; --b-800:#1E1C8F; --b-700:#2A28B0;
+  --b-500:#3533CD; --b-400:#5C5ADB; --b-300:#8B8AE8; --b-200:#BCBBF3;
+  --b-100:#E2E1FB; --b-050:#F1F1FE;
+  --ok:#0E9F6E; --ok-bg:#E6F6F0; --warn:#B7791F; --warn-bg:#FBF3E2;
+  --risk:#D0342C; --risk-bg:#FCECEA;
+  --ink:#14142B; --ink-2:#474763; --ink-3:#78788F;
+  --bg:#FAFAFB; --card:#FFFFFF; --line:#E7E7EF;
+  --r:14px; --r-lg:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:-.025em}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+
+/* ============ LANDING — full bleed ============ */
+.land{
+  background:var(--b-900);
+  background-image:radial-gradient(115% 130% at 10% 0%, #3533CD 0%, #22208F 48%, #100F5C 100%);
+  color:#fff;min-height:100vh;display:flex;flex-direction:column;
+}
+.land .wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:88px;padding-bottom:56px}
+.mark{position:absolute;top:32px;left:0;right:0}
+.mark .wrap{display:flex;align-items:center;gap:10px;padding-top:0;padding-bottom:0;min-height:auto;flex-direction:row;justify-content:flex-start}
+.mark img{height:24px;display:block}
+.land-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;width:100%}
+.land h1{font-size:74px;line-height:.95;font-weight:800;letter-spacing:-.045em}
+.land ul{list-style:none}
+.land li{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid rgba(255,255,255,.14);font-size:15.5px;color:#EDEDFB;line-height:1.5}
+.land li:first-child{border-top:0;padding-top:0}
+.land li i{flex:none;width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.13);display:grid;place-items:center;
+           font-style:normal;font-family:'Plus Jakarta Sans';font-size:11px;font-weight:800;color:#fff;margin-top:1px}
+.cue{display:flex;align-items:center;gap:10px;background:none;border:0;color:#9695E0;font-family:'Inter';font-size:13.4px;cursor:pointer;padding:0;margin-top:52px}
+.cue:hover{color:#fff}
+.cue svg{animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+main{padding:22px 0 70px}
+
+/* ============ FORM ============ */
+.frame{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:26px}
+.frame > h2{font-size:20px;font-weight:700;margin-bottom:18px}
+.hdr,.row{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 32px;gap:10px;align-items:center}
+.hdr{padding-bottom:8px}
+.hdr div{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);font-weight:600;line-height:1.3}
+.row{margin-bottom:8px}
+.nm{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:0 11px}
+.nm .dot{width:9px;height:9px;border-radius:3px;flex:none}
+.nm input{border:0!important;padding:10px 0!important;box-shadow:none!important}
+input[type=text],input[type=number]{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font-family:'Inter';font-size:14.5px;color:var(--ink);background:#fff;outline:none}
+.nm input{font-family:'Plus Jakarta Sans';font-weight:600}
+input:focus{border-color:var(--b-500);box-shadow:0 0 0 3px var(--b-050)}
+.nm:focus-within{border-color:var(--b-500);box-shadow:0 0 0 3px var(--b-050)}
+.rm{background:none;border:0;color:var(--ink-3);cursor:pointer;font-size:19px;line-height:1;padding:5px;border-radius:8px}
+.rm:hover{background:var(--risk-bg);color:var(--risk)}
+.add{margin-top:4px;padding:10px 17px;border:1.5px dashed var(--b-200);background:var(--b-050);color:var(--b-500);border-radius:10px;font-family:'Plus Jakarta Sans';font-weight:700;font-size:13.8px;cursor:pointer}
+.add:hover{background:var(--b-100)}
+
+.split{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:14px;margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+.f label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);font-weight:600;margin-bottom:6px}
+.opt{font-weight:400;text-transform:none;letter-spacing:0;color:#A3A3B8;font-size:11.4px}
+.dur{display:flex;gap:8px}
+.dur input{flex:1;min-width:0}
+.bench{display:flex;align-items:center;gap:7px;padding:0 13px;border:1px solid var(--line);background:#fff;color:var(--ink-2);
+       border-radius:10px;font-family:'Inter';font-weight:500;font-size:13px;cursor:pointer;white-space:nowrap}
+.bench:hover{background:#F6F6F9;border-color:#D6D6E2;color:var(--ink)}
+.bench svg{flex:none;color:var(--ink-3)}
+
+.cc{position:relative}
+.cc-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-family:'Plus Jakarta Sans';font-weight:600;font-size:14.5px;color:var(--ink);text-align:left}
+.cc-btn:hover{border-color:var(--b-200)}
+.cc-btn span.sub{font-family:'Inter';font-weight:400;font-size:13px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-pop{position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(20,20,43,.13);display:none;overflow:hidden}
+.cc.open .cc-pop{display:block}
+.cc-pop input{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:11px 13px}
+.cc-pop input:focus{box-shadow:none;border-color:var(--line);border-bottom-color:var(--b-200)}
+.cc-list{max-height:230px;overflow-y:auto}
+.cc-list div{padding:9px 13px;cursor:pointer;font-size:14px;display:flex;gap:9px;align-items:baseline}
+.cc-list div:hover{background:var(--b-050)}
+.cc-list b{font-family:'Plus Jakarta Sans';font-weight:700;font-size:13.5px;min-width:34px}
+.cc-list span{color:var(--ink-3);font-size:13px}
+.cc-list .grp{padding:8px 13px 4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600;cursor:default}
+.cc-list .grp:hover{background:#fff}
+.cc-none{padding:14px;font-size:13.5px;color:var(--ink-3);text-align:center}
+
+.submit{width:100%;margin-top:22px;padding:15px;border:0;border-radius:12px;background:var(--b-500);color:#fff;font-family:'Plus Jakarta Sans';font-weight:800;font-size:16px;cursor:pointer;transition:background .15s}
+.submit:hover{background:var(--b-700)}
+.submit:disabled{background:#D6D6E1;cursor:not-allowed}
+
+/* ============ REPORT ============ */
+#report{display:none;margin-top:20px}
+#report.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.rc{border:1.5px solid var(--b-200);border-radius:var(--r-lg);background:#fff;overflow:hidden}
+.rc-head{background:var(--b-050);border-bottom:1.5px solid var(--b-100);padding:34px 30px}
+.rc-head h2{font-size:44px;font-weight:800;letter-spacing:-.045em;line-height:1;color:var(--b-500)}
+.rc-body{padding:30px}
+.sec{padding-top:30px;margin-top:30px;border-top:1px solid var(--line)}
+.sec:first-of-type{padding-top:0;margin-top:0;border-top:0}
+.sec-h{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.sec-h h3{font-size:16.5px;font-weight:700}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:15px}
+.kpi .k{font-size:10.8px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);font-weight:600;line-height:1.35;min-height:28px}
+.kpi .v{font-family:'Plus Jakarta Sans';font-weight:800;font-size:24px;margin-top:6px;letter-spacing:-.03em;line-height:1.15;word-break:break-word}
+.kpi .v.sm{font-size:18px;line-height:1.25}
+.kpi .v.b{color:var(--b-500)} .kpi .v.g{color:var(--ok)}
+.kpi .u{font-size:12.2px;color:var(--ink-3);margin-top:3px}
+
+.tog{display:flex;gap:3px;background:#F2F2F6;border-radius:9px;padding:3px}
+.tog button{padding:6px 14px;border:0;background:none;border-radius:7px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:13px;color:var(--ink-3);cursor:pointer}
+.tog button.on{background:#fff;color:var(--b-500);box-shadow:0 1px 3px rgba(20,20,43,.09)}
+.chart-box{position:relative;height:300px}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin-top:18px}
+.legend div{display:flex;align-items:center;gap:7px;font-size:12.6px;color:var(--ink-2)}
+.legend i{width:10px;height:10px;border-radius:3px;display:block;flex:none}
+
+.per-wrap{position:relative}
+.per-wrap:after{content:'';position:absolute;top:0;bottom:0;right:0;width:34px;pointer-events:none;
+  background:linear-gradient(to right,rgba(255,255,255,0),#fff)}
+.per-scroll{display:flex;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;-ms-overflow-style:none}
+.per-scroll::-webkit-scrollbar{display:none}
+.per-scroll button{flex:none;padding:6px 11px;border:1px solid var(--line);background:#fff;border-radius:8px;
+  font-family:'Plus Jakarta Sans';font-weight:600;font-size:12.6px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.per-scroll button:hover{border-color:var(--b-300);color:var(--b-500)}
+.per-scroll button.on{background:var(--b-500);border-color:var(--b-500);color:#fff}
+.per-scroll .sep{flex:none;width:1px;background:var(--line);margin:2px 6px}
+.showing{font-family:'Plus Jakarta Sans';font-size:19px;font-weight:700;color:var(--ink);margin:16px 0 18px;letter-spacing:-.025em}
+.showing span{color:var(--ink-3);font-weight:600;font-size:13px;font-family:'Inter';letter-spacing:0;margin-right:7px;text-transform:uppercase}
+
+.donuts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.donut-c{text-align:center}
+.donut-c .dt{font-size:13.2px;font-weight:600;color:var(--ink-2);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
+.donut-w{position:relative;height:180px}
+.donut-mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none}
+.donut-mid .m1{font-family:'Plus Jakarta Sans';font-weight:800;font-size:20px;letter-spacing:-.025em}
+.donut-mid .m2{font-size:10.6px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-top:3px}
+
+.finds{list-style:none}
+.finds li{display:flex;gap:13px;padding:0 0 20px}
+.finds li:last-child{padding-bottom:0}
+.sig{flex:none;width:25px;height:25px;border-radius:7px;display:grid;place-items:center;font-family:'Plus Jakarta Sans';font-weight:800;font-size:13px;margin-top:1px}
+.sig.r{background:var(--risk-bg);color:var(--risk)}
+.sig.w{background:var(--warn-bg);color:var(--warn)}
+.sig.g{background:var(--ok-bg);color:var(--ok)}
+.finds strong{font-family:'Plus Jakarta Sans';font-weight:700;font-size:15px;display:block;margin-bottom:3px;line-height:1.4}
+.finds span{font-size:13.4px;color:var(--ink-3);line-height:1.55;display:block}
+.clean{font-size:14px;color:var(--ink-2)}
+
+.ceil{background:var(--b-050);border:1px solid var(--b-100);border-radius:14px;padding:22px;display:flex;gap:24px;align-items:center}
+.ceil .n{font-family:'Plus Jakarta Sans';font-weight:800;font-size:54px;color:var(--b-500);line-height:1;letter-spacing:-.045em;flex:none}
+.ceil .t strong{font-family:'Plus Jakarta Sans';font-weight:700;font-size:16.5px;display:block;margin-bottom:6px}
+.ceil .t p{font-size:14px;color:var(--ink-2);line-height:1.55}
+
+.pdf{display:block;width:100%;margin-top:16px;padding:16px;background:var(--b-500);border:0;color:#fff;
+     border-radius:var(--r);font-family:'Plus Jakarta Sans';font-weight:800;font-size:16px;cursor:pointer;text-align:center;text-decoration:none}
+.pdf:hover{background:var(--b-700)}
+
+/* ============ NEXT STEP ============ */
+.next{background:var(--b-900);background-image:radial-gradient(110% 160% at 100% 0%, #3533CD 0%, #24229C 50%, #14136B 100%);
+      border-radius:var(--r-lg);padding:34px;margin-top:16px;color:#fff}
+.next-top{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.next h3{font-size:27px;font-weight:800;letter-spacing:-.035em;line-height:1.12}
+.next .lead{font-size:15.2px;color:#C3C2F2;margin-top:11px;line-height:1.6}
+.next ul{list-style:none}
+.next li{display:flex;gap:11px;align-items:flex-start;font-size:14.6px;color:#EDEDFB;padding:0 0 13px;line-height:1.5}
+.next li:last-child{padding-bottom:0}
+.next li svg{flex:none;margin-top:4px}
+.cta{display:block;width:100%;margin-top:28px;padding:16px;background:#fff;color:var(--b-700);border:0;border-radius:12px;
+     font-family:'Plus Jakarta Sans';font-weight:800;font-size:16px;cursor:pointer;text-align:center}
+.cta:hover{background:#EFEFFD}
+.exp{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.exp.on{max-height:620px}
+.exp-in{margin-top:26px;padding-top:24px;border-top:1px solid rgba(255,255,255,.13)}
+.exp-in .pl{font-size:13.4px;color:#9695E0;margin-bottom:13px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;align-items:center;gap:8px;padding:9px 15px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);
+      color:#EDEDFB;border-radius:9px;font-family:'Inter';font-size:13.8px;cursor:pointer;transition:background .14s,border-color .14s}
+.chip:hover{background:rgba(255,255,255,.13)}
+.chip.on{background:#fff;border-color:#fff;color:var(--b-700);font-weight:600}
+.chip .bx{width:14px;height:14px;border-radius:4px;border:1.5px solid rgba(255,255,255,.5);flex:none;display:grid;place-items:center}
+.chip.on .bx{background:var(--b-500);border-color:var(--b-500)}
+.chip .bx svg{display:none} .chip.on .bx svg{display:block}
+.wa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:22px;padding:16px;background:#fff;color:var(--b-700);
+    border:0;border-radius:12px;font-family:'Plus Jakarta Sans';font-weight:800;font-size:16px;cursor:pointer;text-decoration:none}
+.wa:hover{background:#EFEFFD}
+
+.foot{text-align:center;margin-top:30px}
+.foot img{height:22px;display:inline-block;margin-bottom:8px;opacity:.9}
+.foot p{font-size:12.4px;color:var(--ink-3)}
+.foot a{color:var(--b-500);text-decoration:none;font-weight:600}
+
+@media(max-width:900px){
+  .land h1{font-size:50px}
+  .land-grid{grid-template-columns:1fr;gap:34px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .next-top{grid-template-columns:1fr;gap:26px}
+}
+@media(max-width:680px){
+  .wrap{padding:0 15px}
+  .land .wrap{padding-top:80px;padding-bottom:44px}
+  .land h1{font-size:40px}
+  .cue{margin-top:34px}
+  .frame{padding:19px}
+  .rc-body{padding:19px}
+  .rc-head{padding:24px 19px}
+  .rc-head h2{font-size:32px}
+  .hdr{display:none}
+  .row{grid-template-columns:1fr 1fr;gap:9px;padding:13px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;position:relative}
+  .row .nm{grid-column:1/-1;padding-right:34px}
+  .row .rm{position:absolute;top:9px;right:7px}
+  .split{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr}
+  .donuts{grid-template-columns:1fr}
+  .ceil{flex-direction:column;align-items:flex-start;gap:12px}
+  .ceil .n{font-size:44px}
+  .next{padding:24px 20px}
+  .next h3{font-size:22px}
+  .exp.on{max-height:760px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<script>
+const CONFIG = {
+  WHATSAPP: "97455299831",
+  LOG_ENDPOINT: "",
+  BENCHMARK_DURATION: 18,        // PLACEHOLDER — replace with your own figure
+  HORIZON: 24,
+  DEFAULT_PERIOD: "M1",
+  RULES:{ concentrationTop1:50, concentrationTop2:80, singleSmall:10,
+          clusterCap:20, clusterMin:2, menuBloat:7, shareGap:15,
+          atCeiling:70, stallSoon:12 }
+};
+const SHADES=['#3533CD','#00A6E0','#8B8AE8','#14136B','#3FBFAF','#5C5ADB','#0C6FBF','#94A3B8','#BCBBF3','#C2CBD8'];
+const CURRENCIES=[
+  {g:'GCC'},{c:'QAR',n:'Qatari Riyal'},{c:'AED',n:'UAE Dirham'},{c:'SAR',n:'Saudi Riyal'},
+  {c:'KWD',n:'Kuwaiti Dinar'},{c:'BHD',n:'Bahraini Dinar'},{c:'OMR',n:'Omani Rial'},
+  {g:'Major'},{c:'USD',n:'US Dollar'},{c:'EUR',n:'Euro'},{c:'GBP',n:'Pound Sterling'},
+  {c:'CAD',n:'Canadian Dollar'},{c:'AUD',n:'Australian Dollar'},{c:'CHF',n:'Swiss Franc'},
+  {c:'JPY',n:'Japanese Yen'},{c:'CNY',n:'Chinese Yuan'},
+  {g:'South Asia'},{c:'INR',n:'Indian Rupee'},{c:'PKR',n:'Pakistani Rupee'},
+  {c:'BDT',n:'Bangladeshi Taka'},{c:'NPR',n:'Nepalese Rupee'},{c:'LKR',n:'Sri Lankan Rupee'},
+  {g:'Wider region'},{c:'EGP',n:'Egyptian Pound'},{c:'JOD',n:'Jordanian Dinar'},
+  {c:'LBP',n:'Lebanese Pound'},{c:'TRY',n:'Turkish Lira'},{c:'MAD',n:'Moroccan Dirham'},
+  {c:'TND',n:'Tunisian Dinar'},{c:'IQD',n:'Iraqi Dinar'},
+  {g:'Other'},{c:'SGD',n:'Singapore Dollar'},{c:'MYR',n:'Malaysian Ringgit'},
+  {c:'IDR',n:'Indonesian Rupiah'},{c:'PHP',n:'Philippine Peso'},{c:'THB',n:'Thai Baht'},
+  {c:'ZAR',n:'South African Rand'},{c:'NGN',n:'Nigerian Naira'},{c:'KES',n:'Kenyan Shilling'},
+  {c:'BRL',n:'Brazilian Real'},{c:'MXN',n:'Mexican Peso'},{c:'NZD',n:'New Zealand Dollar'},
+  {c:'SEK',n:'Swedish Krona'},{c:'NOK',n:'Norwegian Krone'},{c:'DKK',n:'Danish Krone'},
+  {c:'PLN',n:'Polish Zloty'},{c:'RUB',n:'Russian Ruble'},{c:'KRW',n:'South Korean Won'},
+  {c:'HKD',n:'Hong Kong Dollar'}
+];
+</script>
+
+<!-- ============ LANDING ============ -->
+<section class="land">
+  <div class="mark"><div class="wrap"><a href="https://hashirfaraz.com" aria-label="Hashir Faraz"><img src="/assets/logo-light.png" alt="Hashir Faraz"></a></div></div>
+  <div class="wrap">
+    <div class="land-grid">
+      <div>
+        <h1>Revenue<br>Analysis</h1>
+        <button class="cue" onclick="document.getElementById('inputs').scrollIntoView({behavior:'smooth'})">
+          Start with your figures
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </button>
+      </div>
+      <ul>
+        <li><i>1</i><span>Project your client base over the next 24 months</span></li>
+        <li><i>2</i><span>See which services actually drive the revenue</span></li>
+        <li><i>3</i><span>Compare each service's client share against its revenue share</span></li>
+        <li><i>4</i><span>Find the point where your growth starts to flatten</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<main>
+<div class="wrap">
+
+  <!-- ============ INPUTS ============ -->
+  <div class="frame" id="inputs">
+    <h2>Your business figures</h2>
+    <div class="hdr">
+      <div>Service</div><div>Monthly fee</div><div>Clients in month 1</div><div>New clients per month</div><div></div>
+    </div>
+    <div id="svcs"></div>
+    <button class="add" onclick="addSvc()">+ Add service</button>
+
+    <div class="split">
+      <div class="f">
+        <label for="life">Average customer duration <span class="opt">(months)</span></label>
+        <div class="dur">
+          <input type="number" id="life" value="18" min="1" max="120" step="1">
+          <button class="bench" onclick="useBenchmark()" type="button">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg>
+            Use industry benchmark
+          </button>
+        </div>
+      </div>
+      <div class="f">
+        <label>Currency</label>
+        <div class="cc" id="cc">
+          <button class="cc-btn" onclick="ccToggle(event)" type="button">
+            <span id="ccCode">QAR</span><span class="sub" id="ccName">Qatari Riyal</span>
+          </button>
+          <div class="cc-pop">
+            <input type="text" id="ccSearch" placeholder="Search currency…" oninput="ccFilter()" onclick="event.stopPropagation()">
+            <div class="cc-list" id="ccList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="f">
+        <label for="co">Company name <span class="opt">— optional</span></label>
+        <input type="text" id="co" placeholder="Your agency">
+      </div>
+    </div>
+
+    <button class="submit" id="btnRun" onclick="run()">Analyse my revenue</button>
+  </div>
+
+  <!-- ============ REPORT ============ -->
+  <div id="report">
+    <div class="rc">
+      <div class="rc-head"><h2 id="rcTitle">Revenue Analysis</h2></div>
+      <div class="rc-body">
+
+      <div class="sec">
+        <div class="kpis">
+          <div class="kpi"><div class="k">Current monthly revenue</div><div class="v" id="k1">—</div><div class="u" id="u1"></div></div>
+          <div class="kpi"><div class="k">Projected monthly revenue</div><div class="v g" id="k2">—</div><div class="u" id="u2"></div></div>
+          <div class="kpi"><div class="k">Avg monthly revenue growth</div><div class="v b" id="k3">—</div><div class="u" id="u3"></div></div>
+          <div class="kpi"><div class="k">Most valuable service</div><div class="v sm" id="k4">—</div><div class="u" id="u4"></div></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h">
+          <h3 id="chTitle">Revenue by service</h3>
+          <div class="tog">
+            <button id="tgR" class="on" onclick="setMode('rev')">Revenue</button>
+            <button id="tgC" onclick="setMode('cli')">Clients</button>
+          </div>
+        </div>
+        <div class="chart-box"><canvas id="cGrowth"></canvas></div>
+        <div class="legend" id="legend"></div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><h3>Portfolio distribution</h3></div>
+        <div class="per-wrap"><div class="per-scroll" id="perBar"></div></div>
+        <p class="showing"><span>Showing</span><b id="showLbl">Month 1</b></p>
+        <div class="donuts">
+          <div class="donut-c"><div class="dt">Revenue by service</div>
+            <div class="donut-w"><canvas id="cRev"></canvas>
+              <div class="donut-mid"><div><div class="m1" id="dRev">—</div><div class="m2" id="dRevU">QAR</div></div></div>
+            </div></div>
+          <div class="donut-c"><div class="dt">Clients by service</div>
+            <div class="donut-w"><canvas id="cCli"></canvas>
+              <div class="donut-mid"><div><div class="m1" id="dCli">—</div><div class="m2">Clients</div></div></div>
+            </div></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><h3>Insights</h3></div>
+        <ul class="finds" id="finds"></ul>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h"><h3>Growth ceiling</h3></div>
+        <div class="ceil">
+          <div class="n" id="ceilN">—</div>
+          <div class="t"><strong id="ceilH"></strong><p id="ceilP"></p></div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <a href="#" class="pdf" data-wa="report" onclick="sendWA('report');return false;">Get PDF Report</a>
+
+    <!-- ============ NEXT STEP ============ -->
+    <div class="next">
+      <div class="next-top">
+        <div>
+          <h3>Get a more detailed analysis</h3>
+          <p class="lead">These figures haven't accounted for delivery costs, discounts, retainer overruns or the clients who buy more than one thing from you.</p>
+        </div>
+        <ul>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg><span>Profit by service, after what it costs to deliver</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg><span>Which services carry the strongest margins</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg><span>Clients buying more than one service</span></li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><path d="M20 6L9 17l-5-5"/></svg><span>Which service combinations earn the most</span></li>
+        </ul>
+      </div>
+
+      <button class="cta" id="ctaOpen" onclick="openReq()">Get a more detailed analysis</button>
+
+      <div class="exp" id="exp">
+        <div class="exp-in">
+          <p class="pl">Pick what you'd like included.</p>
+          <div class="chips" id="chips"></div>
+          <a href="#" class="wa" data-wa="detailed" onclick="sendWA('detailed');return false;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z"/></svg>
+            Send my request
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <a href="https://hashirfaraz.com" target="_blank" rel="noopener" aria-label="Hashir Faraz"><img src="/assets/logo-dark.png" alt="Hashir Faraz"></a>
+      <p>Performance tracking for SME owners — <a href="https://hashirfaraz.com" target="_blank" rel="noopener">hashirfaraz.com</a></p>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script>
+let services=[], seq=0, chartG=null, chartR=null, chartC=null,
+    R={}, live=false, logged=false, CUR='QAR', PERIOD=CONFIG.DEFAULT_PERIOD, MODE='rev';
+
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+const pct=n=>Math.round(n)+'%';
+const pct1=n=>(Math.round(n*10)/10).toFixed(1)+'%';
+const co=()=>document.getElementById('co').value.trim();
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ---------- currency ---------- */
+function ccRender(q){
+  q=(q||'').toLowerCase();
+  let html='',shown=0;
+  CURRENCIES.forEach(x=>{
+    if(x.g){ if(!q) html+=`<div class="grp">${x.g}</div>`; return; }
+    if(q && !(x.c.toLowerCase().includes(q)||x.n.toLowerCase().includes(q))) return;
+    shown++;
+    html+=`<div onclick="ccPick('${x.c}','${x.n.replace(/'/g,"\\'")}')"><b>${x.c}</b><span>${x.n}</span></div>`;
+  });
+  document.getElementById('ccList').innerHTML = shown?html:'<div class="cc-none">No currency matches that.</div>';
+}
+function ccToggle(e){ e.stopPropagation();
+  const cc=document.getElementById('cc'); cc.classList.toggle('open');
+  if(cc.classList.contains('open')){ document.getElementById('ccSearch').value=''; ccRender(''); document.getElementById('ccSearch').focus(); }
+}
+function ccFilter(){ ccRender(document.getElementById('ccSearch').value); }
+function ccPick(c,n){
+  CUR=c;
+  document.getElementById('ccCode').textContent=c;
+  document.getElementById('ccName').textContent=n;
+  document.getElementById('cc').classList.remove('open');
+  if(live) paint();
+}
+document.addEventListener('click',()=>document.getElementById('cc').classList.remove('open'));
+
+/* ---------- inputs ---------- */
+function addSvc(name,price,m1,nw){
+  services.push({id:++seq,name:name||'',price:price??'',m1:m1??'',nw:nw??''});
+  render(); check();
+}
+function rmSvc(id){ if(services.length<=1)return; services=services.filter(s=>s.id!==id); render(); check(); if(live)calc(); }
+function upd(id,f,v){ const s=services.find(x=>x.id===id); if(s){ s[f]=v; check(); if(live)calc(); } }
+function render(){
+  document.getElementById('svcs').innerHTML=services.map((s,i)=>`
+    <div class="row">
+      <div class="nm"><span class="dot" style="background:${SHADES[i%SHADES.length]}"></span>
+        <input type="text" placeholder="Service ${i+1}" value="${esc(s.name)}" oninput="upd(${s.id},'name',this.value)"></div>
+      <input type="number" min="0" step="100" placeholder="Monthly fee" value="${s.price}" oninput="upd(${s.id},'price',this.value)">
+      <input type="number" min="0" step="1"   placeholder="Clients M1"  value="${s.m1}"    oninput="upd(${s.id},'m1',this.value)">
+      <input type="number" min="0" step="0.5" placeholder="New / month" value="${s.nw}"    oninput="upd(${s.id},'nw',this.value)">
+      ${services.length>1?`<button class="rm" onclick="rmSvc(${s.id})" title="Remove service">&times;</button>`:'<span></span>'}
+    </div>`).join('');
+}
+function check(){ document.getElementById('btnRun').disabled=!services.some(s=>(+s.price>0)&&((+s.m1>0)||(+s.nw>0))); }
+function useBenchmark(){ document.getElementById('life').value=CONFIG.BENCHMARK_DURATION; if(live)calc(); }
+document.getElementById('life').addEventListener('input',()=>{ if(live)calc(); });
+
+function run(){
+  live=true; calc();
+  const r=document.getElementById('report'); r.classList.add('on');
+  if(!logged){ logSubmission(); logged=true; }
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'start'}),60);
+  document.getElementById('btnRun').textContent='Recalculate';
+}
+
+/* ---------- model ---------- */
+function calc(){
+  const L=Math.max(1,+document.getElementById('life').value||1), H=CONFIG.HORIZON;
+  const S=services.map((s,i)=>({
+    name:(s.name||'').trim()||('Service '+(i+1)), color:SHADES[i%SHADES.length],
+    price:+s.price||0, m1:+s.m1||0, nw:+s.nw||0 }));
+  S.forEach(s=>{
+    s.ceil=s.nw*L; s.path=[]; let c=s.m1;
+    for(let t=0;t<H;t++){ s.path.push(c); c=c+s.nw-(c/L); }
+    s.rev=s.path.map(v=>v*s.price); s.ceilRev=s.ceil*s.price;
+  });
+  const ceil=S.reduce((a,s)=>a+s.ceil,0), ceilRev=S.reduce((a,s)=>a+s.ceilRev,0),
+        m1=S.reduce((a,s)=>a+s.m1,0), totNw=S.reduce((a,s)=>a+s.nw,0);
+  const actual=[],revPath=[];
+  for(let t=0;t<H;t++){ actual.push(S.reduce((a,s)=>a+s.path[t],0)); revPath.push(S.reduce((a,s)=>a+s.rev[t],0)); }
+  let stall=null;
+  for(let t=0;t<H-1;t++){ if(actual[t+1]-actual[t]<1){ stall=t+1; break; } }
+  let growth=null,gFrom=0;
+  for(let t=0;t<H;t++){ if(revPath[t]>0){ gFrom=t; break; } }
+  if(revPath[gFrom]>0 && H-1>gFrom) growth=(Math.pow(revPath[H-1]/revPath[gFrom],1/(H-1-gFrom))-1)*100;
+  R={L,S,H,ceil,ceilRev,m1,totNw,actual,revPath,stall,growth,gFrom,
+     valid:S.filter(s=>s.price>0&&(s.m1>0||s.nw>0)),
+     mvp:[...S].sort((a,b)=>b.ceilRev-a.ceilRev)[0],
+     pos:ceil>0?(m1/ceil)*100:0};
+  paint();
+}
+
+/* ---------- periods ---------- */
+const ALLP=(()=>{const P=[];
+  for(let m=1;m<=24;m++)P.push({id:'M'+m,short:'M'+m,label:'Month '+m,idx:[m-1]});
+  for(let q=1;q<=8;q++)P.push({id:'Q'+q,short:'Q'+q,label:'Quarter '+q,idx:[0,1,2].map(k=>(q-1)*3+k)});
+  for(let y=1;y<=2;y++)P.push({id:'Y'+y,short:'Y'+y,label:'Year '+y,idx:Array.from({length:12},(_,k)=>(y-1)*12+k)});
+  P.push({id:'ALL',short:'Total',label:'Both years',idx:Array.from({length:24},(_,k)=>k)});
+  return P;})();
+function curP(){ return ALLP.find(p=>p.id===PERIOD)||ALLP[0]; }
+function buildPerBar(){
+  const bar=document.getElementById('perBar');
+  if(!bar.dataset.built){
+    bar.innerHTML=ALLP.map(p=>
+      ((p.id==='Q1'||p.id==='Y1'||p.id==='ALL')?'<div class="sep"></div>':'')+
+      `<button data-p="${p.id}" onclick="setPer('${p.id}')">${p.short}</button>`).join('');
+    bar.dataset.built='1';
+  }
+  markPer();
+}
+function markPer(){
+  document.querySelectorAll('#perBar button').forEach(b=>b.classList.toggle('on',b.dataset.p===PERIOD));
+  document.getElementById('showLbl').textContent=curP().label;
+}
+function setPer(id){
+  PERIOD=id; markPer(); drawDonuts();
+  const b=document.querySelector(`#perBar button[data-p="${id}"]`);
+  if(b) b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'});
+}
+function setMode(m){
+  MODE=m;
+  document.getElementById('tgR').classList.toggle('on',m==='rev');
+  document.getElementById('tgC').classList.toggle('on',m==='cli');
+  document.getElementById('chTitle').textContent = m==='rev'?'Revenue by service':'Clients by service';
+  drawGrowth(); renderLegend();
+}
+
+/* ---------- paint ---------- */
+function paint(){
+  const ok=R.valid.length>0;
+  document.getElementById('rcTitle').textContent = co()? `Revenue Analysis — ${co()}` : 'Revenue Analysis';
+  document.getElementById('k1').textContent=ok?fmt(R.revPath[0]):'—';
+  document.getElementById('u1').textContent=CUR+' · month 1';
+  document.getElementById('k2').textContent=ok?fmt(R.ceilRev):'—';
+  document.getElementById('u2').textContent=CUR+' · at steady state';
+  document.getElementById('k3').textContent=(ok&&R.growth!==null)?pct1(R.growth):'—';
+  document.getElementById('u3').textContent=(ok&&R.growth!==null)?`months ${R.gFrom+1}–24, compounded`:'';
+  document.getElementById('k4').textContent=(ok&&R.mvp)?R.mvp.name:'—';
+  document.getElementById('u4').textContent=(ok&&R.mvp)?`${fmt(R.mvp.ceilRev)} ${CUR} projected / month`:'';
+
+  document.getElementById('ceilN').textContent=ok?fmt(R.ceil):'—';
+  document.getElementById('ceilH').textContent = !ok?''
+    : R.totNw<=0 ? `With no new clients, your base runs down`
+    : `Your growth stops at about ${fmt(R.ceil)} clients`;
+  document.getElementById('ceilP').textContent = !ok?''
+    : R.totNw<=0
+      ? `You haven't set a signing rate, so nothing replaces the clients who leave. The base falls to roughly ${fmt(R.actual[R.H-1])} clients by month 24.`
+      : `You sign about ${R.totNw.toFixed(1).replace(/\.0$/,'')} clients a month and keep each one ${R.L} months. Once you reach ${fmt(R.ceil)} clients, you lose roughly as many as you sign — so the number stops moving.${R.stall?` That happens around month ${R.stall}.`:''} Getting past it means keeping clients longer, not signing faster.`;
+
+  renderLegend(); drawGrowth(); buildPerBar(); drawDonuts(); drawFindings();
+}
+function stackOrder(){
+  const isRev=MODE==='rev';
+  const tot=s=>(isRev?s.rev:s.path).reduce((a,b)=>a+b,0);
+  return [...R.S].sort((a,b)=>tot(b)-tot(a));
+}
+function renderLegend(){
+  document.getElementById('legend').innerHTML=
+    stackOrder().map(s=>`<div><i style="background:${s.color}"></i>${esc(s.name)}</div>`).join('');
+}
+function drawGrowth(){
+  if(chartG)chartG.destroy();
+  if(!R.S) return;
+  const isRev=MODE==='rev';
+  const labels=Array.from({length:R.H},(_,i)=>'M'+(i+1));
+  const ds=stackOrder().map(s=>({label:s.name,data:isRev?s.rev:s.path,backgroundColor:s.color,borderRadius:3,stack:'a'}));
+  chartG=new Chart(document.getElementById('cGrowth'),{type:'bar',data:{labels,datasets:ds},options:{
+    responsive:true,maintainAspectRatio:false,animation:{duration:350},
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}${isRev?' '+CUR:' clients'}`}}},
+    scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#78788F',font:{size:10},maxRotation:0,autoSkipPadding:12}},
+            y:{stacked:true,grid:{color:'#F1F1F5'},border:{display:false},
+               ticks:{color:'#78788F',font:{size:11},precision:isRev?undefined:0,
+                      callback:v=>isRev?(v>=1000?(v/1000)+'k':v):v}}}
+  }});
+}
+function donut(el,vals,cols,names,unit){
+  return new Chart(el,{type:'doughnut',
+    data:{labels:names||[],datasets:[{data:vals,backgroundColor:cols,borderWidth:0,cutout:'70%'}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{
+        const t=c.dataset.data.reduce((a,b)=>a+b,0);
+        return `${c.label}: ${fmt(c.parsed)}${unit} ${t>0?`(${pct(c.parsed/t*100)})`:''}`;}}}}}});
+}
+function drawDonuts(){
+  if(chartR)chartR.destroy(); if(chartC)chartC.destroy();
+  const p=curP();
+  const rev=R.S.map(s=>p.idx.reduce((a,i)=>a+(s.rev[i]||0),0));
+  const cli=R.S.map(s=>p.idx.reduce((a,i)=>a+(s.path[i]||0),0));
+  const tR=rev.reduce((a,b)=>a+b,0), tC=cli.reduce((a,b)=>a+b,0);
+  const any=tR>0||tC>0, cols=R.S.map(s=>s.color), names=R.S.map(s=>s.name);
+  chartR=donut(document.getElementById('cRev'),any?rev:[1],any?cols:['#EEEEF4'],any?names:[''],' '+CUR);
+  chartC=donut(document.getElementById('cCli'),any?cli:[1],any?cols:['#EEEEF4'],any?names:[''],'');
+  document.getElementById('dRev').textContent=any?fmt(tR):'—';
+  document.getElementById('dRevU').textContent=CUR;
+  document.getElementById('dCli').textContent=any?fmt(tC):'—';
+}
+
+/* ---------- insights ---------- */
+function findings(){
+  const out=[],T=CONFIG.RULES;
+  const S=R.S.filter(s=>s.ceilRev>0||s.ceil>0), n=S.length;
+  if(!n||R.ceilRev<=0) return out;
+  const rs=s=>(s.ceilRev/R.ceilRev)*100, cs=s=>R.ceil>0?(s.ceil/R.ceil)*100:0;
+  const sorted=[...S].sort((a,b)=>rs(b)-rs(a));
+
+  S.forEach(s=>{
+    const gap=cs(s)-rs(s);
+    if(gap>=T.shareGap) out.push({t:1,m:gap,sig:'!',tone:'w',
+      h:`${s.name} takes ${pct(cs(s))} of your clients but produces ${pct(rs(s))} of projected revenue`,
+      s:`Per client, this is the lightest-earning thing you sell — and every one of those clients still needs onboarding, reporting and account time.`});
+    else if(-gap>=T.shareGap) out.push({t:1,m:-gap,sig:'↓',tone:'r',
+      h:`${pct(rs(s))} of projected revenue rests on ${pct(cs(s))} of your clients`,
+      s:`${s.name} carries the plan on a narrow base. Losing one of those clients moves the whole projection.`});
+  });
+  if(R.stall&&R.stall<=T.stallSoon) out.push({t:2,m:T.stallSoon-R.stall,sig:'↓',tone:'r',
+    h:`Growth flattens from month ${R.stall}`,
+    s:`After that, new clients roughly replace the ones leaving. The line keeps rising, but barely.`});
+  if(R.pos>=T.atCeiling) out.push({t:2,m:100-R.pos,sig:'!',tone:'w',
+    h:`You start at ${pct(R.pos)} of your ceiling`,
+    s:`Month 1 already puts you at ${fmt(R.m1)} of a possible ${fmt(R.ceil)} clients. Most of this projection's growth is behind you before it starts.`});
+  if(n>=3){
+    if(rs(sorted[0])>=T.concentrationTop1) out.push({t:3,m:rs(sorted[0]),sig:'!',tone:'w',
+      h:`${pct(rs(sorted[0]))} of projected revenue sits in ${sorted[0].name}`,
+      s:`One service is carrying most of the business. Worth knowing whether that's a strength or an exposure.`});
+    if(n>=4){
+      const t2=rs(sorted[0])+rs(sorted[1]);
+      if(t2>=T.concentrationTop2) out.push({t:3,m:t2,sig:'!',tone:'w',
+        h:`Two services carry ${pct(t2)} of projected revenue`,
+        s:`${sorted[0].name} and ${sorted[1].name}. Everything else on the menu is close to noise.`});
+    }
+  }
+  let clustered=[];
+  if(n>=3){
+    const asc=[...S].sort((a,b)=>rs(a)-rs(b));
+    let tot=0,cl=[];
+    for(const s of asc){ if(tot+rs(s)<T.clusterCap){ cl.push(s); tot+=rs(s);} else break; }
+    if(cl.length>=T.clusterMin){
+      clustered=cl;
+      const cShare=cl.reduce((a,s)=>a+cs(s),0);
+      out.push({t:4,m:cl.length*10+(cShare-tot),sig:'!',tone:'w',
+        h:`${cl.length} services make up ${pct(tot)} of revenue — and ${pct(cShare)} of your clients`,
+        s:`${cl.map(s=>s.name).join(', ')}. Small on the invoice, not small on your calendar.`});
+    }
+    S.filter(s=>rs(s)<T.singleSmall&&!clustered.includes(s)).forEach(s=>{
+      out.push({t:4,m:T.singleSmall-rs(s),sig:'!',tone:'w',
+        h:`${s.name} is ${pct(rs(s))} of projected revenue`,
+        s:`It still needs its own pricing, delivery and client time like everything else you sell.`});
+    });
+  }
+  if(n>T.menuBloat) out.push({t:4,m:n,sig:'!',tone:'w',
+    h:`You're planning to sell ${n} different services`,
+    s:`Each one needs its own pitch, price and delivery method to stay profitable.`});
+  const best=[...S].filter(s=>s.ceil>0).sort((a,b)=>(rs(b)-cs(b))-(rs(a)-cs(a)))[0];
+  if(best && rs(best)-cs(best)>=8 && rs(best)-cs(best)<T.shareGap)
+    out.push({t:5,m:rs(best)-cs(best),sig:'↑',tone:'g',
+      h:`${best.name} earns more per client than anything else you sell`,
+      s:`${pct(rs(best))} of revenue from ${pct(cs(best))} of clients. If you want more revenue without more accounts, this is the one to sell harder.`});
+  out.sort((a,b)=>a.t-b.t||b.m-a.m);
+  return out.slice(0,3);
+}
+function drawFindings(){
+  const el=document.getElementById('finds');
+  if(!R.valid.length){ el.innerHTML='<li class="clean">Enter your services to see the insights.</li>'; return; }
+  const f=findings();
+  el.innerHTML = f.length
+    ? f.map(x=>`<li><div class="sig ${x.tone}">${x.sig}</div><div><strong>${esc(x.h)}</strong><span>${esc(x.s)}</span></div></li>`).join('')
+    : `<li class="clean">Nothing structurally off — the mix is balanced and no single service carries an unfair share of clients or revenue. Your main constraint is the ceiling below.</li>`;
+}
+
+/* ---------- request flow ---------- */
+const PICKS=[
+  {id:'profit', t:'Profit by service'},
+  {id:'margin', t:'Margins per service'},
+  {id:'overlap',t:'Clients buying multiple services'},
+  {id:'combos', t:'Service combinations'},
+  {id:'cost',   t:'Delivery cost vs revenue'},
+  {id:'disc',   t:'Discounts and retainer overruns'},
+  {id:'bench',  t:'Comparison to other agencies'}
+];
+let picked=new Set();
+const TICK='<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="M20 6L9 17l-5-5"/></svg>';
+function drawChips(){
+  document.getElementById('chips').innerHTML=PICKS.map(x=>
+    `<button class="chip${picked.has(x.id)?' on':''}" onclick="togglePick('${x.id}')" type="button">
+      <span class="bx">${TICK}</span>${x.t}</button>`).join('');
+}
+function togglePick(id){ picked.has(id)?picked.delete(id):picked.add(id); drawChips(); }
+function openReq(){
+  const e=document.getElementById('exp');
+  e.classList.add('on');
+  document.getElementById('ctaOpen').style.display='none';
+  setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'nearest'}),120);
+}
+
+/* ---------- capture + whatsapp ---------- */
+function logSubmission(){
+  const p={ company:co()||'(not given)', currency:CUR, duration_months:R.L,
+    current_revenue:Math.round(R.revPath[0]), ceiling_clients:Math.round(R.ceil),
+    ceiling_revenue:Math.round(R.ceilRev), month1_clients:R.m1, stall_month:R.stall??'24+',
+    avg_monthly_growth:R.growth!==null?pct1(R.growth):'n/a',
+    services:R.S.map(s=>`${s.name}|${s.price}|${s.m1}|${s.nw}`).join(' ;; '),
+    flagged:findings().map(x=>x.h).join(' | ') };
+  if(window.gtag) gtag('event','revenue_analysis_run',{
+    ceiling_clients:p.ceiling_clients, ceiling_revenue:p.ceiling_revenue,
+    services_count:R.S.length, duration_months:p.duration_months, currency:CUR});
+  if(CONFIG.LOG_ENDPOINT) fetch(CONFIG.LOG_ENDPOINT,{method:'POST',mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(p)}).catch(()=>{});
+}
+function sendWA(kind){
+  const who=co()?` for ${co()}`:'';
+  const nums=`${fmt(R.ceil)} clients / ${fmt(R.ceilRev)} ${CUR} per month at steady state`;
+  let msg;
+  if(kind==='report'){
+    msg=`Hi Hashir, I ran the Revenue Analysis${who}. Could you send me the PDF report?\n\n${nums}`;
+  } else {
+    const want=PICKS.filter(x=>picked.has(x.id)).map(x=>x.t.toLowerCase());
+    msg=want.length
+      ? `Hi Hashir, I ran the Revenue Analysis${who}. I'd like the detailed analysis, covering:\n\n- ${want.join('\n- ')}\n\n${nums}`
+      : `Hi Hashir, I ran the Revenue Analysis${who}. I'd like the detailed analysis.\n\n${nums}`;
+  }
+  if(window.gtag) gtag('event','wa_click',{cta:kind,picks:[...picked].join(',')});
+  window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+/* ---------- init ---------- */
+ccRender(''); drawChips();
+addSvc('Social media management',4000,3,1);
+addSvc('Paid ads management',6000,2,1);
+addSvc('Website maintenance',900,4,0.8);
+</script>
+</body>
+</html>
