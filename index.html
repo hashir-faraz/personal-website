@@ -80,15 +80,6 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   .page-sub{font-size:clamp(16px,2.4vw,22px);margin-top:12px}
   .page .fill{zoom:.85}
   #p-cards .page-title{margin-bottom:clamp(18px,3.5vh,32px)}
-  .segs.top{margin-top:14px}
-  .ba-grid{margin-top:14px}
-  .hassle-grid{margin-top:18px;gap:36px}
-  .id-grid{margin-top:18px;gap:32px}
-  .plans{margin-top:22px}
-  .plan{padding:22px 24px}
-  .plan ul{margin:16px 0 18px}
-  #p-final p{margin:12px auto 24px}
-  .dark-foot{margin-top:28px;padding-top:18px}
 }
 @media(max-width:959.5px),(max-height:559.5px){
   .page .fill{width:100%}
@@ -476,6 +467,18 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 @media(max-width:900px){.logos{justify-content:center;margin:0 auto}}
 
 /* ---------- page 7 — pricing ---------- */
+/* ---------- free resources ---------- */
+.res-sub{text-align:center;color:var(--ink-2);font-size:clamp(15px,1.9vw,18px)}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:840px;margin:30px auto 0;width:100%}
+.res-card{display:block;text-align:left;background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px;text-decoration:none;color:var(--ink);transition:transform .15s ease,box-shadow .15s ease}
+.res-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(20,20,40,.10)}
+.res-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:rgba(53,51,205,.08);padding:4px 10px;border-radius:999px}
+.res-card h3{font-size:clamp(19px,2.2vw,23px);font-weight:800;margin:14px 0 6px}
+.res-card p{color:var(--ink-2);font-size:15px}
+.res-open{display:inline-block;margin-top:16px;font-weight:700;color:var(--accent)}
+@media(max-width:720px){.res-grid{grid-template-columns:1fr;max-width:440px}}
+@media(min-width:960px) and (min-height:560px) and (max-height:700px){.res-grid{margin-top:18px;gap:16px}.res-card{padding:20px 22px}}
+
 .plans{display:grid;gap:18px;margin-top:52px;width:100%;text-align:left}
 @media(min-width:960px){.plans{grid-template-columns:repeat(3,1fr);align-items:stretch}}
 .plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:30px 28px;display:flex;flex-direction:column}
@@ -516,6 +519,18 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
+
+/* short-viewport component compressions — must stay AFTER component definitions (cascade order) */
+@media(min-width:960px) and (min-height:560px) and (max-height:700px){
+  .segs.top{margin-top:14px}
+  .ba-grid{margin-top:14px}
+  .hassle-grid{margin-top:18px;gap:36px}
+  .id-grid{margin-top:18px;gap:32px}
+  .plans{margin-top:22px}
+  .plan{padding:22px 24px}
+  .plan ul{margin:16px 0 18px}
+  #p-final p{margin:12px auto 24px}
+}
 </style>
 </head>
 <body>
@@ -525,6 +540,7 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   <nav class="nav">
     <div class="wrap">
       <img src="assets/logo-light.png" alt="Hashir Faraz">
+      <a class="btn btn-ghost" href="resources.html">Free Resources</a>
     </div>
   </nav>
   <div class="wrap">
@@ -896,6 +912,29 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 </section>
 
 <!-- ============ PAGE 8 — FINAL CTA (dark) ============ -->
+<section class="page" id="p-resources">
+  <div class="wrap">
+    <h2 class="page-title">Free Resources</h2>
+    <div class="fill">
+      <p class="res-sub">Interactive tools that read your numbers. Free, no sign-up.</p>
+      <div class="res-grid">
+        <a class="res-card" data-tool="pricing_planner" href="agency-pricing-planner/">
+          <span class="res-tag">Interactive tool</span>
+          <h3>Agency Pricing Planner</h3>
+          <p>Price your services and see your revenue ceiling.</p>
+          <span class="res-open">Open &rarr;</span>
+        </a>
+        <a class="res-card" data-tool="revenue_analysis" href="revenue-analysis.html">
+          <span class="res-tag">Interactive tool</span>
+          <h3>Revenue Analysis</h3>
+          <p>Enter your numbers, see where your revenue really comes from.</p>
+          <span class="res-open">Open &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="page tall dark" id="p-final">
   <div class="wrap cta-mid">
     <h2>Get clarity on your numbers.</h2>
@@ -1272,6 +1311,9 @@ document.querySelectorAll('.seg').forEach(btn=>{
     fbq('init',META_PIXEL_ID);fbq('track','PageView');
   }
   // conversion event on every WhatsApp button
+  document.querySelectorAll('a[data-tool]').forEach(a=>{
+    a.addEventListener('click',()=>{ if(window.gtag)gtag('event','tool_open',{tool:a.dataset.tool}); });
+  });
   document.querySelectorAll('a[href*="wa.me"]').forEach(a=>{
     const label=a.dataset.wa || (a.textContent.trim()||'whatsapp').toLowerCase().replace(/\s+/g,'_').slice(0,40) || 'whatsapp';
     a.addEventListener('click',()=>{
