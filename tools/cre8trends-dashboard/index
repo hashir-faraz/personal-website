@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Almara Wellness Club — Cre8Trends</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#D9530A; --accent-2:#E85D04; --accent-4:#FBA05C; --accent-5:#FBD9BE;
+  --accent-6:#FDF2E9;
+  --band:#121212; --band-ink:#FFFFFF;
+  --bg:#F8F7F5; --card:#FFFFFF; --line:#E7E4E0; --tile:#F8F7F5;
+  --ink:#141414; --ink-2:#6A6560; --ink-3:#9B958E;
+  --muted:#DEDAD5; --good:#1F8A4C; --wait:#C08A2E; --late:#C0392B;
+  --wait-bg:#FCF3E3; --wait-ink:#8F6416;
+  --late-bg:#FBECEA; --late-line:#F0CCC7;
+  --R:18px;             /* panel radius   */
+  --r:12px;             /* tile radius    */
+  --tagW:118px;         /* uniform tag    */
+  --tagH:26px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;
+  font-size:14px;line-height:1.5;padding:26px 24px 64px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto}
+h1,h2{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+
+/* ================= HEADER ================= */
+.band{background:var(--band);border-radius:var(--R);padding:24px 26px;display:flex;
+  align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.band-left{display:flex;align-items:center;gap:18px;min-width:0}
+.logo-agency{background:#fff;border-radius:9px;padding:10px 14px;font-family:'Plus Jakarta Sans';
+  font-weight:800;font-size:12.5px;letter-spacing:.14em;color:var(--accent);white-space:nowrap}
+.band h1{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.01em}
+.band .sub{font-size:12.5px;color:#fff;opacity:.7;margin-top:3px}
+.band-right{display:flex;align-items:center;gap:14px}
+.pill{background:rgba(255,255,255,.16);color:#fff;border-radius:999px;height:var(--tagH);
+  padding:0 15px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:8px}
+.pill i{width:6px;height:6px;border-radius:50%;background:#F0C464;display:block}
+.logo-client{width:54px;height:54px;background:#fff;border-radius:11px;display:grid;place-items:center;
+  font-family:'Plus Jakarta Sans';font-weight:800;font-size:16px;color:var(--accent-2);flex:none}
+
+/* ================= NAV ================= */
+.secnav{position:sticky;top:0;z-index:40;margin-top:12px;background:rgba(250,248,245,.88);
+  backdrop-filter:saturate(160%) blur(10px);border:1px solid var(--line);border-radius:999px;
+  padding:5px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.secnav::-webkit-scrollbar{display:none}
+.secnav a{flex:none;text-decoration:none;color:var(--ink-2);font-size:12.5px;font-weight:600;
+  padding:8px 15px;border-radius:999px;white-space:nowrap;transition:.15s;display:inline-flex;
+  align-items:center;gap:8px}
+.secnav a:hover{color:var(--ink);background:#F2EEE9}
+.secnav a.on{background:var(--accent);color:#fff}
+.secnav a .n{min-width:21px;height:19px;display:inline-grid;place-items:center;font-size:11px;
+  background:rgba(0,0,0,.07);border-radius:999px;padding:0 6px;font-variant-numeric:tabular-nums}
+.secnav a.on .n{background:rgba(255,255,255,.22)}
+.secnav a.warn .n{background:var(--late);color:#fff}
+
+/* ================= PANELS / GRID ================= */
+.grid{display:grid;gap:14px;margin-top:14px;align-items:start}
+.g-ov{grid-template-columns:1.55fr 1fr;align-items:stretch}
+.g-ov>.panel{display:flex;flex-direction:column}
+.g-ov>.panel>.donut-wrap{flex:1;align-items:center}
+.g-2{grid-template-columns:1fr 1fr;align-items:stretch}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.grid>*{min-width:0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--R);
+  padding:19px 22px 22px;scroll-margin-top:74px;min-width:0}
+.p-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding-bottom:13px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.p-head h2{font-size:14.5px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px}
+.p-head h2 .num{font-size:10.5px;font-weight:700;color:var(--accent-4);letter-spacing:.1em;
+  font-variant-numeric:tabular-nums}
+.p-stat{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.p-stat b{font-family:'Plus Jakarta Sans';font-weight:700;color:var(--ink)}
+.sub-h{font-family:'Plus Jakarta Sans';font-size:10.5px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:12px}
+.hr{height:1px;background:var(--line);margin:20px 0}
+
+/* ================= KPI TILES ================= */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpi{background:var(--tile);border-radius:var(--r);padding:14px 15px 13px}
+.kpi.alert{background:var(--wait-bg)}
+.k-label{font-size:10.5px;color:var(--ink-2);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+.k-val{font-family:'Plus Jakarta Sans';font-size:26px;font-weight:700;letter-spacing:-.02em;margin-top:7px;line-height:1}
+.k-val small{font-size:13px;font-weight:600;color:var(--ink-3);margin-left:2px}
+.kpi.alert .k-val{color:var(--wait)}
+.k-foot{font-size:11px;color:var(--ink-3);margin-top:5px}
+
+/* ================= UNIFORM TAGS ================= */
+.tag,.st,.age,.owner,.apst,.mpill{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-width:var(--tagW);height:var(--tagH);padding:0 12px;border-radius:999px;
+  font-size:11.5px;font-weight:600;white-space:nowrap;flex:none}
+.st.delivered {background:#FCEAE0;color:#E85D04}
+.st.progress  {background:#FDF2E9;color:#B4571F}
+.st.awaiting  {background:var(--wait-bg);color:var(--wait-ink)}
+.st.notstarted{background:#F2EEE9;color:var(--ink-3)}
+.tag{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  min-width:136px;height:23px;background:#F2EEE9;color:var(--ink-2)}
+.tag.approved{background:#E6F3EB;color:var(--good)}
+.tag.live{background:var(--wait-bg);color:var(--wait-ink)}
+.tag.commented{background:var(--accent-6);color:var(--accent)}
+.age{font-family:'Plus Jakarta Sans';font-weight:700;font-size:11.5px;background:#F2EEE9;color:var(--ink-2)}
+.age.od{background:var(--late);color:#fff}
+.age.due{background:var(--wait);color:#fff}
+.owner{min-width:124px;height:24px;font-size:11px}
+.owner.a{background:var(--accent-6);color:var(--accent)}
+.owner.c{background:#F5EFE5;color:var(--wait-ink)}
+.apst{min-width:96px;height:24px;font-size:11px}
+.apst.done{background:#E6F3EB;color:var(--good)}
+.apst.open{background:var(--wait-bg);color:var(--wait-ink)}
+.apst.od{background:var(--late-bg);color:var(--late)}
+.mpill{min-width:116px;height:24px;font-size:11px;background:#F2EEE9;color:var(--ink-2)}
+.mpill.open{background:var(--wait-bg);color:var(--wait-ink)}
+.mpill.tbc{background:var(--late-bg);color:var(--late)}
+.dot{width:8px;height:8px;border-radius:2px;display:inline-block;flex:none}
+
+/* ================= CHARTS ================= */
+svg{display:block}
+.panel>svg,.donut svg{width:100%;height:auto}
+.axis{font-family:Inter;font-size:10.5px;fill:var(--ink-3)}
+.grid-line{stroke:var(--line);stroke-width:1}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--ink-2);flex-wrap:wrap;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.bar{width:14px;border-radius:2px;display:inline-block}
+.timebar{display:flex;height:34px;border-radius:9px;overflow:hidden}
+.timebar div{display:grid;place-items:center;color:#fff;font-size:11.5px;font-weight:600;font-family:'Plus Jakarta Sans'}
+.time-key{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.time-key div{font-size:11.5px;color:var(--ink-2);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.time-key .kn{font-family:'Plus Jakarta Sans';font-weight:700;font-size:16px;color:var(--ink);width:100%;margin-top:1px}
+.donut-wrap{display:flex;align-items:center;gap:20px}
+.donut{position:relative;flex:none;width:144px}
+.donut .center{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.donut .center b{font-family:'Plus Jakarta Sans';font-size:28px;font-weight:700;letter-spacing:-.02em;display:block;line-height:1}
+.donut .center span{font-size:10px;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase}
+.brk{width:100%;border-collapse:collapse}
+.brk td{padding:7px 0;font-size:12.5px;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.brk td:first-child{display:flex;align-items:center;gap:9px}
+.brk tr:last-child td{border-bottom:0}
+.brk td:last-child{text-align:right;font-family:'Plus Jakarta Sans';font-weight:700;font-size:14px;color:var(--ink)}
+
+/* ================= ACTION CARDS ================= */
+.act-card{background:var(--tile);border-radius:var(--r);padding:16px 17px 15px;display:flex;
+  flex-direction:column;gap:9px;min-height:100%}
+.act-card>.age{align-self:flex-start}
+.act-card.od{background:var(--late-bg)}
+.act-card.due{background:var(--wait-bg)}
+.act-title{font-size:13.5px;font-weight:600;letter-spacing:-.005em;line-height:1.4}
+.act-meta{font-size:11.5px;color:var(--ink-2);line-height:1.5}
+.act-card .btn{margin-top:auto;width:100%}
+.allclear{background:#F2F8F4;border-radius:var(--r);padding:20px;text-align:center;
+  font-size:13px;color:var(--good);font-weight:600}
+
+/* ================= BUTTONS ================= */
+.btn{border-radius:9px;height:34px;padding:0 15px;font-size:12.5px;font-weight:600;transition:.15s;
+  border:1px solid transparent;white-space:nowrap;display:inline-flex;align-items:center;
+  justify-content:center;gap:7px}
+.btn-p{background:var(--accent);color:#fff}
+.btn-p:hover{background:var(--accent-2)}
+.btn-g{background:#fff;border-color:var(--line);color:var(--ink-2)}
+.btn-g:hover{border-color:var(--ink-3);color:var(--ink)}
+.btn-l{background:none;color:var(--accent);padding:0 6px}
+.btn-l:hover{text-decoration:underline}
+.btnrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* ================= TABLES ================= */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.data{width:100%;border-collapse:collapse;min-width:520px}
+table.data th{text-align:left;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);padding-bottom:9px;border-bottom:1px solid var(--line)}
+table.data td{padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+table.data td.r,table.data th.r{text-align:right}
+table.data td.c,table.data th.c{text-align:center}
+.date{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dname{font-size:13px}
+.qty{font-family:'Plus Jakarta Sans';font-weight:700;font-size:12.5px;white-space:nowrap;
+  font-variant-numeric:tabular-nums;color:var(--ink-2)}
+tr.head-row{cursor:pointer}
+tr.head-row:hover td{background:#FBF9F7}
+tr.head-row td{transition:background .12s}
+.chev{width:18px;height:18px;border-radius:5px;display:inline-grid;place-items:center;color:var(--ink-3);
+  transition:transform .18s,background .15s;flex:none}
+tr.head-row:hover .chev{background:#F2EEE9;color:var(--ink)}
+tr.open .chev{transform:rotate(90deg);color:var(--accent)}
+tr.open td{background:var(--accent-6)!important}
+.exp>td{padding:0!important;border-bottom:1px solid var(--line)!important;background:#FBF9F7}
+.exp-in{padding:20px 4px 24px}
+.vcount{font-size:11px;color:var(--ink-3);margin-left:8px;font-variant-numeric:tabular-nums}
+.nameflex{display:flex;align-items:center;gap:9px}
+
+/* ================= VERSION RAIL ================= */
+.vrail{position:relative;padding-left:26px;margin-left:8px}
+.vrail:before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.ver{position:relative;padding-bottom:20px}
+.ver:last-child{padding-bottom:0}
+.ver:before{content:'';position:absolute;left:-25px;top:5px;width:12px;height:12px;border-radius:50%;
+  background:#fff;border:2.5px solid var(--muted)}
+.ver.approved:before{border-color:var(--good);background:var(--good)}
+.ver.live:before{border-color:var(--wait);background:var(--wait);box-shadow:0 0 0 4px var(--wait-bg)}
+.ver.commented:before{border-color:var(--accent);background:var(--accent)}
+.ver-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ver-n{font-family:'Plus Jakarta Sans';font-weight:700;font-size:13.5px}
+.ver-d{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.ver-body{margin-top:10px;display:grid;gap:11px;max-width:640px}
+.vb{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+.vb b{display:block;font-family:'Plus Jakarta Sans';font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.blist{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.blist li{font-size:12.5px;color:var(--ink-2);padding-left:15px;position:relative;line-height:1.5}
+.blist li:before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent-4)}
+.vfiles{display:flex;gap:7px;flex-wrap:wrap}
+.file{font-size:11.5px;color:var(--ink-2);background:#fff;border:1px solid var(--line);
+  border-radius:7px;padding:5px 10px}
+.review{margin-top:14px;background:#fff;border:1px solid #EFDFBB;border-radius:12px;padding:15px 16px;max-width:640px}
+.review.done{border-color:#CFE7D8;background:#F7FBF8}
+.rv-q{font-size:12.5px;font-weight:600;margin-bottom:11px}
+.review textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px 12px;
+  font:inherit;font-size:12.5px;resize:vertical;min-height:72px;margin-bottom:10px;background:var(--bg)}
+.review textarea:focus{outline:none;border-color:var(--accent-4);background:#fff}
+.sent{font-size:12.5px;color:var(--good);font-weight:600;display:flex;align-items:flex-start;gap:8px}
+.sent small{display:block;font-weight:400;color:var(--ink-3);font-size:11.5px;margin-top:2px}
+
+/* ================= MEETING LIST ================= */
+.mrow{width:100%;display:flex;align-items:center;gap:14px;padding:12px 12px;border-radius:var(--r);
+  text-align:left;transition:background .13s}
+.mrow+.mrow{margin-top:2px}
+.mrow:hover{background:var(--tile)}
+.mdate{font-family:'Plus Jakarta Sans';font-weight:700;font-size:12px;color:var(--accent);
+  width:54px;flex:none;font-variant-numeric:tabular-nums;line-height:1.25}
+.mdate span{display:block;font-family:Inter;font-weight:500;font-size:10.5px;color:var(--ink-3)}
+.mrow.tbc .mdate{color:var(--ink-3)}
+.mt-t{flex:1;min-width:0}
+.mt-t .t{font-size:13.5px;font-weight:600;letter-spacing:-.005em;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.mt-t .m{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+
+/* ================= MAIL LIST ================= */
+.mail{display:flex;align-items:flex-start;gap:12px;padding:12px 12px;border-radius:var(--r)}
+.mail+.mail{border-top:1px solid var(--line);border-radius:0}
+.mail-ico{width:19px;height:19px;flex:none;object-fit:contain;margin-top:1px}
+.mail-b{flex:1;min-width:0}
+.mail-s{font-size:13px;line-height:1.4}
+.mail-f{font-size:11.5px;color:var(--ink-3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail-d{font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:1px}
+
+/* ================= MODAL ================= */
+.ov{position:fixed;inset:0;background:rgba(25,24,23,.44);z-index:80;padding:24px;
+  display:none;place-items:center;opacity:0;transition:opacity .18s}
+.ov.on{display:grid}
+.ov.vis{opacity:1}
+.modal{background:var(--card);border-radius:var(--R);width:100%;max-width:620px;max-height:84vh;
+  display:flex;flex-direction:column;overflow:hidden;box-shadow:0 26px 64px rgba(0,0,0,.26);
+  transform:translateY(10px);transition:transform .2s}
+.ov.vis .modal{transform:none}
+.m-head{padding:20px 22px 16px;border-bottom:1px solid var(--line);display:flex;
+  justify-content:space-between;align-items:flex-start;gap:14px;flex:none}
+.m-head h3{font-family:'Plus Jakarta Sans';font-size:16px;font-weight:700;letter-spacing:-.01em}
+.m-head .ms{font-size:11.5px;color:var(--ink-3);margin-top:4px}
+.xbtn{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--ink-3);flex:none}
+.xbtn:hover{background:var(--tile);color:var(--ink)}
+.m-body{padding:20px 22px 24px;overflow-y:auto;display:grid;gap:22px}
+.who-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.who-cols .lbl{font-size:10.5px;color:var(--ink-3);margin-bottom:6px}
+.chips{display:grid;gap:6px}
+.chip{font-size:12px;background:var(--tile);border-radius:8px;padding:7px 11px;color:var(--ink)}
+.chip span{color:var(--ink-3);font-size:11px;display:block}
+.dec{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.dec li{font-size:12.5px;color:var(--ink-2);padding-left:19px;position:relative;line-height:1.55}
+.dec li:before{content:'';position:absolute;left:2px;top:7px;width:7px;height:7px;border-radius:2px;background:var(--accent-4)}
+.apl{display:grid;gap:8px}
+.ap-item{background:var(--tile);border-radius:10px;padding:11px 13px;display:flex;
+  align-items:center;gap:12px;flex-wrap:wrap}
+.ap-t{flex:1;min-width:150px;font-size:12.5px;line-height:1.45}
+.ap-t em{display:block;font-style:normal;font-size:11px;color:var(--ink-3);margin-top:2px}
+
+/* ================= FOOT / TOAST ================= */
+.foot{margin-top:22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-size:11.5px;color:var(--ink-3);padding:0 6px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,140%);background:var(--ink);
+  color:#fff;padding:13px 20px;border-radius:11px;font-size:13px;font-weight:500;z-index:99;
+  box-shadow:0 12px 34px rgba(0,0,0,.22);transition:transform .3s cubic-bezier(.2,.8,.3,1);max-width:88vw}
+.toast.on{transform:translate(-50%,0)}
+.hide{display:none!important}
+
+@media(max-width:1000px){
+  .g-ov,.g-2{grid-template-columns:1fr}
+  .g-3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  body{padding:14px 12px 56px}
+  .g-3,.kpis,.who-cols{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .panel{padding:16px 15px 18px}
+  .band{padding:20px;gap:16px}
+  .band-left{flex-direction:column;align-items:flex-start;gap:13px;width:100%}
+  .band h1{font-size:16.5px}
+  .band-right{width:100%;justify-content:space-between}
+  .donut-wrap{flex-direction:column;align-items:stretch;gap:16px}
+  .donut{align-self:center}
+  .time-key{grid-template-columns:1fr}
+  .p-head{flex-direction:column;align-items:flex-start;gap:5px}
+  .modal{max-height:90vh}.ov{padding:12px}
+}
+@media print{body{background:#fff;padding:0}.panel{break-inside:avoid}
+  .secnav,.btnrow,.toast,.ov{display:none!important}.exp{display:table-row!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= HEADER ================= -->
+  <div class="band">
+    <div class="band-left">
+      <div class="logo-agency"><span style="letter-spacing:-.005em;font-size:14.5px"><span style="color:#121212">Cre</span><span style="color:#FC6305">8</span><span style="color:#121212">Trends</span><span style="color:#FC6305">.</span></span></div>
+      <div>
+        <h1>Social Media Management &mdash; Business Booster</h1>
+        <div class="sub">Almara Wellness Club &middot; Jun&ndash;Sep 2026 &middot; Updated 21 August 2026</div>
+      </div>
+    </div>
+    <div class="band-right">
+      <span class="pill"><i></i>Behind plan</span>
+      <div class="logo-client">AW</div>
+    </div>
+  </div>
+
+  <!-- ================= NAV ================= -->
+  <nav class="secnav">
+    <a href="#p-overview" class="on">Overview</a>
+    <a href="#p-actions" class="warn">Your actions<span class="n" id="navAct">3</span></a>
+    <a href="#p-timeline">Timeline</a>
+    <a href="#p-deliverables">Deliverables<span class="n">13</span></a>
+    <a href="#p-meetings">Meetings<span class="n">5</span></a>
+    <a href="#p-mail">Email<span class="n">8</span></a>
+  </nav>
+
+  <!-- ================= ROW 1 : OVERVIEW + STATUS ================= -->
+  <div class="grid g-ov">
+    <div class="panel" id="p-overview">
+      <div class="p-head">
+        <h2><span class="num">01</span>Overview</h2>
+        <div class="p-stat">Day <b>82</b> of 122</div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="k-label">Complete</div><div class="k-val" id="kComplete">54<small>%</small></div>
+          <div class="k-foot" id="kCompleteF">7 of 13 deliverables</div></div>
+        <div class="kpi"><div class="k-label">Delivered on time</div><div class="k-val">6<small>/7</small></div>
+          <div class="k-foot">86% on-time rate</div></div>
+        <div class="kpi alert" id="kAct"><div class="k-label">Needs your input</div><div class="k-val" id="kActVal">3</div>
+          <div class="k-foot" id="kActFoot">2 overdue</div></div>
+        <div class="kpi"><div class="k-label">Days remaining</div><div class="k-val">40</div>
+          <div class="k-foot">Ends 30 Sep 2026</div></div>
+      </div>
+      <div class="hr"></div>
+      <div class="sub-h">Where the days went</div>
+      <div class="timebar">
+        <div style="width:51.9%;background:#E85D04">41</div>
+        <div style="width:17.7%;background:#FBA05C">14</div>
+        <div style="width:30.4%;background:#C08A2E">24</div>
+      </div>
+      <div class="time-key">
+        <div><span class="dot" style="background:#E85D04"></span>Production<span class="kn">41 days</span></div>
+        <div><span class="dot" style="background:#FBA05C"></span>Revisions<span class="kn">14 days</span></div>
+        <div><span class="dot" style="background:#C08A2E"></span>Awaiting Almara<span class="kn">24 days</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="p-head">
+        <h2><span class="num">02</span>Delivery status</h2>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut">
+          <svg viewBox="0 0 168 168">
+            <g transform="rotate(-90 84 84)" fill="none" stroke-width="21" id="donutG"></g>
+          </svg>
+          <div class="center"><b>13</b><span>Deliverables</span></div>
+        </div>
+        <table class="brk" id="donutKey"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ROW 2 : ACTIONS ================= -->
+  <div class="grid">
+    <div class="panel" id="p-actions">
+      <div class="p-head">
+        <h2><span class="num">03</span>What we need from you</h2>
+        <div class="p-stat" id="actStat"><b>3</b> open &middot; oldest <b>37</b> days</div>
+      </div>
+      <div class="grid g-3" style="margin-top:0" id="actList"></div>
+    </div>
+  </div>
+
+  <!-- ================= ROW 3 : TIMELINE ================= -->
+  <div class="grid">
+    <div class="panel" id="p-timeline">
+      <div class="p-head">
+        <h2><span class="num">04</span>Timeline</h2>
+        <div class="p-stat"><b>2</b> deliverables behind plan</div>
+      </div>
+
+      <div class="sub-h" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Milestones</span>
+        <span class="legend" style="text-transform:none;letter-spacing:0;font-weight:400">
+          <span><i class="dot" style="background:#E85D04"></i>Delivered</span>
+          <span><i class="dot" style="background:#FBA05C"></i>In progress</span>
+          <span><i class="dot" style="background:#C08A2E"></i>Awaiting you</span>
+          <span><i class="dot" style="background:#DEDAD5"></i>Not started</span>
+        </span>
+      </div>
+      <svg viewBox="0 0 920 146" role="img" aria-label="Project milestones">
+        <line x1="602.3" y1="20" x2="602.3" y2="104" stroke="#C0BAB2" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="axis" x="602.3" y="15" text-anchor="middle">TODAY</text>
+        <rect x="40" y="60" width="840" height="16" rx="8" fill="#FDF2E9"/>
+        <rect x="40" y="60" width="416.5" height="16" rx="8" fill="#FBD9BE"/>
+        <g stroke="#FFFFFF" stroke-width="1.5">
+          <rect x="48.9"  y="63" width="10" height="10" rx="2" transform="rotate(45 53.9 68)"  fill="#E85D04"/>
+          <rect x="125.2" y="63" width="10" height="10" rx="2" transform="rotate(45 130.2 68)" fill="#E85D04"/>
+          <rect x="208.6" y="63" width="10" height="10" rx="2" transform="rotate(45 213.6 68)" fill="#E85D04"/>
+          <rect x="451.5" y="63" width="10" height="10" rx="2" transform="rotate(45 456.5 68)" fill="#E85D04"/>
+          <rect x="576.5" y="63" width="10" height="10" rx="2" transform="rotate(45 581.5 68)" fill="#C08A2E"/>
+          <rect x="666.7" y="63" width="10" height="10" rx="2" transform="rotate(45 671.7 68)" fill="#FBA05C"/>
+          <rect x="875"   y="63" width="10" height="10" rx="2" transform="rotate(45 880 68)"   fill="#DEDAD5"/>
+        </g>
+        <g font-family="Inter" font-size="11" fill="#191817">
+          <text x="40"    y="48" text-anchor="start">Kickoff</text>
+          <text x="213.6" y="48" text-anchor="middle">Moodboard sign-off</text>
+          <text x="581.5" y="48" text-anchor="middle">Mid-campaign review</text>
+          <text x="880"   y="48" text-anchor="end">Sept content &amp; wrap</text>
+          <text x="130.2" y="93" text-anchor="middle">Strategy approved</text>
+          <text x="456.5" y="93" text-anchor="middle">Jun &amp; Jul content live</text>
+          <text x="671.7" y="93" text-anchor="middle">Aug content live</text>
+        </g>
+        <line class="grid-line" x1="40" y1="114" x2="880" y2="114"/>
+        <g class="axis" text-anchor="middle">
+          <text x="40" y="132">1 Jun</text><text x="241.3" y="132">30 Jun</text>
+          <text x="456.5" y="132">31 Jul</text><text x="671.7" y="132">31 Aug</text>
+          <text x="875" y="132">30 Sep</text>
+        </g>
+      </svg>
+
+      <div class="hr"></div>
+
+      <div class="sub-h" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Progress against plan</span>
+        <span class="legend" style="text-transform:none;letter-spacing:0;font-weight:400">
+          <span><i class="bar" style="background:#FBD9BE;height:7px"></i>Planned</span>
+          <span><i class="bar" style="background:#C2410C;height:3px"></i>Actual</span>
+        </span>
+      </div>
+      <svg viewBox="0 0 920 258" role="img" aria-label="Planned versus actual cumulative deliverables">
+        <defs>
+          <linearGradient id="gP" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FBD9BE" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#FBD9BE" stop-opacity="0"/></linearGradient>
+          <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#C2410C" stop-opacity=".22"/>
+            <stop offset="100%" stop-color="#C2410C" stop-opacity="0"/></linearGradient>
+        </defs>
+        <g class="axis">
+          <line class="grid-line" x1="44" y1="220" x2="880" y2="220"/>
+          <line class="grid-line" x1="44" y1="158.5" x2="880" y2="158.5"/>
+          <line class="grid-line" x1="44" y1="96.9" x2="880" y2="96.9"/>
+          <line class="grid-line" x1="44" y1="35.4" x2="880" y2="35.4"/>
+          <text x="34" y="224" text-anchor="end">0</text><text x="34" y="162" text-anchor="end">4</text>
+          <text x="34" y="101" text-anchor="end">8</text><text x="34" y="39" text-anchor="end">12</text>
+        </g>
+        <path d="M44.0,220.0 C58.5,217.7 110.7,213.8 140.7,204.6 C170.8,195.4 196.7,170.0 244.4,158.5 C292.0,146.9 410.9,136.9 458.5,127.7 C506.2,118.5 530.1,106.2 562.2,96.9 C594.3,87.7 625.1,77.7 672.7,66.2 C720.4,54.6 848.9,26.9 880.0,20.0 L880.0,220 L44,220 Z" fill="url(#gP)"/>
+        <path d="M44.0,220.0 C58.5,217.7 110.7,213.8 140.7,204.6 C170.8,195.4 196.7,170.0 244.4,158.5 C292.0,146.9 410.9,134.6 458.5,127.7 C506.2,120.8 540.4,114.6 562.2,112.3 C583.9,110.0 597.4,112.3 603.6,112.3 L603.6,220 L44,220 Z" fill="url(#gA)"/>
+        <line x1="603.6" y1="20" x2="603.6" y2="220" stroke="#C0BAB2" stroke-width="1" stroke-dasharray="3 4"/>
+        <text class="axis" x="603.6" y="14" text-anchor="middle">TODAY</text>
+        <path d="M44.0,220.0 C58.5,217.7 110.7,213.8 140.7,204.6 C170.8,195.4 196.7,170.0 244.4,158.5 C292.0,146.9 410.9,136.9 458.5,127.7 C506.2,118.5 530.1,106.2 562.2,96.9 C594.3,87.7 625.1,77.7 672.7,66.2 C720.4,54.6 848.9,26.9 880.0,20.0" fill="none" stroke="#FBD9BE" stroke-width="7" stroke-linecap="round"/>
+        <path d="M44.0,220.0 C58.5,217.7 110.7,213.8 140.7,204.6 C170.8,195.4 196.7,170.0 244.4,158.5 C292.0,146.9 410.9,134.6 458.5,127.7 C506.2,120.8 540.4,114.6 562.2,112.3 C583.9,110.0 597.4,112.3 603.6,112.3" fill="none" stroke="#C2410C" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="603.6" cy="112.3" r="4.5" fill="#C2410C"/>
+        <line x1="624" y1="85.4" x2="624" y2="112.3" stroke="#C0392B" stroke-width="1.5"/>
+        <line x1="619" y1="85.4" x2="629" y2="85.4" stroke="#C0392B" stroke-width="1.5"/>
+        <line x1="619" y1="112.3" x2="629" y2="112.3" stroke="#C0392B" stroke-width="1.5"/>
+        <text x="636" y="94" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="700" fill="#C0392B">2 behind plan</text>
+        <text x="636" y="109" font-family="Inter" font-size="11" fill="#9C958D">9 planned &middot; 7 delivered</text>
+        <g class="axis" text-anchor="middle">
+          <text x="44" y="240">1 Jun</text><text x="244" y="240">30 Jun</text>
+          <text x="458" y="240">31 Jul</text><text x="673" y="240">31 Aug</text>
+          <text x="875" y="240">30 Sep</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ================= ROW 4 : DELIVERABLES ================= -->
+  <div class="grid">
+    <div class="panel" id="p-deliverables">
+      <div class="p-head">
+        <h2><span class="num">05</span>Deliverables &amp; versions</h2>
+        <div class="p-stat"><b>19</b> versions submitted</div>
+      </div>
+      <div class="tscroll">
+        <table class="data">
+          <thead><tr><th>Item</th><th class="c">Qty</th><th class="c">Status</th><th class="r">Date</th></tr></thead>
+          <tbody id="delBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ROW 5 : MEETINGS + MAIL ================= -->
+  <div class="grid g-2">
+    <div class="panel" id="p-meetings">
+      <div class="p-head">
+        <h2><span class="num">06</span>Meetings</h2>
+        <div class="p-stat"><b>8</b> action points &middot; <b>2</b> open</div>
+      </div>
+      <div id="mtList"></div>
+    </div>
+
+    <div class="panel" id="p-mail">
+      <div class="p-head">
+        <h2><span class="num">07</span>Email</h2>
+        <div class="p-stat"><b>8</b> messages logged</div>
+      </div>
+      <div id="mailList"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div>Cre8Trends &middot; Almara Wellness Club &middot; Doha, Qatar</div>
+    <div>Last updated 21 August 2026, 09:40 AST</div>
+  </div>
+</div>
+
+<div class="ov" id="ov"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   SAMPLE DATA — demo only
+   ============================================================ */
+const OUTLOOK = "data:image/png;base64,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";
+const TODAY = "21 Aug 2026";
+const AGENCY = "Cre8Trends", CLIENT = "Almara",
+      CLIENT_FULL = "Almara Wellness Club", APPROVER = "Layla Al Marri";
+
+const DELIVERABLES = [
+ {
+  "id": "d1",
+  "name": "Brand & content strategy",
+  "qty": "1/1",
+  "status": "delivered",
+  "date": "14 Jun 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "8 Jun 2026",
+    "state": "superseded",
+    "changes": [
+     "Four content pillars proposed",
+     "Indicative 25/25/25/25 monthly mix",
+     "Tone-of-voice guardrails"
+    ],
+    "feedback": [
+     "Pillar 4 overlaps with pillar 2",
+     "Add a recruitment angle \u2014 hiring across three sites"
+    ],
+    "files": [
+     "Strategy_v1.pdf"
+    ]
+   },
+   {
+    "n": 2,
+    "date": "14 Jun 2026",
+    "state": "approved",
+    "approvedOn": "14 Jun 2026",
+    "approvedBy": "Layla Al Marri",
+    "changes": [
+     "Pillars 2 and 4 merged",
+     "New 'People & Careers' pillar added",
+     "Mix reweighted to 40/25/20/15"
+    ],
+    "files": [
+     "Strategy_v2.pdf",
+     "Pillar_matrix.xlsx"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d2",
+  "name": "Moodboard & visual direction",
+  "qty": "1/1",
+  "status": "delivered",
+  "date": "26 Jun 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "18 Jun 2026",
+    "state": "superseded",
+    "changes": [
+     "Three palette directions",
+     "Two type pairings",
+     "12-frame reference grid"
+    ],
+    "feedback": [
+     "Palette B reads too cool",
+     "Too much stock photography",
+     "Show Arabic type beside Latin"
+    ],
+    "files": [
+     "Moodboard_v1.pdf"
+    ]
+   },
+   {
+    "n": 2,
+    "date": "23 Jun 2026",
+    "state": "superseded",
+    "changes": [
+     "Palette B warmed 8%",
+     "6 of 9 stock images swapped for owned photography",
+     "Almarai / Inter pairing added at three sizes"
+    ],
+    "feedback": [
+     "Logo crowded on dark frames",
+     "Drop the third palette"
+    ],
+    "files": [
+     "Moodboard_v2.pdf"
+    ]
+   },
+   {
+    "n": 3,
+    "date": "26 Jun 2026",
+    "state": "approved",
+    "approvedOn": "26 Jun 2026",
+    "approvedBy": "Layla Al Marri",
+    "changes": [
+     "Logo clearance increased to 1.5\u00d7",
+     "Third palette removed",
+     "One-page usage sheet added"
+    ],
+    "files": [
+     "Moodboard_v3.pdf",
+     "Usage_sheet.pdf"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d3",
+  "name": "June posts",
+  "qty": "15/15",
+  "status": "delivered",
+  "date": "30 Jun 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "21 Jun 2026",
+    "state": "superseded",
+    "changes": [
+     "All 15 June posts",
+     "Captions English-first with Arabic secondary"
+    ],
+    "feedback": [
+     "Posts 4 and 9 show old service hours",
+     "Post 7 needs Arabic first"
+    ],
+    "files": [
+     "June_grid_v1.pdf"
+    ]
+   },
+   {
+    "n": 2,
+    "date": "29 Jun 2026",
+    "state": "approved",
+    "approvedOn": "30 Jun 2026",
+    "approvedBy": "Layla Al Marri",
+    "changes": [
+     "Service hours corrected on posts 4 and 9",
+     "Arabic-first rule applied to all bilingual captions"
+    ],
+    "files": [
+     "June_grid_v2.pdf",
+     "June_assets.zip"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d4",
+  "name": "June reels",
+  "qty": "2/2",
+  "status": "delivered",
+  "date": "30 Jun 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "27 Jun 2026",
+    "state": "approved",
+    "approvedOn": "30 Jun 2026",
+    "approvedBy": "Layla Al Marri",
+    "changes": [
+     "Cut to 9:16",
+     "Licensed audio",
+     "Burned-in Arabic subtitles"
+    ],
+    "files": [
+     "June_reels.zip"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d5",
+  "name": "July posts",
+  "qty": "15/15",
+  "status": "delivered",
+  "date": "31 Jul 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "22 Jul 2026",
+    "state": "superseded",
+    "changes": [
+     "Summer service-hours theme agreed 2 July"
+    ],
+    "feedback": [
+     "Swap the two Doha Festival City references \u2014 closed until October"
+    ],
+    "files": [
+     "July_grid_v1.pdf"
+    ]
+   },
+   {
+    "n": 2,
+    "date": "29 Jul 2026",
+    "state": "approved",
+    "approvedOn": "31 Jul 2026",
+    "approvedBy": "Layla Al Marri",
+    "changes": [
+     "Replaced with Al Khor and Lusail locations",
+     "Two frames re-shot to match"
+    ],
+    "files": [
+     "July_grid_v2.pdf",
+     "July_assets.zip"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d6",
+  "name": "July reels",
+  "qty": "2/2",
+  "status": "delivered",
+  "date": "31 Jul 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "24 Jul 2026",
+    "state": "superseded",
+    "changes": [
+     "First cut of all reels"
+    ],
+    "feedback": [
+     "Reel 2 runs long \u2014 trim under 30s",
+     "Rest approved"
+    ],
+    "files": [
+     "July_reels_v1.zip"
+    ]
+   },
+   {
+    "n": 2,
+    "date": "28 Jul 2026",
+    "state": "approved",
+    "approvedOn": "28 Jul 2026",
+    "approvedBy": "Layla Al Marri",
+    "changes": [
+     "Reel 2 recut 41s \u2192 27s",
+     "Intro tightened, second B-roll sequence dropped"
+    ],
+    "files": [
+     "July_reels_v2.zip"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d7",
+  "name": "Monthly reports \u2014 Jun, Jul",
+  "qty": "2/2",
+  "status": "delivered",
+  "date": "5 Aug 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "5 Aug 2026",
+    "state": "approved",
+    "approvedOn": "5 Aug 2026",
+    "approvedBy": "Layla Al Marri",
+    "changes": [
+     "Rebuilt template agreed 2 July",
+     "Reach, engagement, follower delta",
+     "Top three posts per month"
+    ],
+    "files": [
+     "Report_June.pdf",
+     "Report_July.pdf"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d8",
+  "name": "August posts",
+  "qty": "10/15",
+  "status": "awaiting",
+  "date": "31 Aug 2026",
+  "versions": [
+   {
+    "n": 1,
+    "date": "17 Aug 2026",
+    "state": "live",
+    "changes": [
+     "First 10 of 15 August posts",
+     "Two National Day teasers",
+     "First use of the 'People & Careers' pillar"
+    ],
+    "files": [
+     "Aug_grid_v1.pdf",
+     "Aug_captions.docx"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "d9",
+  "name": "Mid-campaign review",
+  "qty": "0/1",
+  "status": "awaiting",
+  "date": "18 Aug 2026",
+  "versions": []
+ },
+ {
+  "id": "d10",
+  "name": "August reels",
+  "qty": "1/2",
+  "status": "progress",
+  "date": "31 Aug 2026",
+  "versions": []
+ },
+ {
+  "id": "d11",
+  "name": "September posts",
+  "qty": "0/15",
+  "status": "notstarted",
+  "date": "30 Sep 2026",
+  "versions": []
+ },
+ {
+  "id": "d12",
+  "name": "September reels",
+  "qty": "0/2",
+  "status": "notstarted",
+  "date": "30 Sep 2026",
+  "versions": []
+ },
+ {
+  "id": "d13",
+  "name": "Campaign wrap film",
+  "qty": "0/1",
+  "status": "notstarted",
+  "date": "30 Sep 2026",
+  "versions": []
+ }
+];
+
+const MEETINGS = [
+ {
+  "id": "m5",
+  "pending": true,
+  "title": "Mid-campaign review",
+  "note": "Three slots proposed 12 Aug \u2014 awaiting your confirmation"
+ },
+ {
+  "id": "m4",
+  "d": "19",
+  "mo": "Jul",
+  "date": "19 July 2026",
+  "title": "Ramadan campaign \u2014 early scoping",
+  "mins": 30,
+  "agency": [
+   [
+    "Rayan Mansour",
+    "Account Director"
+   ]
+  ],
+  "client": [
+   [
+    "Layla Al Marri",
+    "Marketing Manager"
+   ]
+  ],
+  "decisions": [
+   "Ramadan work to be scoped as a separate engagement.",
+   "Indicative window agreed as January to March 2027.",
+   "Cre8Trends to lead creative and production; media buying stays with the existing partner."
+  ],
+  "aps": [
+   [
+    "Draft Ramadan scope outline",
+    "agency",
+    "31 Aug 2026",
+    "open"
+   ]
+  ]
+ },
+ {
+  "id": "m3",
+  "d": "2",
+  "mo": "Jul",
+  "date": "2 July 2026",
+  "title": "July planning",
+  "mins": 60,
+  "agency": [
+   [
+    "Rayan Mansour",
+    "Account Director"
+   ],
+   [
+    "Dana Haddad",
+    "Creative Lead"
+   ]
+  ],
+  "client": [
+   [
+    "Layla Al Marri",
+    "Marketing Manager"
+   ],
+   [
+    "Khalid Nasser",
+    "Operations"
+   ]
+  ],
+  "decisions": [
+   "July theme locked as summer service hours across all four sites.",
+   "All reels move to 9:16 only \u2014 1:1 cuts discontinued.",
+   "Monthly reporting moves to the 5th of each month.",
+   "Two revision rounds per deliverable confirmed as the working norm."
+  ],
+  "aps": [
+   [
+    "Provide Q4 product launch dates",
+    "client",
+    "15 Jul 2026",
+    "od"
+   ],
+   [
+    "Rebuild reporting template",
+    "agency",
+    "5 Aug 2026",
+    "done"
+   ]
+  ]
+ },
+ {
+  "id": "m2",
+  "d": "23",
+  "mo": "Jun",
+  "date": "23 June 2026",
+  "title": "Moodboard review",
+  "mins": 45,
+  "agency": [
+   [
+    "Dana Haddad",
+    "Creative Lead"
+   ]
+  ],
+  "client": [
+   [
+    "Layla Al Marri",
+    "Marketing Manager"
+   ]
+  ],
+  "decisions": [
+   "Palette narrowed from three options to two.",
+   "Arabic and Latin type pairing confirmed as Almarai with Inter.",
+   "Stock photography capped at 30% of any monthly grid."
+  ],
+  "aps": [
+   [
+    "Rework logo clearance to 1.5\u00d7",
+    "agency",
+    "26 Jun 2026",
+    "done"
+   ],
+   [
+    "Supply owned photography \u2014 minimum 20 images",
+    "client",
+    "30 Jun 2026",
+    "done"
+   ]
+  ]
+ },
+ {
+  "id": "m1",
+  "d": "3",
+  "mo": "Jun",
+  "date": "3 June 2026",
+  "title": "Kickoff",
+  "mins": 90,
+  "agency": [
+   [
+    "Rayan Mansour",
+    "Account Director"
+   ],
+   [
+    "Dana Haddad",
+    "Creative Lead"
+   ]
+  ],
+  "client": [
+   [
+    "Layla Al Marri",
+    "Marketing Manager"
+   ],
+   [
+    "Khalid Nasser",
+    "Operations"
+   ]
+  ],
+  "decisions": [
+   "Engagement runs 1 June to 30 September 2026.",
+   "Monthly output fixed at 15 branded posts, 2 reels and 10 stories.",
+   "Approval window set at 3 working days from submission.",
+   "Layla Al Marri is the sole approver.",
+   "Two revision rounds included per deliverable."
+  ],
+  "aps": [
+   [
+    "Share brand asset pack",
+    "client",
+    "8 Jun 2026",
+    "done"
+   ],
+   [
+    "Set up shared drive",
+    "agency",
+    "6 Jun 2026",
+    "done"
+   ],
+   [
+    "Draft content pillars",
+    "agency",
+    "12 Jun 2026",
+    "done"
+   ]
+  ]
+ }
+];
+
+const MAILS = [
+ [
+  "August grid \u2014 posts for approval",
+  "Rayan Mansour",
+  "rayan@cre8trends.com",
+  "17 Aug 2026"
+ ],
+ [
+  "Mid-campaign review \u2014 three slots proposed",
+  "Rayan Mansour",
+  "rayan@cre8trends.com",
+  "12 Aug 2026"
+ ],
+ [
+  "July performance report",
+  "Dana Haddad",
+  "dana@cre8trends.com",
+  "5 Aug 2026"
+ ],
+ [
+  "Re: July reels \u2014 all approved",
+  "Layla Al Marri",
+  "layla@almarawellness.qa",
+  "28 Jul 2026"
+ ],
+ [
+  "Ramadan campaign \u2014 early thoughts",
+  "Layla Al Marri",
+  "layla@almarawellness.qa",
+  "19 Jul 2026"
+ ],
+ [
+  "June report and July calendar",
+  "Dana Haddad",
+  "dana@cre8trends.com",
+  "2 Jul 2026"
+ ],
+ [
+  "Moodboard v3 \u2014 signed off",
+  "Layla Al Marri",
+  "layla@almarawellness.qa",
+  "26 Jun 2026"
+ ],
+ [
+  "Content pillars \u2014 final deck",
+  "Rayan Mansour",
+  "rayan@cre8trends.com",
+  "14 Jun 2026"
+ ]
+];
+
+let ACTIONS = [
+ {
+  "id": "a1",
+  "title": "Approve the August grid",
+  "meta": "Version 1 submitted 17 Aug",
+  "age": "1 day overdue",
+  "level": "od",
+  "link": "d8",
+  "cta": "Review version 1"
+ },
+ {
+  "id": "a2",
+  "title": "Provide Q4 product launch dates",
+  "meta": "From July planning, 2 Jul &middot; due 15 Jul",
+  "age": "37 days overdue",
+  "level": "od",
+  "link": "m3",
+  "cta": "Open minutes"
+ },
+ {
+  "id": "a3",
+  "title": "Confirm a mid-campaign review slot",
+  "meta": "Three slots proposed by email, 12 Aug",
+  "age": "9 days open",
+  "level": "due",
+  "link": "m5",
+  "cta": "See proposal"
+ }
+];
+
+/* ---- DEMO SUBMIT — no backend. Swap this one function later. ---- */
+function submitClientResponse(payload){
+  console.log("Client response (demo — not sent):", payload);
+  return Promise.resolve({ok:true});
+}
+
+const STATUS = {
+  delivered:["Delivered","#E85D04"], progress:["In progress","#FBA05C"],
+  awaiting:["Awaiting you","#C08A2E"], notstarted:["Not started","#DEDAD5"]
+};
+const DONUT_LABEL = {delivered:"Delivered", progress:"In progress",
+  awaiting:"Awaiting your approval", notstarted:"Not started"};
+const CHEV = '<svg width="7" height="10" viewBox="0 0 9 12" fill="none"><path d="M1.5 1L7 6l-5.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove("on"),3600);
+}
+
+/* ---------- ACTIONS ---------- */
+function renderActions(){
+  const el = document.getElementById("actList");
+  if(!ACTIONS.length){
+    el.className = "grid";
+    el.innerHTML = `<div class="allclear">Nothing outstanding — thank you</div>`;
+  } else {
+    el.className = "grid g-3";
+    el.style.marginTop = "0";
+    el.innerHTML = ACTIONS.map(a=>`
+      <div class="act-card ${a.level}">
+        <span class="age ${a.level}">${esc(a.age)}</span>
+        <div class="act-title">${esc(a.title)}</div>
+        <div class="act-meta">${a.meta}</div>
+        <button class="btn btn-g" data-jump="${a.link}">${esc(a.cta)}</button>
+      </div>`).join("");
+  }
+  const od = ACTIONS.filter(a=>a.level==="od").length;
+  document.getElementById("navAct").textContent = ACTIONS.length;
+  document.getElementById("kActVal").textContent = ACTIONS.length;
+  document.getElementById("kActFoot").textContent = od ? od+" overdue" : "nothing overdue";
+  document.getElementById("kAct").classList.toggle("alert", ACTIONS.length>0);
+  const oldest = ACTIONS.reduce((m,a)=>Math.max(m,parseInt(a.age)||0),0);
+  document.getElementById("actStat").innerHTML = ACTIONS.length
+    ? `<b>${ACTIONS.length}</b> open &middot; oldest <b>${oldest}</b> days` : `<b>0</b> open`;
+}
+const clearAction = id => { ACTIONS = ACTIONS.filter(a=>a.id!==id); renderActions(); };
+
+/* ---------- DONUT ---------- */
+function renderDonut(){
+  const C = 2*Math.PI*70, total = DELIVERABLES.length;
+  const order = ["delivered","progress","awaiting","notstarted"];
+  const counts = Object.fromEntries(order.map(k=>[k,DELIVERABLES.filter(d=>d.status===k).length]));
+  let off=0, segs="", key="";
+  order.forEach(k=>{
+    const len = C*counts[k]/total, col = STATUS[k][1];
+    if(counts[k]) segs += `<circle cx="84" cy="84" r="70" stroke="${col}"
+      stroke-dasharray="${len.toFixed(1)} ${(C-len).toFixed(1)}" stroke-dashoffset="${(-off).toFixed(1)}"
+      style="transition:stroke-dasharray .5s ease,stroke-dashoffset .5s ease"/>`;
+    off += len;
+    key += `<tr><td><span class="dot" style="background:${col}"></span>${DONUT_LABEL[k]}</td><td>${counts[k]}</td></tr>`;
+  });
+  document.getElementById("donutG").innerHTML = segs;
+  document.getElementById("donutKey").innerHTML = key;
+  document.getElementById("kComplete").innerHTML = Math.round(counts.delivered/total*100)+'<small>%</small>';
+  document.getElementById("kCompleteF").textContent = counts.delivered+" of "+total+" deliverables";
+}
+
+/* ---------- DELIVERABLES ---------- */
+function versionHTML(d,v){
+  const s = v.state;
+  const tag = s==="approved" ? `<span class="tag approved">Approved ${esc(v.approvedOn)}</span>`
+            : s==="live"      ? `<span class="tag live">Awaiting your review</span>`
+            : s==="commented" ? `<span class="tag commented">Changes requested</span>`
+            : `<span class="tag">Superseded</span>`;
+  const list = (label,arr) => (arr&&arr.length)
+    ? `<div class="vb"><b>${label}</b><ul class="blist">${arr.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>` : "";
+  let body = list("Changes", v.changes) + list("Your feedback", v.feedback);
+  if(v.myComment) body += list("Your comment &middot; "+TODAY, [v.myComment]);
+  if(v.files && v.files.length) body += `<div class="vfiles">${v.files.map(f=>`<span class="file">${esc(f)}</span>`).join("")}</div>`;
+  const meta = esc(v.date) + (s==="approved"&&v.approvedBy ? " &middot; "+esc(v.approvedBy) : "");
+
+  const review = s!=="live" ? "" : `
+    <div class="review">
+      <div class="rv-q">Is this version approved?</div>
+      <div data-stage="idle" class="btnrow">
+        <button class="btn btn-p" data-approve="${d.id}|${v.n}">Approve version ${v.n}</button>
+        <button class="btn btn-g" data-comment="${d.id}|${v.n}">Leave a comment</button>
+      </div>
+      <div class="hide" data-stage="confirm">
+        <div class="rv-q">Approve version ${v.n} of ${esc(d.name)}? ${AGENCY} will be notified.</div>
+        <div class="btnrow">
+          <button class="btn btn-p" data-confirm="${d.id}|${v.n}">Yes, approve</button>
+          <button class="btn btn-l" data-cancel="1">Cancel</button>
+        </div>
+      </div>
+      <div class="hide" data-stage="comment">
+        <textarea placeholder="What needs to change before this can be approved?"></textarea>
+        <div class="btnrow">
+          <button class="btn btn-p" data-send="${d.id}|${v.n}">Send to ${AGENCY}</button>
+          <button class="btn btn-l" data-cancel="1">Cancel</button>
+        </div>
+      </div>
+    </div>`;
+  return `<div class="ver ${s}">
+    <div class="ver-top"><span class="ver-n">Version ${v.n}</span>
+      <span class="ver-d">${meta}</span>${tag}</div>
+    <div class="ver-body">${body}</div>${review}</div>`;
+}
+
+function renderDeliverables(){
+  document.getElementById("delBody").innerHTML = DELIVERABLES.map(d=>{
+    const has = d.versions.length>0;
+    const chev = has ? `<span class="chev">${CHEV}</span>` : `<span class="chev"></span>`;
+    const vc = has ? `<span class="vcount">${d.versions.length}v</span>` : "";
+    const head = `<tr class="${has?"head-row":""}" data-row="${d.id}">
+      <td><div class="nameflex">${chev}<span class="dname">${esc(d.name)}${vc}</span></div></td>
+      <td class="c qty">${esc(d.qty)}</td>
+      <td class="c"><span class="st ${d.status}" data-st="${d.id}">${STATUS[d.status][0]}</span></td>
+      <td class="r date">${esc(d.date)}</td></tr>`;
+    const exp = has ? `<tr class="exp hide" data-exp="${d.id}"><td colspan="4"><div class="exp-in">
+      <div class="vrail">${d.versions.map(v=>versionHTML(d,v)).join("")}</div></div></td></tr>` : "";
+    return head+exp;
+  }).join("");
+}
+
+/* ---------- MEETINGS (list + modal) ---------- */
+function renderMeetings(){
+  document.getElementById("mtList").innerHTML = MEETINGS.map(m=>{
+    if(m.pending) return `<div class="mrow tbc">
+      <div class="mdate">TBC<span>&nbsp;</span></div>
+      <div class="mt-t"><div class="t">${esc(m.title)}</div><div class="m">${esc(m.note)}</div></div>
+      <span class="mpill tbc">Not scheduled</span><span class="chev"></span></div>`;
+    const open = m.aps.filter(a=>a[3]!=="done").length;
+    return `<button class="mrow" data-mt="${m.id}">
+      <div class="mdate">${esc(m.d)} ${esc(m.mo)}<span>2026</span></div>
+      <div class="mt-t"><div class="t">${esc(m.title)}</div>
+        <div class="m">${m.mins} min &middot; ${m.decisions.length} decision${m.decisions.length>1?"s":""} &middot; ${m.aps.length} action${m.aps.length>1?"s":""}</div></div>
+      <span class="mpill ${open?"open":""}">${open?open+" open":"All closed"}</span>
+      <span class="chev">${CHEV}</span></button>`;
+  }).join("");
+}
+
+function openModal(html){
+  const ov = document.getElementById("ov");
+  document.getElementById("modal").innerHTML = html;
+  ov.classList.add("on");
+  requestAnimationFrame(()=>ov.classList.add("vis"));
+}
+function closeModal(){
+  const ov = document.getElementById("ov");
+  ov.classList.remove("vis");
+  setTimeout(()=>ov.classList.remove("on"),180);
+}
+function meetingModal(id){
+  const m = MEETINGS.find(x=>x.id===id);
+  if(!m) { document.getElementById("p-meetings").scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  if(m.pending){ document.getElementById("p-meetings").scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  const chips = l => l.map(([n,r])=>`<span class="chip">${esc(n)}<span>${esc(r)}</span></span>`).join("");
+  const APLB = {done:"Done", open:"Open", od:"Overdue"};
+  openModal(`
+    <div class="m-head">
+      <div><h3>${esc(m.title)}</h3><div class="ms">${esc(m.date)} &middot; ${m.mins} minutes &middot; ${m.agency.length+m.client.length} attendees</div></div>
+      <button class="xbtn" data-close="1"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="m-body">
+      <div><div class="sub-h">Attendees</div>
+        <div class="who-cols">
+          <div><div class="lbl">${AGENCY}</div><div class="chips">${chips(m.agency)}</div></div>
+          <div><div class="lbl">${CLIENT_FULL}</div><div class="chips">${chips(m.client)}</div></div>
+        </div></div>
+      <div><div class="sub-h">Decisions made</div>
+        <ul class="dec">${m.decisions.map(d=>`<li>${esc(d)}</li>`).join("")}</ul></div>
+      <div><div class="sub-h">Action points</div>
+        <div class="apl">${m.aps.map(([t,o,due,st])=>`<div class="ap-item">
+          <div class="ap-t">${esc(t)}<em>Due ${esc(due)}</em></div>
+          <span class="owner ${o==="agency"?"a":"c"}">${o==="agency"?AGENCY:CLIENT}</span>
+          <span class="apst ${st}">${APLB[st]}</span></div>`).join("")}</div></div>
+    </div>`);
+}
+
+/* ---------- MAIL ---------- */
+function renderMail(){
+  document.getElementById("mailList").innerHTML = MAILS.map(([s,n,e,d])=>`
+    <div class="mail">
+      <img class="mail-ico" src="${OUTLOOK}" alt="">
+      <div class="mail-b"><div class="mail-s">${esc(s)}</div>
+        <div class="mail-f">${esc(n)} &middot; ${esc(e)}</div></div>
+      <div class="mail-d">${esc(d)}</div></div>`).join("");
+}
+
+/* ---------- INTERACTION ---------- */
+function openDeliverable(id,scroll){
+  const row = document.querySelector(`[data-row="${id}"]`), exp = document.querySelector(`[data-exp="${id}"]`);
+  if(!row||!exp) return;
+  row.classList.add("open"); exp.classList.remove("hide");
+  if(scroll) setTimeout(()=>row.scrollIntoView({behavior:"smooth",block:"center"}),60);
+}
+const stage = (box,name)=>box.querySelectorAll("[data-stage]")
+  .forEach(s=>s.classList.toggle("hide", s.dataset.stage!==name));
+function setStatus(id,status){
+  const d = DELIVERABLES.find(x=>x.id===id); if(!d) return;
+  d.status = status; renderDonut();
+  const el = document.querySelector(`[data-st="${id}"]`);
+  if(el){ el.className = "st "+status; el.setAttribute("data-st",id); el.textContent = STATUS[status][0]; }
+}
+
+document.addEventListener("click", e=>{
+  const t = e.target;
+
+  if(t.closest("[data-close]") || t.id==="ov"){ closeModal(); return; }
+
+  const jump = t.closest("[data-jump]");
+  if(jump){
+    const id = jump.dataset.jump;
+    id.startsWith("d") ? openDeliverable(id,true) : meetingModal(id);
+    return;
+  }
+  const mt = t.closest("[data-mt]");
+  if(mt){ meetingModal(mt.dataset.mt); return; }
+
+  const row = t.closest("tr.head-row");
+  if(row){
+    const exp = document.querySelector(`[data-exp="${row.dataset.row}"]`);
+    if(exp){ row.classList.toggle("open"); exp.classList.toggle("hide"); }
+    return;
+  }
+  const ap = t.closest("[data-approve]"); if(ap){ stage(ap.closest(".review"),"confirm"); return; }
+  const cm = t.closest("[data-comment]");
+  if(cm){ const b = cm.closest(".review"); stage(b,"comment");
+    setTimeout(()=>b.querySelector("textarea").focus(),40); return; }
+  const cn = t.closest("[data-cancel]"); if(cn){ stage(cn.closest(".review"),"idle"); return; }
+
+  const conf = t.closest("[data-confirm]");
+  if(conf){
+    const [did,vn] = conf.dataset.confirm.split("|");
+    const d = DELIVERABLES.find(x=>x.id===did), v = d.versions.find(x=>x.n==vn);
+    submitClientResponse({deliverable:d.name, version:v.n, action:"approve"});
+    v.state="approved"; v.approvedOn=TODAY; v.approvedBy=APPROVER;
+    setStatus(did,"delivered"); clearAction("a1");
+    const box = conf.closest(".review"), ver = box.closest(".ver");
+    box.classList.add("done");
+    box.innerHTML = `<div class="sent">&#10003;<div>Approved and sent to ${AGENCY}
+      <small>Version ${v.n} &middot; ${TODAY} &middot; ${APPROVER}</small></div></div>`;
+    ver.className = "ver approved";
+    ver.querySelector(".tag").outerHTML = `<span class="tag approved">Approved ${TODAY}</span>`;
+    toast("Version "+v.n+" approved — "+AGENCY+" has been notified");
+    return;
+  }
+  const send = t.closest("[data-send]");
+  if(send){
+    const box = send.closest(".review"), ta = box.querySelector("textarea");
+    const txt = ta.value.trim();
+    if(!txt){ ta.focus(); toast("Add a comment first"); return; }
+    const [did,vn] = send.dataset.send.split("|");
+    const d = DELIVERABLES.find(x=>x.id===did), v = d.versions.find(x=>x.n==vn);
+    submitClientResponse({deliverable:d.name, version:v.n, action:"comment", comment:txt});
+    v.state="commented"; v.myComment=txt; clearAction("a1");
+    const ver = box.closest(".ver");
+    box.classList.add("done");
+    box.innerHTML = `<div class="sent">&#10003;<div>Comment sent to ${AGENCY}
+      <small>${TODAY} &middot; a revised version will follow</small></div></div>`;
+    ver.className = "ver commented";
+    ver.querySelector(".tag").outerHTML = `<span class="tag commented">Changes requested</span>`;
+    ver.querySelector(".ver-body").insertAdjacentHTML("beforeend",
+      `<div class="vb"><b>Your comment &middot; ${TODAY}</b><ul class="blist"><li>${esc(txt)}</li></ul></div>`);
+    toast("Comment sent — "+AGENCY+" will respond");
+    return;
+  }
+});
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+
+/* ---------- SCROLLSPY ---------- */
+const links = [...document.querySelectorAll(".secnav a")];
+const secs  = links.map(a=>document.querySelector(a.getAttribute("href")));
+function spy(){
+  const y = window.scrollY + 110;
+  let i = 0;
+  secs.forEach((s,j)=>{ if(s && s.offsetTop <= y) i = j; });
+  if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 6) i = links.length-1;
+  links.forEach((l,j)=>l.classList.toggle("on", j===i));
+}
+window.addEventListener("scroll", spy, {passive:true});
+window.addEventListener("resize", spy);
+
+renderActions(); renderDonut(); renderDeliverables(); renderMeetings(); renderMail();
+</script>
+</body>
+</html>
