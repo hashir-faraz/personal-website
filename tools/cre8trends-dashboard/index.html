@@ -4,20 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Al Nakheel Group — Meridian Studio</title>
+<meta name="description" content="Project dashboard: deliverables, timeline, correspondence and finance in one link.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Al Nakheel Group — Project Dashboard">
+<meta property="og:description" content="Deliverables, timeline, approvals and finance — everything on your project, in one link.">
+<meta property="og:url" content="https://hashirfaraz.com/tools/cre8trends-dashboard/">
+<meta property="og:image" content="https://hashirfaraz.com/tools/cre8trends-dashboard/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   /* ---- BRAND ---- */
-  --accent:#0E4F4A; --accent-2:#14655E; --accent-3:#2E8078; --accent-4:#6FBFB5;
-  --accent-5:#C7E5E1; --accent-6:#EDF6F4;
+  --accent:#3533CD; --accent-2:#2A28A8; --accent-3:#5C5AE0; --accent-4:#9C9BEC;
+  --accent-5:#CFCEF7; --accent-6:#EFEFFD;
   --ink:#191817; --ink-2:#6B6560; --ink-3:#9C958D;
   --bg:#FAF8F5; --card:#FFFFFF; --line:#E8E4DE; --tile:#FAF8F5; --muted:#DDD8D2;
   --good:#1F8A4C; --good-bg:#E9F4ED;
   --wait:#C08A2E; --wait-bg:#FCF3E3; --wait-ink:#8F6416;
   --late:#C0523C; --late-bg:#FBEDEA;
-  --side:#0E4F4A;
+  --side:#1A1940;
   --R:18px; --r:12px; --tagW:112px; --tagH:26px; --SIDE:236px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -44,7 +53,15 @@ svg{display:block}
   stroke-linecap:round;stroke-linejoin:round}
 .nav a:hover{background:rgba(255,255,255,.07);color:#fff}
 .nav a.on{background:var(--accent-2);color:#fff;font-weight:600}
-.side-foot{margin-top:auto;color:rgba(255,255,255,.35);font-size:11px;padding:0 4px;line-height:1.6}
+.side-site{margin-top:auto;display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);
+  color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;transition:.15s}
+.side-site:hover{background:rgba(255,255,255,.12);color:#fff}
+.side-site svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.side-site .ss-t{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.side-site em{font-style:normal;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.6}
+.side-site b{font-weight:700;font-size:13px;white-space:nowrap}
+.side-foot{color:rgba(255,255,255,.35);font-size:11px;padding:0 4px;line-height:1.6}
 .burger{display:none}
 
 /* ================= LAYOUT ================= */
@@ -264,6 +281,7 @@ textarea:focus{outline:none;border-color:var(--accent-4);background:#fff}
   .side{position:sticky;top:0;left:0;right:0;bottom:auto;width:100%;flex-direction:row;align-items:center;
     padding:12px 14px;gap:12px}
   .side-client,.side-foot{display:none}
+  .side-site{margin-top:0;order:9;font-size:12px;padding:9px 11px}
   .nav{position:absolute;top:100%;left:0;right:0;background:var(--side);padding:8px 14px 16px;gap:2px}
   .nav.shut{display:none}
   .burger{display:grid;place-items:center;width:38px;height:38px;border-radius:9px;margin-left:auto;
@@ -298,6 +316,10 @@ textarea:focus{outline:none;border-color:var(--accent-4);background:#fff}
     <a href="#s-correspondence"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Correspondence</a>
     <a href="#s-finance"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>Finance</a>
   </nav>
+  <a class="side-site" href="https://hashirfaraz.com" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg>
+    <span class="ss-t"><em>Dashboard by</em><b>Hashir Faraz</b></span>
+  </a>
   <div class="side-foot">Updated 21 Aug 2026<br>09:40 AST</div>
 </aside>
 
@@ -398,8 +420,8 @@ const RUNS = [
   ["awaiting",6],["production",3],["awaiting",3]
 ];
 const OWNER = {
-  production:{label:"Production",       color:"#14655E", hex:"#14655E"},
-  revision:  {label:"Revisions",        color:"#6FBFB5", hex:"#6FBFB5"},
+  production:{label:"Production",       color:"#3533CD", hex:"#3533CD"},
+  revision:  {label:"Revisions",        color:"#9C9BEC", hex:"#9C9BEC"},
   awaiting:  {label:"Awaiting "+CLIENT, color:"#C08A2E", hex:"#C08A2E"}
 };
 
@@ -413,7 +435,7 @@ const OV_CARDS = [
 const STAGE = {
   approved:  {label:"Approved",    hex:"#1F8A4C"},
   revisions: {label:"Revisions",   hex:"#C08A2E"},
-  progress:  {label:"In progress", hex:"#14655E"},
+  progress:  {label:"In progress", hex:"#3533CD"},
   notstarted:{label:"Not started", hex:"#DDD8D2"}
 };
 const STAGE_ORDER = ["notstarted","progress","revisions","approved"];
@@ -770,9 +792,9 @@ function renderFinance(){
     const lbl=["1 Jun","30 Jun","31 Jul","31 Aug","30 Sep"][i];
     g += `<text class="axis" x="${xf(d).toFixed(1)}" y="${Y0+21}" text-anchor="${i===0?"start":i===4?"end":"middle"}">${lbl}</text>`;
   });
-  g += `<path d="${path(DELIVERED)}" fill="none" stroke="#6FBFB5" stroke-width="2.5" stroke-linecap="round"/>`;
-  g += `<path d="${path(PAID)}" fill="none" stroke="#0E4F4A" stroke-width="2.5" stroke-linecap="round"/>`;
-  [[DELIVERED,"#6FBFB5"],[PAID,"#0E4F4A"]].forEach(([s,c])=>{
+  g += `<path d="${path(DELIVERED)}" fill="none" stroke="#9C9BEC" stroke-width="2.5" stroke-linecap="round"/>`;
+  g += `<path d="${path(PAID)}" fill="none" stroke="#2A28A8" stroke-width="2.5" stroke-linecap="round"/>`;
+  [[DELIVERED,"#9C9BEC"],[PAID,"#2A28A8"]].forEach(([s,c])=>{
     const last=s[s.length-1];
     g += `<circle cx="${xf(last[0]).toFixed(1)}" cy="${yf(last[1]).toFixed(1)}" r="4.5" fill="${c}"/>`;
   });
