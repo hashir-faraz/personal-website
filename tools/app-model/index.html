@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matana On Call — Financial Model</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F6F2EE;
+  --surface: #FFFFFF;
+  --surface2: #FBF7F3;
+  --border: #EAE1D6;
+  --text: #211C18;
+  --muted: #8C8073;
+  --muted2: #B8AD9E;
+  --accent: #DD5511;
+  --accent2: #FF7A33;
+  --accent-soft: #FDECE0;
+  --accent-soft2: #F8C7A3;
+  --navy: #26344A;
+  --navy-soft: #ECEFF4;
+  --navy-soft2: #D7DEEA;
+  --focus: #3E7CB1;
+  --focus-soft: #E8F0F6;
+  --red: #C81E3A;
+  --red-soft: #FBEAEE;
+  --green: #1B8A5A;
+  --green-soft: #E9F7EF;
+  --amber: #B45309;
+  --amber-soft: #FFFBEB;
+  --yellow-fill: #FDF1C7;
+  --yellow-border: #ECC152;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 13.5px; min-height: 100vh; }
+.wrap { max-width: 1480px; margin: 0 auto; padding: 36px 28px 100px; }
+
+/* HERO */
+.hero { background: linear-gradient(135deg, var(--accent) 0%, #C8470D 100%); border-radius: 20px; padding: 36px 44px; margin-bottom: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -80px; right: -60px; width: 320px; height: 320px; background: rgba(255,255,255,0.10); border-radius: 50%; }
+.hero::after { content: ''; position: absolute; bottom: -100px; right: 120px; width: 200px; height: 200px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+.hero-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.hero-brand-mark { width: 26px; height: 26px; border-radius: 7px; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; color: #fff; }
+.hero-brand-name { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.78); }
+.hero-inner { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+.hero h1 { font-family: 'DM Sans', sans-serif; font-size: 30px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 6px; }
+.hero-sub { color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.6; max-width: 540px; }
+.hero-kpis { display: flex; gap: 12px; flex-wrap: wrap; }
+.hkpi { background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.20); border-radius: 12px; padding: 12px 18px; min-width: 120px; }
+.hkpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.65); font-weight: 600; margin-bottom: 4px; }
+.hkpi-val { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; color: #fff; }
+.hkpi-val.accent { color: #FFE3CB; }
+.hkpi-val.neg { color: #FFD2D2; }
+
+/* SECTIONS */
+.section { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; margin-bottom: 14px; overflow: hidden; transition: border-color 0.25s, box-shadow 0.25s; }
+.section.open { border-color: var(--accent); box-shadow: 0 4px 28px rgba(221,85,17,0.10); }
+.section-head { display: flex; align-items: center; gap: 16px; padding: 20px 26px; cursor: pointer; user-select: none; }
+.step-badge { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted2); background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.25s; }
+.section.open .step-badge { color: var(--accent); background: var(--accent-soft); border-color: var(--accent-soft2); }
+.section.done .step-badge { color: var(--green); background: var(--green-soft); border-color: #BBF7D0; }
+.section-titles { flex: 1; }
+.section-title { font-family: 'DM Sans', sans-serif; font-size: 15.5px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.section-desc { font-size: 12px; color: var(--muted); }
+.chevron { color: var(--muted2); transition: transform 0.3s; font-size: 13px; }
+.section.open .chevron { transform: rotate(180deg); color: var(--accent); }
+.section-body { max-height: 0; overflow: hidden; transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1); }
+.section.open .section-body { max-height: 9000px; overflow: visible; }
+.section-inner { padding: 4px 26px 30px; }
+
+/* INPUT LAYOUT */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+.input-group { display: flex; flex-direction: column; gap: 10px; }
+.group-title { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 2px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.input-row { display: grid; grid-template-columns: 1fr 130px; gap: 12px; align-items: center; }
+.input-row.three-col { grid-template-columns: 1fr 100px 100px 100px; }
+.input-label { font-size: 12.5px; color: var(--text); line-height: 1.4; }
+.input-note { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.inp { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; padding: 8px 11px; width: 100%; outline: none; transition: border-color 0.2s, box-shadow 0.2s; text-align: right; }
+.inp:focus { border-color: var(--focus); box-shadow: 0 0 0 3px var(--focus-soft); }
+.inp.yellow { background: var(--yellow-fill); border-color: var(--yellow-border); }
+.inp.yellow:focus { border-color: var(--focus); background: var(--focus-soft); box-shadow: 0 0 0 3px var(--focus-soft); }
+.derived-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--navy); background: var(--navy-soft); border: 1.5px solid var(--navy-soft2); border-radius: 9px; padding: 8px 11px; text-align: right; white-space: nowrap; }
+.pct-wrap { display: flex; align-items: center; gap: 5px; }
+.pct-wrap .inp { flex: 1; min-width: 0; }
+.pct-suffix { font-size: 13px; font-weight: 600; color: var(--muted); flex-shrink: 0; }
+.col-header-row { display: flex; gap: 8px; padding: 0 0 4px 0; }
+.col-hdr { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 600; width: 100px; text-align: right; }
+
+/* SECTION CONTENT GRID */
+.content-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; margin-bottom: 28px; }
+.chart-panel { display: flex; flex-direction: column; gap: 16px; }
+.chart-box { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+.chart-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+.chart-box canvas { max-height: 200px; }
+.mini-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.mini-kpi { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.mk-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+.mk-val { font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); }
+.mk-val.accent { color: var(--navy); }
+.mk-val.red { color: var(--red); }
+.mk-val.green { color: var(--green); }
+.mk-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* TABLE */
+.table-section { margin-top: 8px; }
+.table-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+
+.tab-bar { display: flex; gap: 6px; position: relative; z-index: 2; padding-left: 2px; }
+.tab-btn { background: var(--surface2); border: 1.5px solid var(--border); border-bottom: 1.5px solid var(--border); border-radius: 12px 12px 0 0; padding: 9px 22px; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; margin-bottom: -2px; transition: color 0.2s, background 0.2s; }
+.tab-btn:hover { color: var(--accent); }
+.tab-btn.active { background: var(--surface); color: var(--accent); border-color: var(--accent); border-bottom: 2px solid var(--surface); }
+
+.tbl-scroll { overflow-x: auto; border: 1.5px solid var(--border); border-radius: 0 12px 12px 12px; }
+.tbl-scroll::-webkit-scrollbar { height: 5px; }
+.tbl-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+table.mtbl { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 12px; }
+table.mtbl th, table.mtbl td { padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+table.mtbl th { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); font-weight: 600; background: var(--surface2); }
+table.mtbl th.row-label, table.mtbl td.row-label { text-align: left; position: sticky; left: 0; background: var(--surface); z-index: 1; min-width: 200px; font-weight: 500; color: var(--text); }
+table.mtbl th.row-label { background: var(--surface2); font-weight: 600; color: var(--muted); }
+table.mtbl th.yr-hdr { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 700; color: var(--navy); background: var(--navy-soft); letter-spacing: 0.5px; }
+table.mtbl th.fy-hdr { background: var(--navy-soft); color: var(--navy); font-size: 10px; font-weight: 700; }
+table.mtbl td.fy-col { background: var(--navy-soft); font-family: 'DM Mono', monospace; font-weight: 600; color: var(--navy); }
+table.mtbl tr.section-row td, table.mtbl tr.section-row th { background: var(--navy-soft); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+table.mtbl tr.section-row td.row-label { background: var(--navy-soft); }
+table.mtbl tr.total-row td { background: var(--navy-soft); font-family: 'DM Mono', monospace; font-weight: 600; color: var(--navy); border-top: 1.5px solid var(--border); }
+table.mtbl tr.total-row td.row-label { font-family: 'DM Sans', sans-serif; font-weight: 700; }
+table.mtbl tr.gp-row td { background: var(--green-soft); font-weight: 600; color: var(--green); }
+table.mtbl tr.gp-row td.fy-col { color: var(--green); }
+table.mtbl tr.ebitda-row td { background: var(--navy-soft); font-weight: 700; color: var(--navy); font-family: 'DM Mono', monospace; }
+table.mtbl td.num { font-family: 'DM Mono', monospace; }
+table.mtbl td.neg { color: var(--red); }
+table.mtbl td.pos { color: var(--green); }
+table.mtbl tr:last-child td { border-bottom: none; }
+
+/* CONTINUE */
+.continue-block { margin-top: 24px; display: flex; align-items: center; gap: 16px; }
+.continue-btn { background: var(--text); border: none; border-radius: 10px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 11px 24px; cursor: pointer; transition: background 0.2s; }
+.continue-btn:hover { background: var(--accent); }
+.continue-note { font-size: 12px; color: var(--muted); }
+
+/* DASHBOARD */
+.dash-section { margin-top: 32px; }
+.dash-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+.dash-head h2 { font-family: 'DM Sans', sans-serif; font-size: 19px; font-weight: 700; color: var(--text); }
+.dash-head .dash-tag { font-size: 11px; color: var(--muted); }
+.dash-kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 18px; }
+.dkpi { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+.dkpi-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+.dkpi-val { font-family: 'DM Sans', sans-serif; font-size: 19px; font-weight: 700; color: var(--text); }
+.dkpi-val.accent { color: var(--navy); }
+.dkpi-val.red { color: var(--red); }
+.dkpi-val.green { color: var(--green); }
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.dash-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px 22px; }
+.dash-card.wide { grid-column: 1 / -1; }
+.dash-card-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.dash-card-sub { font-size: 11px; color: var(--muted2); margin-bottom: 14px; }
+.dash-card canvas { max-height: 260px; }
+.dash-card.wide canvas { max-height: 220px; }
+
+@media (max-width: 1100px) {
+  .dash-kpi-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 700px) {
+  .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-grid { grid-template-columns: 1fr; }
+}
+
+/* LEGEND */
+.legend-strip { display: flex; gap: 18px; font-size: 11px; color: var(--muted); margin-bottom: 14px; flex-wrap: wrap; }
+.legend-strip span { display: flex; align-items: center; gap: 5px; }
+.ld { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.ld.yellow { background: #FDE68A; border: 1px solid #FCD34D; }
+.ld.blue { background: var(--navy-soft); border: 1px solid #C7D2EC; }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+@media (max-width: 900px) {
+  .content-row { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .hero-inner { flex-direction: column; align-items: flex-start; }
+  h1 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="hero-brand">
+    <div class="hero-brand-mark">M</div>
+    <div class="hero-brand-name">Matana On Call · Matana FMS</div>
+  </div>
+  <div class="hero-inner">
+    <div>
+      <h1>3-Year Financial Model</h1>
+      <p class="hero-sub">Input your market funnel, pricing, and cost assumptions. The model builds 36 months of P&L live — change any yellow input and everything updates.</p>
+    </div>
+    <div class="hero-kpis">
+      <div class="hkpi"><div class="hkpi-label">3-Yr Revenue</div><div class="hkpi-val accent" id="hkpi-rev">—</div></div>
+      <div class="hkpi"><div class="hkpi-label">3-Yr EBITDA</div><div class="hkpi-val accent" id="hkpi-ebitda">—</div></div>
+      <div class="hkpi"><div class="hkpi-label">Breakeven</div><div class="hkpi-val" id="hkpi-be">—</div></div>
+      <div class="hkpi"><div class="hkpi-label">Funding Req.</div><div class="hkpi-val" id="hkpi-fund">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div class="section open" id="sec-0">
+  <div class="section-head" onclick="toggleSection(0)">
+    <div class="step-badge">01</div>
+    <div class="section-titles">
+      <div class="section-title">Market Funnel</div>
+      <div class="section-desc">Define the funnel from Qatar's addressable market down to active customers and subscriber counts</div>
+    </div>
+    <div class="chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-inner">
+
+      <div class="legend-strip">
+        <span><span class="ld yellow"></span> Market research estimate — change me</span>
+        <span><span class="ld blue"></span> Calculated / given</span>
+      </div>
+
+      <div class="content-row">
+        <!-- LEFT: inputs -->
+        <div>
+          <div class="group-title">Qatar Market Context</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="input-row">
+              <div><div class="input-label">Family Households (total universe)</div></div>
+              <div class="derived-val" id="d-famhh">220,000</div>
+            </div>
+            <div class="input-row">
+              <div><div class="input-label">App-Ready Household Rate (SAM %)</div><div class="input-note">Share comfortable booking maintenance via app</div></div>
+              <input class="inp yellow" id="i-sampct" type="number" value="35" min="1" max="100" step="1" oninput="recalc()">
+            </div>
+            <div class="input-row">
+              <div><div class="input-label">SAM — App-Ready Households</div></div>
+              <div class="derived-val" id="d-sam">—</div>
+            </div>
+          </div>
+
+          <div class="group-title" style="margin-top:4px;">Download Targets (% of SAM at each Dec)</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="input-row">
+              <div><div class="input-label">Month 1 download seed</div><div class="input-note">Controlled soft-launch cohort</div></div>
+              <input class="inp yellow" id="i-dlseed" type="number" value="500" min="1" oninput="recalc()">
+            </div>
+            <div class="col-header-row" style="padding-left:0;">
+              <div style="flex:1"></div>
+              <div class="col-hdr">Y1 Dec</div><div class="col-hdr">Y2 Dec</div><div class="col-hdr">Y3 Dec</div>
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Cumulative download target (% of SAM)</div></div>
+              <input class="inp yellow" id="i-dl1pct" type="number" value="8" min="1" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-dl2pct" type="number" value="18" min="1" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-dl3pct" type="number" value="30" min="1" max="100" oninput="recalc()">
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Derived download targets (#)</div></div>
+              <div class="derived-val" id="d-dl1">—</div>
+              <div class="derived-val" id="d-dl2">—</div>
+              <div class="derived-val" id="d-dl3">—</div>
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Implied monthly growth rate</div></div>
+              <div class="derived-val" id="d-dlg1">—</div>
+              <div class="derived-val" id="d-dlg2">—</div>
+              <div class="derived-val" id="d-dlg3">—</div>
+            </div>
+          </div>
+
+          <div class="group-title">Activation & Booking</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="input-row three-col">
+              <div><div class="input-label">Activation rate — downloads → active customers (%)</div><div class="input-note">Improves as UX and trust mature</div></div>
+              <input class="inp yellow" id="i-act1" type="number" value="15" min="1" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-act2" type="number" value="18" min="1" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-act3" type="number" value="20" min="1" max="100" oninput="recalc()">
+            </div>
+            <div class="input-row">
+              <div><div class="input-label">Avg bookings per active customer / month</div><div class="input-note">~1 job every 3–4 months = 0.27</div></div>
+              <input class="inp yellow" id="i-bookfreq" type="number" value="0.27" min="0.01" step="0.01" oninput="recalc()">
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">In-house job share vs third-party (%)</div><div class="input-note">Shifts from quality control to marketplace scale</div></div>
+              <input class="inp yellow" id="i-inh1" type="number" value="75" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-inh2" type="number" value="60" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-inh3" type="number" value="50" min="0" max="100" oninput="recalc()">
+            </div>
+          </div>
+
+          <div class="group-title">Subscription Conversion (% of Active Customers)</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="input-row three-col">
+              <div><div class="input-label">Cleaning subscription conversion rate (%)</div><div class="input-note">Natural upsell after first job</div></div>
+              <input class="inp yellow" id="i-clconv1" type="number" value="10" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-clconv2" type="number" value="12" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-clconv3" type="number" value="13" min="0" max="100" oninput="recalc()">
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">PM Plan conversion rate (%)</div><div class="input-note">Higher-commitment annual product</div></div>
+              <input class="inp yellow" id="i-pmconv1" type="number" value="6" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-pmconv2" type="number" value="7" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-pmconv3" type="number" value="8.5" min="0" max="100" step="0.5" oninput="recalc()">
+            </div>
+            <div class="input-row">
+              <div><div class="input-label">Monthly subscriber churn rate (%)</div><div class="input-note">Applies to both cleaning and PM subs</div></div>
+              <input class="inp yellow" id="i-churn" type="number" value="4" min="0" max="50" step="0.5" oninput="recalc()">
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: funnel diagram -->
+        <div class="chart-panel">
+          <div class="chart-box" style="padding:20px 24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+              <div class="chart-title" style="margin-bottom:0;">Market Funnel — Qatar Population to Active Customers</div>
+              <div style="display:flex;gap:4px;">
+                <button class="tab-btn active" id="funnelbtn-1" onclick="setFunnelYear(1)" style="padding:5px 12px;font-size:11px;margin-bottom:0;border-radius:6px;">Y1</button>
+                <button class="tab-btn" id="funnelbtn-2" onclick="setFunnelYear(2)" style="padding:5px 12px;font-size:11px;margin-bottom:0;border-radius:6px;">Y2</button>
+                <button class="tab-btn" id="funnelbtn-3" onclick="setFunnelYear(3)" style="padding:5px 12px;font-size:11px;margin-bottom:0;border-radius:6px;">Y3</button>
+              </div>
+            </div>
+            <div id="funnel-diagram" style="width:100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FUNNEL TABLE -->
+      <div class="table-section">
+        <div class="table-label">Monthly Volume & Funnel</div>
+        <div class="tab-bar" id="tabs-funnel">
+          <button class="tab-btn active" data-year="1" onclick="switchTab('funnel',1)">Year 1</button>
+          <button class="tab-btn" data-year="2" onclick="switchTab('funnel',2)">Year 2</button>
+          <button class="tab-btn" data-year="3" onclick="switchTab('funnel',3)">Year 3</button>
+        </div>
+        <div class="tbl-scroll">
+          <table class="mtbl" id="tbl-funnel"></table>
+        </div>
+      </div>
+
+      <div class="continue-block">
+        <button class="continue-btn" onclick="nextSection(0)">Continue to Pricing →</button>
+        <span class="continue-note">Funnel built. Now set prices and margins to generate revenue.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="section" id="sec-1">
+  <div class="section-head" onclick="toggleSection(1)">
+    <div class="step-badge">02</div>
+    <div class="section-titles">
+      <div class="section-title">Pricing & Revenue</div>
+      <div class="section-desc">Set prices, margins, and tier mixes across all six revenue streams</div>
+    </div>
+    <div class="chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-inner">
+      <div class="legend-strip">
+        <span><span class="ld yellow"></span> Market research estimate</span>
+        <span><span class="ld blue"></span> Matana actual rate card</span>
+      </div>
+
+      <div class="content-row">
+        <div>
+          <div class="group-title">On-Demand Job Pricing</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="input-row"><div><div class="input-label">Blended Average Order Value — AOV (QAR)</div><div class="input-note">Blended across AC, electrical, plumbing, pest control</div></div><input class="inp yellow" id="i-aov" type="number" value="220" min="1" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">Marketplace commission rate (%)</div><div class="input-note">Charged on third-party job value</div></div><input class="inp yellow" id="i-commrate" type="number" value="22" min="0" max="100" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">Booking fee per booking (QAR)</div><div class="input-note">All jobs — in-house and third-party</div></div><input class="inp yellow" id="i-bookfee" type="number" value="15" min="0" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">Emergency premium multiplier</div><div class="input-note">Same-day / after-hours calls</div></div><input class="inp yellow" id="i-emergmult" type="number" value="1.75" min="1" step="0.05" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">Emergency jobs as % of total jobs</div></div><input class="inp yellow" id="i-emergpct" type="number" value="15" min="0" max="100" oninput="recalc()"></div>
+          </div>
+
+          <div class="group-title">Gross Margins by Stream</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="input-row"><div><div class="input-label">In-house job margin (%)</div><div class="input-note">After direct tech labour & materials</div></div><input class="inp yellow" id="i-inhmargin" type="number" value="65" min="0" max="100" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">Marketplace commission margin (%)</div><div class="input-note">Near 100% — tech bears delivery cost</div></div><input class="inp yellow" id="i-commmargin" type="number" value="95" min="0" max="100" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">Booking fee margin (%)</div></div><input class="inp yellow" id="i-bookfeemargin" type="number" value="100" min="0" max="100" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">Cleaning subscription margin (%)</div></div><input class="inp yellow" id="i-cleanmargin" type="number" value="58" min="0" max="100" oninput="recalc()"></div>
+            <div class="input-row"><div><div class="input-label">PM Plan margin (%)</div></div><input class="inp yellow" id="i-pmmargin" type="number" value="60" min="0" max="100" oninput="recalc()"></div>
+          </div>
+
+          <div class="group-title">Cleaning Subscription Pricing — Matana Rate Card</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="input-row three-col">
+              <div><div class="input-label">Prices (QAR/mo) — Basic / Essential / Premium</div></div>
+              <input class="inp" id="i-clbasic" type="number" value="350" min="0" oninput="recalc()">
+              <input class="inp" id="i-eless" type="number" value="680" min="0" oninput="recalc()">
+              <input class="inp" id="i-clprem" type="number" value="1000" min="0" oninput="recalc()">
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Tier mix (%) — must sum to 100</div></div>
+              <input class="inp yellow" id="i-clmix1" type="number" value="50" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-clmix2" type="number" value="35" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-clmix3" type="number" value="15" min="0" max="100" oninput="recalc()">
+            </div>
+          </div>
+
+          <div class="group-title">PM Plan Pricing</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="input-row three-col">
+              <div><div class="input-label">Prices (QAR/mo) — Bronze / Silver / Gold</div></div>
+              <input class="inp yellow" id="i-pmbronze" type="number" value="89" min="0" oninput="recalc()">
+              <input class="inp yellow" id="i-pmsilver" type="number" value="149" min="0" oninput="recalc()">
+              <input class="inp yellow" id="i-pmgold" type="number" value="249" min="0" oninput="recalc()">
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Tier mix (%) — must sum to 100</div></div>
+              <input class="inp yellow" id="i-pmmix1" type="number" value="50" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-pmmix2" type="number" value="35" min="0" max="100" oninput="recalc()">
+              <input class="inp yellow" id="i-pmmix3" type="number" value="15" min="0" max="100" oninput="recalc()">
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="mini-kpis">
+            <div class="mini-kpi"><div class="mk-label">Y1 Revenue</div><div class="mk-val accent" id="mk-rev1">—</div></div>
+            <div class="mini-kpi"><div class="mk-label">Y2 Revenue</div><div class="mk-val accent" id="mk-rev2">—</div></div>
+            <div class="mini-kpi"><div class="mk-label">Y3 Revenue</div><div class="mk-val accent" id="mk-rev3">—</div></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">Revenue by Stream — QAR (Annual)</div>
+            <canvas id="chart-revmix" height="200"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">Revenue Mix by Stream — % of Total (Annual)</div>
+            <canvas id="chart-revmix-pct" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-label">Monthly Revenue & Gross Profit</div>
+        <div class="tab-bar" id="tabs-pnl1">
+          <button class="tab-btn active" data-year="1" onclick="switchTab('pnl1',1)">Year 1</button>
+          <button class="tab-btn" data-year="2" onclick="switchTab('pnl1',2)">Year 2</button>
+          <button class="tab-btn" data-year="3" onclick="switchTab('pnl1',3)">Year 3</button>
+        </div>
+        <div class="tbl-scroll">
+          <table class="mtbl" id="tbl-pnl1"></table>
+        </div>
+      </div>
+
+      <div class="continue-block">
+        <button class="continue-btn" onclick="nextSection(1)">Continue to Costs →</button>
+        <span class="continue-note">Revenue and gross profit locked. Now subtract operating expenses to reach EBITDA.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="section" id="sec-2">
+  <div class="section-head" onclick="toggleSection(2)">
+    <div class="step-badge">03</div>
+    <div class="section-titles">
+      <div class="section-title">Costs & EBITDA</div>
+      <div class="section-desc">Light operating cost estimates — replace with Finance actuals as they become available</div>
+    </div>
+    <div class="chevron">▾</div>
+  </div>
+  <div class="section-body">
+    <div class="section-inner">
+
+      <div class="content-row">
+        <div>
+          <div class="group-title">User Acquisition Cost</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="input-row"><div><div class="input-label">Cost per new app download — CPI (QAR)</div><div class="input-note">Marketing spend = net new downloads × CPI</div></div><input class="inp yellow" id="i-cpi" type="number" value="8" min="0" oninput="recalc()"></div>
+          </div>
+
+          <div class="group-title">Annual Operating Expenses (÷12 monthly)</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            <div class="col-header-row"><div style="flex:1"></div><div class="col-hdr">Y1 Annual</div><div class="col-hdr">Y2 Annual</div><div class="col-hdr">Y3 Annual</div></div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Staff costs (QAR)</div><div class="input-note">Tech team, call centre, management overhead only</div></div>
+              <input class="inp yellow" id="i-staff1" type="number" value="25000" min="0" step="1000" oninput="recalc()">
+              <input class="inp yellow" id="i-staff2" type="number" value="25000" min="0" step="10000" oninput="recalc()">
+              <input class="inp yellow" id="i-staff3" type="number" value="25000" min="0" step="1000" oninput="recalc()">
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Platform & tech costs (QAR)</div><div class="input-note">App hosting, maintenance, integrations</div></div>
+              <input class="inp yellow" id="i-plat1" type="number" value="25000" min="0" step="1000" oninput="recalc()">
+              <input class="inp yellow" id="i-plat2" type="number" value="25000" min="0" step="5000" oninput="recalc()">
+              <input class="inp yellow" id="i-plat3" type="number" value="25000" min="0" step="1000" oninput="recalc()">
+            </div>
+            <div class="input-row three-col">
+              <div><div class="input-label">Admin & G&A (QAR)</div><div class="input-note">Office, legal, insurance, compliance</div></div>
+              <input class="inp yellow" id="i-admin1" type="number" value="25000" min="0" step="1000" oninput="recalc()">
+              <input class="inp yellow" id="i-admin2" type="number" value="25000" min="0" step="5000" oninput="recalc()">
+              <input class="inp yellow" id="i-admin3" type="number" value="25000" min="0" step="1000" oninput="recalc()">
+            </div>
+          </div>
+
+          <div class="group-title">One-Time CapEx</div>
+          <div style="display:flex;flex-direction:column;gap:8px;" id="capex-list">
+            <div class="input-row capex-item"><div><input class="inp" type="text" placeholder="Item name" value="App finalisation & QA" oninput="recalc()" style="text-align:left;font-size:12px;"></div><input class="inp yellow" type="number" value="30000" min="0" step="1000" oninput="recalc()"></div>
+            <div class="input-row capex-item"><div><input class="inp" type="text" placeholder="Item name" value="Call centre & tech systems setup" oninput="recalc()" style="text-align:left;font-size:12px;"></div><input class="inp yellow" type="number" value="40000" min="0" step="1000" oninput="recalc()"></div>
+            <div class="input-row capex-item"><div><input class="inp" type="text" placeholder="Item name" value="In-house tech tooling & equipment" oninput="recalc()" style="text-align:left;font-size:12px;"></div><input class="inp yellow" type="number" value="60000" min="0" step="1000" oninput="recalc()"></div>
+            <div class="input-row capex-item"><div><input class="inp" type="text" placeholder="Item name" value="Pre-launch marketing campaign" oninput="recalc()" style="text-align:left;font-size:12px;"></div><input class="inp yellow" type="number" value="50000" min="0" step="1000" oninput="recalc()"></div>
+            <div class="input-row capex-item"><div><input class="inp" type="text" placeholder="Item name" value="Office & warehouse setup" oninput="recalc()" style="text-align:left;font-size:12px;"></div><input class="inp yellow" type="number" value="30000" min="0" step="1000" oninput="recalc()"></div>
+          </div>
+          <button onclick="addCapexItem()" style="margin-top:8px;background:none;border:1.5px dashed var(--border);border-radius:8px;padding:7px 14px;font-size:12px;color:var(--muted);cursor:pointer;width:100%;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">+ Add CapEx item</button>
+          <div class="input-row" style="margin-top:8px;"><div><div class="input-label" style="font-weight:600;">Total CapEx</div></div><div class="derived-val" id="d-capex">—</div></div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="mini-kpis">
+            <div class="mini-kpi"><div class="mk-label">Y1 EBITDA</div><div class="mk-val" id="mk-eb1">—</div></div>
+            <div class="mini-kpi"><div class="mk-label">Y2 EBITDA</div><div class="mk-val" id="mk-eb2">—</div></div>
+            <div class="mini-kpi"><div class="mk-label">Y3 EBITDA</div><div class="mk-val" id="mk-eb3">—</div></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">Monthly EBITDA — 36 Months</div>
+            <canvas id="chart-ebitda" height="195"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">Cumulative EBITDA — Path to Breakeven</div>
+            <canvas id="chart-cumeb" height="185"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-label">Monthly P&L — Revenue through EBITDA</div>
+        <div class="tab-bar" id="tabs-pnl2">
+          <button class="tab-btn active" data-year="1" onclick="switchTab('pnl2',1)">Year 1</button>
+          <button class="tab-btn" data-year="2" onclick="switchTab('pnl2',2)">Year 2</button>
+          <button class="tab-btn" data-year="3" onclick="switchTab('pnl2',3)">Year 3</button>
+        </div>
+        <div class="tbl-scroll">
+          <table class="mtbl" id="tbl-pnl2"></table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash-section">
+  <div class="dash-head">
+    <h2>Dashboard</h2>
+    <span class="dash-tag">Full picture across all three steps — updates live with every input</span>
+  </div>
+
+  <div class="dash-kpi-grid">
+    <div class="dkpi"><div class="dkpi-label">3-Yr Revenue</div><div class="dkpi-val accent" id="dk-rev">—</div></div>
+    <div class="dkpi"><div class="dkpi-label">3-Yr EBITDA</div><div class="dkpi-val accent" id="dk-eb">—</div></div>
+    <div class="dkpi"><div class="dkpi-label">Y3 EBITDA Margin</div><div class="dkpi-val" id="dk-ebm">—</div></div>
+    <div class="dkpi"><div class="dkpi-label">Cumulative Breakeven</div><div class="dkpi-val" id="dk-be">—</div></div>
+    <div class="dkpi"><div class="dkpi-label">Funding Required</div><div class="dkpi-val" id="dk-fund">—</div></div>
+    <div class="dkpi"><div class="dkpi-label">Peak Cash Shortfall</div><div class="dkpi-val red" id="dk-peak">—</div></div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-card wide">
+      <div class="dash-card-title">Cumulative EBITDA — Path to Profitability</div>
+      <div class="dash-card-sub">36-month cumulative position — crosses zero at breakeven</div>
+      <canvas id="chart-dash-cumeb"></canvas>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">Revenue Mix — Year 3</div>
+      <div class="dash-card-sub">Share of total revenue by stream</div>
+      <canvas id="chart-dash-revmix"></canvas>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title">Cost Structure — Year 3</div>
+      <div class="dash-card-sub">Where every QAR of cost goes</div>
+      <canvas id="chart-dash-cost"></canvas>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title">Subscriber Tier Mix — Dec Year 3</div>
+      <div class="dash-card-sub">Cleaning and PM Plan subscribers by tier</div>
+      <canvas id="chart-dash-subs"></canvas>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title">Revenue vs EBITDA by Year</div>
+      <div class="dash-card-sub">FY1 → FY3 trajectory</div>
+      <canvas id="chart-dash-yearbar"></canvas>
+    </div>
+
+
+  </div>
+</div>
+
+</div>
+
+<script>
+const N = 36;
+let charts = {};
+let MODEL = {};
+let currentYear = { funnel: 1, pnl1: 1, pnl2: 1 };
+let funnelYear = 1;
+
+function v(id){ return parseFloat(document.getElementById(id).value) || 0; }
+function pct(id){ return v(id) / 100; }
+function fmt(n, dp=0){ if(n===null||isNaN(n)) return '—'; const abs = Math.abs(n); const s = abs.toLocaleString('en',{minimumFractionDigits:dp,maximumFractionDigits:dp}); return n<0 ? '('+s+')' : s; }
+function fmtPct(n){ if(isNaN(n)||!isFinite(n)) return '—'; return (n*100).toFixed(1)+'%'; }
+function monthLabel(i){ const y=Math.floor(i/12)+1; const m=i%12+1; return `Y${y}M${String(m).padStart(2,'0')}`; }
+function fyLabel(y){ return `FY${y}`; }
+
+function yearOf(i){ return Math.floor(i/12); } // 0-based
+
+function toggleSection(i){
+  document.getElementById('sec-'+i).classList.toggle('open');
+}
+function nextSection(i){
+  document.getElementById('sec-'+i).classList.remove('open');
+  document.getElementById('sec-'+i).classList.add('done');
+  const next = document.getElementById('sec-'+(i+1));
+  if(next){ next.classList.add('open'); setTimeout(()=>next.scrollIntoView({behavior:'smooth',block:'start'}),200); }
+}
+
+function recalc(){
+  const samPct = pct('i-sampct');
+  const famHH = 220000;
+  const sam = famHH * samPct;
+  document.getElementById('d-famhh').textContent = fmt(famHH);
+  document.getElementById('d-sam').textContent = fmt(sam);
+
+  const dlSeed = v('i-dlseed');
+  const dl1pct = pct('i-dl1pct'), dl2pct = pct('i-dl2pct'), dl3pct = pct('i-dl3pct');
+  const dl1 = sam * dl1pct, dl2 = sam * dl2pct, dl3 = sam * dl3pct;
+  document.getElementById('d-dl1').textContent = fmt(dl1);
+  document.getElementById('d-dl2').textContent = fmt(dl2);
+  document.getElementById('d-dl3').textContent = fmt(dl3);
+
+  const dlg1 = Math.pow(dl1/dlSeed, 1/11) - 1;
+  const dlg2 = Math.pow(dl2/dl1, 1/11) - 1;
+  const dlg3 = Math.pow(dl3/dl2, 1/11) - 1;
+  document.getElementById('d-dlg1').textContent = fmtPct(dlg1);
+  document.getElementById('d-dlg2').textContent = fmtPct(dlg2);
+  document.getElementById('d-dlg3').textContent = fmtPct(dlg3);
+
+  const act = [pct('i-act1'), pct('i-act2'), pct('i-act3')];
+  const inh = [pct('i-inh1'), pct('i-inh2'), pct('i-inh3')];
+  const bookFreq = v('i-bookfreq');
+  const clConv = [pct('i-clconv1'), pct('i-clconv2'), pct('i-clconv3')];
+  const pmConv = [pct('i-pmconv1'), pct('i-pmconv2'), pct('i-pmconv3')];
+  const churn = pct('i-churn');
+  const dlGrow = [dlg1, dlg2, dlg3];
+
+  // Build monthly arrays
+  const downloads = new Array(N), netNew = new Array(N), activeCust = new Array(N);
+  const jobsTotal = new Array(N), jobsIH = new Array(N), jobs3P = new Array(N);
+  const cleanSubs = new Array(N), pmSubs = new Array(N);
+
+  // Phase 1: compute downloads
+  for(let i=0;i<N;i++){
+    const yr = yearOf(i);
+    if(i===0){ downloads[i]=dlSeed; }
+    else if(i===12||i===24){ downloads[i]=downloads[i-1]; }
+    else { downloads[i]=downloads[i-1]*(1+dlGrow[yr]); }
+    netNew[i]=i===0?downloads[0]:downloads[i]-downloads[i-1];
+  }
+
+  // Phase 2: active customers, jobs
+  for(let i=0;i<N;i++){
+    const yr=yearOf(i);
+    activeCust[i]=downloads[i]*act[yr];
+    jobsTotal[i]=activeCust[i]*bookFreq;
+    jobsIH[i]=jobsTotal[i]*inh[yr];
+    jobs3P[i]=jobsTotal[i]-jobsIH[i];
+  }
+
+  // Phase 3: compute subscriber targets from Dec active customers, then ramp
+  const acDec = [activeCust[11], activeCust[23], activeCust[35]];
+  const clTargets = acDec.map((a,i)=>a*clConv[i]);
+  const pmTargets = acDec.map((a,i)=>a*pmConv[i]);
+  const clSeed=5, pmSeed=5;
+  const clGrow = [
+    Math.pow(clTargets[0]/clSeed,1/11)-1,
+    Math.pow(clTargets[1]/clTargets[0],1/11)-1,
+    Math.pow(clTargets[2]/clTargets[1],1/11)-1
+  ];
+  const pmGrow = [
+    Math.pow(pmTargets[0]/pmSeed,1/11)-1,
+    Math.pow(pmTargets[1]/pmTargets[0],1/11)-1,
+    Math.pow(pmTargets[2]/pmTargets[1],1/11)-1
+  ];
+
+  for(let i=0;i<N;i++){
+    const yr=yearOf(i);
+    if(i===0){ cleanSubs[i]=clSeed; pmSubs[i]=pmSeed; }
+    else if(i===12||i===24){ cleanSubs[i]=cleanSubs[i-1]; pmSubs[i]=pmSubs[i-1]; }
+    else { cleanSubs[i]=cleanSubs[i-1]*(1+clGrow[yr]); pmSubs[i]=pmSubs[i-1]*(1+pmGrow[yr]); }
+  }
+
+  // Update funnel mini kpis
+  // funnel diagram updated separately via setFunnelYear()
+
+  // === REVENUE ===
+  const aov=v('i-aov'), commRate=pct('i-commrate'), bookFee=v('i-bookfee');
+  const emergMult=v('i-emergmult'), emergPct=pct('i-emergpct');
+  const inhMargin=pct('i-inhmargin'), commMargin=pct('i-commmargin');
+  const bookFeeMargin=pct('i-bookfeemargin'), cleanMargin=pct('i-cleanmargin'), pmMargin=pct('i-pmmargin');
+  const emergMargin=inhMargin;
+
+  const clPrices=[v('i-clbasic'),v('i-eless'),v('i-clprem')];
+  const clMix=[pct('i-clmix1'),pct('i-clmix2'),pct('i-clmix3')];
+  const pmPrices=[v('i-pmbronze'),v('i-pmsilver'),v('i-pmgold')];
+  const pmMix=[pct('i-pmmix1'),pct('i-pmmix2'),pct('i-pmmix3')];
+
+  const rIH=new Array(N), rComm=new Array(N), rBook=new Array(N);
+  const rEmerg=new Array(N), rClean=new Array(N), rPM=new Array(N), rTotal=new Array(N);
+  const cIH=new Array(N), cComm=new Array(N), cBook=new Array(N);
+  const cEmerg=new Array(N), cClean=new Array(N), cPM=new Array(N), cTotal=new Array(N);
+  const gp=new Array(N), gpm=new Array(N);
+
+  for(let i=0;i<N;i++){
+    rIH[i]=jobsIH[i]*aov;
+    rComm[i]=jobs3P[i]*aov*commRate;
+    rBook[i]=jobsTotal[i]*bookFee;
+    rEmerg[i]=jobsTotal[i]*emergPct*aov*(emergMult-1);
+    const blendedClean = clPrices[0]*clMix[0]+clPrices[1]*clMix[1]+clPrices[2]*clMix[2];
+    const blendedPM = pmPrices[0]*pmMix[0]+pmPrices[1]*pmMix[1]+pmPrices[2]*pmMix[2];
+    rClean[i]=cleanSubs[i]*blendedClean;
+    rPM[i]=pmSubs[i]*blendedPM;
+    rTotal[i]=rIH[i]+rComm[i]+rBook[i]+rEmerg[i]+rClean[i]+rPM[i];
+    cIH[i]=-rIH[i]*(1-inhMargin);
+    cComm[i]=-rComm[i]*(1-commMargin);
+    cBook[i]=-rBook[i]*(1-bookFeeMargin);
+    cEmerg[i]=-rEmerg[i]*(1-emergMargin);
+    cClean[i]=-rClean[i]*(1-cleanMargin);
+    cPM[i]=-rPM[i]*(1-pmMargin);
+    cTotal[i]=cIH[i]+cComm[i]+cBook[i]+cEmerg[i]+cClean[i]+cPM[i];
+    gp[i]=rTotal[i]+cTotal[i];
+    gpm[i]=rTotal[i]>0?gp[i]/rTotal[i]:0;
+  }
+
+  // OPEX
+  const cpi=v('i-cpi');
+  const staff=[v('i-staff1'),v('i-staff2'),v('i-staff3')];
+  const plat=[v('i-plat1'),v('i-plat2'),v('i-plat3')];
+  const admin=[v('i-admin1'),v('i-admin2'),v('i-admin3')];
+
+  const oStaff=new Array(N), oMkt=new Array(N), oPlat=new Array(N), oAdmin=new Array(N);
+  const oTotal=new Array(N), ebitda=new Array(N), cumEbitda=new Array(N);
+
+  for(let i=0;i<N;i++){
+    const yr=yearOf(i);
+    oStaff[i]=-staff[yr]/12;
+    oMkt[i]=-netNew[i]*cpi;
+    oPlat[i]=-plat[yr]/12;
+    oAdmin[i]=-admin[yr]/12;
+    oTotal[i]=oStaff[i]+oMkt[i]+oPlat[i]+oAdmin[i];
+    ebitda[i]=gp[i]+oTotal[i];
+    cumEbitda[i]=i===0?ebitda[0]:cumEbitda[i-1]+ebitda[i];
+  }
+
+  // FY sums
+  const fyRev=[0,0,0], fyEb=[0,0,0], fyGP=[0,0,0];
+  for(let i=0;i<N;i++){ const yr=yearOf(i); fyRev[yr]+=rTotal[i]; fyEb[yr]+=ebitda[i]; fyGP[yr]+=gp[i]; }
+
+  // CapEx — dynamic list
+  const capex = Array.from(document.querySelectorAll('#capex-list .capex-item input[type="number"]')).reduce((a,el)=>a+(parseFloat(el.value)||0),0);
+  document.getElementById('d-capex').textContent = 'QAR '+fmt(capex);
+
+  // Peak shortfall
+  const peakShortfall = Math.max(0, -Math.min(...cumEbitda));
+  const fundReq = capex + peakShortfall;
+
+  // Breakeven month
+  let beMonth = '> Y3';
+  for(let i=0;i<N;i++){ if(cumEbitda[i]>=0){ beMonth=monthLabel(i); break; } }
+
+  // Hero KPIs
+  document.getElementById('hkpi-rev').textContent = 'QAR '+fmt(fyRev[0]+fyRev[1]+fyRev[2]);
+  const totalEb=fyEb[0]+fyEb[1]+fyEb[2];
+  const ebEl=document.getElementById('hkpi-ebitda');
+  ebEl.textContent='QAR '+fmt(totalEb);
+  ebEl.className='hkpi-val '+(totalEb>=0?'accent':'neg');
+  document.getElementById('hkpi-be').textContent=beMonth;
+  document.getElementById('hkpi-fund').textContent='QAR '+fmt(fundReq);
+
+  // Revenue mini KPIs
+  document.getElementById('mk-rev1').textContent='QAR '+fmt(fyRev[0]);
+  document.getElementById('mk-rev2').textContent='QAR '+fmt(fyRev[1]);
+  document.getElementById('mk-rev3').textContent='QAR '+fmt(fyRev[2]);
+
+  // EBITDA mini KPIs
+  ['mk-eb1','mk-eb2','mk-eb3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.textContent='QAR '+fmt(fyEb[i]);
+    el.className='mk-val '+(fyEb[i]>=0?'green':'red');
+  });
+
+  // === CHARTS ===
+  const palette=['#26344A','#3E7CB1','#0B8C7D','#C9A227','#7D5BA6','#5B7C99'];
+  const labels36=Array.from({length:N},(_,i)=>monthLabel(i));
+
+  // Chart 1 replaced by SVG funnel diagram — no canvas needed
+
+  // Chart 2 (subs) removed
+
+  // Chart 3: Revenue mix stacked bar (annual)
+  const fyLabels=['FY1','FY2','FY3'];
+  const fyStreams=[
+    {label:'In-House Jobs',data:[0,0,0],color:'#26344A'},
+    {label:'Marketplace Comm.',data:[0,0,0],color:'#3E7CB1'},
+    {label:'Booking Fees',data:[0,0,0],color:'#0B8C7D'},
+    {label:'Emergency Premium',data:[0,0,0],color:'#C9A227'},
+    {label:'Cleaning Subs',data:[0,0,0],color:'#7D5BA6'},
+    {label:'PM Plan Subs',data:[0,0,0],color:'#5B7C99'},
+  ];
+  for(let i=0;i<N;i++){
+    const yr=yearOf(i);
+    fyStreams[0].data[yr]+=rIH[i];
+    fyStreams[1].data[yr]+=rComm[i];
+    fyStreams[2].data[yr]+=rBook[i];
+    fyStreams[3].data[yr]+=rEmerg[i];
+    fyStreams[4].data[yr]+=rClean[i];
+    fyStreams[5].data[yr]+=rPM[i];
+  }
+  if(charts.revmix) charts.revmix.destroy();
+  charts.revmix=new Chart(document.getElementById('chart-revmix'),{
+    type:'bar',
+    data:{labels:fyLabels,datasets:fyStreams.map(s=>({label:s.label,data:s.data.map(Math.round),backgroundColor:s.color,borderRadius:3}))},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}},scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,ticks:{font:{size:9},callback:v=>'QAR '+fmt(v)}}}}
+  });
+
+  // Chart 4: 100% stacked revenue mix %
+  const fyTotals=[fyStreams[0].data[0]+fyStreams[1].data[0]+fyStreams[2].data[0]+fyStreams[3].data[0]+fyStreams[4].data[0]+fyStreams[5].data[0],
+                  fyStreams[0].data[1]+fyStreams[1].data[1]+fyStreams[2].data[1]+fyStreams[3].data[1]+fyStreams[4].data[1]+fyStreams[5].data[1],
+                  fyStreams[0].data[2]+fyStreams[1].data[2]+fyStreams[2].data[2]+fyStreams[3].data[2]+fyStreams[4].data[2]+fyStreams[5].data[2]];
+  const fyStreamsPct=fyStreams.map(s=>({...s,dataPct:s.data.map((d,i)=>fyTotals[i]>0?+(d/fyTotals[i]*100).toFixed(1):0)}));
+  if(charts.revmixPct) charts.revmixPct.destroy();
+  charts.revmixPct=new Chart(document.getElementById('chart-revmix-pct'),{
+    type:'bar',
+    data:{labels:fyLabels,datasets:fyStreamsPct.map(s=>({label:s.label,data:s.dataPct,backgroundColor:s.color,borderRadius:2}))},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+'%'}}},
+      scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,max:100,ticks:{font:{size:9},callback:v=>v+'%'}}}}
+  });
+
+  // Chart 5: Monthly EBITDA bar
+  if(charts.ebitda) charts.ebitda.destroy();
+  charts.ebitda=new Chart(document.getElementById('chart-ebitda'),{
+    type:'bar',
+    data:{labels:labels36,datasets:[{
+      label:'EBITDA',
+      data:ebitda.map(Math.round),
+      backgroundColor:ebitda.map(v=>v>=0?'rgba(27,138,90,0.75)':'rgba(200,30,58,0.75)'),
+      borderRadius:2
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'QAR '+fmt(c.raw)}}},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}}},y:{ticks:{font:{size:9},callback:v=>'QAR '+fmt(v)}}}}
+  });
+
+  // Chart 6: Cumulative EBITDA
+  if(charts.cumeb) charts.cumeb.destroy();
+  charts.cumeb=new Chart(document.getElementById('chart-cumeb'),{
+    type:'line',
+    data:{labels:labels36,datasets:[
+      {label:'Cumulative EBITDA',data:cumEbitda.map(Math.round),borderColor:'#26344A',backgroundColor:ctx=>{
+        const g=ctx.chart.ctx.createLinearGradient(0,0,0,200);
+        g.addColorStop(0,'rgba(62,124,179,0.16)');g.addColorStop(1,'rgba(62,124,179,0.02)');return g;
+      },tension:0.3,fill:true,pointRadius:0,borderWidth:2.5,segment:{borderColor:ctx=>ctx.p1.parsed.y<0?'rgba(200,30,58,0.9)':'rgba(38,52,74,0.9)'}}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}}},y:{ticks:{font:{size:9},callback:v=>'QAR '+fmt(v)}}}}
+  });
+
+  // === STORE MODEL FOR TABLES & DASHBOARD ===
+  MODEL = {
+    downloads, netNew, activeCust, jobsTotal, jobsIH, jobs3P, cleanSubs, pmSubs,
+    rIH, rComm, rBook, rEmerg, rClean, rPM, rTotal,
+    cTotal, gp, gpm,
+    oStaff, oMkt, oPlat, oAdmin, oTotal, ebitda, cumEbitda,
+    fyRev, fyEb, fyGP,
+    capex, peakShortfall, fundReq, beMonth,
+    sam, clMix, pmMix
+  };
+
+  // === FUNNEL DIAGRAM ===
+  renderFunnelDiagram();
+
+  // === FUNNEL TABLE ===
+  buildFunnelTable(currentYear.funnel);
+
+  // === P&L TABLE 1 (revenue & GP) ===
+  buildPnlTable1(currentYear.pnl1);
+
+  // === P&L TABLE 2 (full P&L to EBITDA) ===
+  buildPnlTable2(currentYear.pnl2);
+
+  // === DASHBOARD ===
+  renderDashboard();
+}
+
+function makeYearHeader(year){
+  const t=document.createElement('thead');
+  const r1=document.createElement('tr');
+  const corner=document.createElement('th'); corner.className='row-label'; r1.appendChild(corner);
+  for(let m=0;m<12;m++){
+    const th=document.createElement('th'); th.className='yr-hdr'; th.textContent='M'+String(m+1).padStart(2,'0'); r1.appendChild(th);
+  }
+  const fy=document.createElement('th'); fy.className='fy-hdr'; fy.textContent='FY'+year; r1.appendChild(fy);
+  t.appendChild(r1);
+  return t;
+}
+
+function yearSlice(arr, year){ const s=(year-1)*12; return arr.slice(s, s+12); }
+function yearSum(arr, year){ return yearSlice(arr, year).reduce((a,b)=>a+b,0); }
+function yearLast(arr, year){ return arr[year*12-1]; }
+
+function switchTab(key, year){
+  currentYear[key] = year;
+  document.querySelectorAll('#tabs-'+key+' .tab-btn').forEach(btn=>{
+    btn.classList.toggle('active', parseInt(btn.dataset.year)===year);
+  });
+  if(key==='funnel') buildFunnelTable(year);
+  else if(key==='pnl1') buildPnlTable1(year);
+  else if(key==='pnl2') buildPnlTable2(year);
+}
+
+function addSectionRow(tb, label){
+  const sr=document.createElement('tr'); sr.className='section-row';
+  const sc=document.createElement('td'); sc.className='row-label'; sc.textContent=label; sr.appendChild(sc);
+  for(let i=0;i<13;i++){ const td=document.createElement('td'); sr.appendChild(td); }
+  tb.appendChild(sr);
+}
+
+function addTotalRow(tb, label, data, year, agg){
+  const tr=document.createElement('tr'); tr.className='total-row';
+  const lbl=document.createElement('td'); lbl.className='row-label'; lbl.textContent=label; tr.appendChild(lbl);
+  yearSlice(data, year).forEach(val=>{
+    const td=document.createElement('td'); td.className='num'+(val<0?' neg':''); td.textContent=fmt(val); tr.appendChild(td);
+  });
+  const fyVal = agg==='sum' ? yearSum(data, year) : yearLast(data, year);
+  const ftd=document.createElement('td'); ftd.className='num fy-col'+(fyVal<0?' neg':''); ftd.textContent=fmt(fyVal); tr.appendChild(ftd);
+  tb.appendChild(tr);
+}
+
+function buildFunnelTable(year){
+  const M = MODEL;
+  const tbl=document.getElementById('tbl-funnel');
+  tbl.innerHTML='';
+  tbl.appendChild(makeYearHeader(year));
+  const tb=document.createElement('tbody');
+
+  const rows=[
+    {label:'Cumulative Downloads (#)', data:M.downloads, agg:'last'},
+    {label:'Net New Downloads (#)', data:M.netNew, agg:'sum'},
+    {label:'Active Customers (#)', data:M.activeCust, agg:'last'},
+    {label:'Total Jobs / Month (#)', data:M.jobsTotal, agg:'sum', section:true, sectionLabel:'JOBS'},
+    {label:'In-House Jobs (#)', data:M.jobsIH, agg:'sum'},
+    {label:'Third-Party Jobs (#)', data:M.jobs3P, agg:'sum'},
+    {label:'Cleaning Subscribers (#)', data:M.cleanSubs, agg:'last', section:true, sectionLabel:'SUBSCRIPTIONS'},
+    {label:'PM Plan Subscribers (#)', data:M.pmSubs, agg:'last'},
+  ];
+
+  let lastSection='';
+  rows.forEach(row=>{
+    if(row.section && row.sectionLabel!==lastSection){
+      lastSection=row.sectionLabel;
+      addSectionRow(tb, row.sectionLabel);
+    }
+    const tr=document.createElement('tr');
+    const lbl=document.createElement('td'); lbl.className='row-label'; lbl.textContent=row.label; tr.appendChild(lbl);
+    yearSlice(row.data, year).forEach(val=>{ const td=document.createElement('td'); td.className='num'; td.textContent=fmt(val); tr.appendChild(td); });
+    const fyVal = row.agg==='sum' ? yearSum(row.data, year) : yearLast(row.data, year);
+    const ftd=document.createElement('td'); ftd.className='num fy-col'; ftd.textContent=fmt(fyVal); tr.appendChild(ftd);
+    tb.appendChild(tr);
+  });
+  tbl.appendChild(tb);
+}
+
+function buildPnlTable1(year){
+  const M = MODEL;
+  const tbl=document.getElementById('tbl-pnl1');
+  tbl.innerHTML='';
+  tbl.appendChild(makeYearHeader(year));
+  const tb=document.createElement('tbody');
+
+  addSectionRow(tb,'REVENUE');
+  const revRows=[
+    {label:'In-House Job Revenue', data:M.rIH},
+    {label:'Marketplace Commission', data:M.rComm},
+    {label:'Booking Fee Revenue', data:M.rBook},
+    {label:'Emergency Premium', data:M.rEmerg},
+    {label:'Cleaning Subscription Revenue', data:M.rClean},
+    {label:'PM Plan Subscription Revenue', data:M.rPM},
+  ];
+  revRows.forEach(row=>{
+    const tr=document.createElement('tr');
+    const lbl=document.createElement('td'); lbl.className='row-label'; lbl.textContent=row.label; tr.appendChild(lbl);
+    yearSlice(row.data, year).forEach(val=>{ const td=document.createElement('td'); td.className='num'; td.textContent=fmt(val); tr.appendChild(td); });
+    const ftd=document.createElement('td'); ftd.className='num fy-col'; ftd.textContent=fmt(yearSum(row.data, year)); tr.appendChild(ftd);
+    tb.appendChild(tr);
+  });
+
+  addTotalRow(tb,'TOTAL REVENUE', M.rTotal, year, 'sum');
+
+  addSectionRow(tb,'COST OF REVENUE');
+  addTotalRow(tb,'TOTAL COST OF REVENUE', M.cTotal, year, 'sum');
+
+  // Gross Profit
+  const gpTr=document.createElement('tr'); gpTr.className='gp-row';
+  const gpLbl=document.createElement('td'); gpLbl.className='row-label'; gpLbl.textContent='GROSS PROFIT'; gpTr.appendChild(gpLbl);
+  yearSlice(M.gp, year).forEach(val=>{ const td=document.createElement('td'); td.className='num'; td.textContent=fmt(val); gpTr.appendChild(td); });
+  const fyGPVal = yearSum(M.gp, year);
+  const gpFtd=document.createElement('td'); gpFtd.className='num fy-col'; gpFtd.textContent=fmt(fyGPVal); gpTr.appendChild(gpFtd);
+  tb.appendChild(gpTr);
+
+  // Gross margin %
+  const gpmTr=document.createElement('tr');
+  const gpmLbl=document.createElement('td'); gpmLbl.className='row-label'; gpmLbl.textContent='  Gross Margin %'; gpmTr.appendChild(gpmLbl);
+  yearSlice(M.gpm, year).forEach(val=>{ const td=document.createElement('td'); td.className='num'; td.textContent=fmtPct(val); gpmTr.appendChild(td); });
+  const fyRevVal = yearSum(M.rTotal, year);
+  const fyGPM = fyRevVal>0 ? fyGPVal/fyRevVal : 0;
+  const gpmFtd=document.createElement('td'); gpmFtd.className='num fy-col'; gpmFtd.textContent=fmtPct(fyGPM); gpmTr.appendChild(gpmFtd);
+  tb.appendChild(gpmTr);
+
+  tbl.appendChild(tb);
+}
+
+function buildPnlTable2(year){
+  const M = MODEL;
+  const tbl=document.getElementById('tbl-pnl2');
+  tbl.innerHTML='';
+  tbl.appendChild(makeYearHeader(year));
+  const tb=document.createElement('tbody');
+
+  addSectionRow(tb,'REVENUE');
+  addTotalRow(tb,'Total Revenue', M.rTotal, year, 'sum');
+  addSectionRow(tb,'COST OF REVENUE');
+  addTotalRow(tb,'Total Cost of Revenue', M.cTotal, year, 'sum');
+  addTotalRow(tb,'GROSS PROFIT', M.gp, year, 'sum');
+
+  addSectionRow(tb,'OPERATING EXPENSES');
+  [{label:'Staff Costs',d:M.oStaff},{label:'Marketing & UA',d:M.oMkt},{label:'Platform & Tech',d:M.oPlat},{label:'Admin & G&A',d:M.oAdmin}].forEach(r=>{
+    const tr=document.createElement('tr');
+    const lbl=document.createElement('td'); lbl.className='row-label'; lbl.textContent='  '+r.label; tr.appendChild(lbl);
+    yearSlice(r.d, year).forEach(val=>{ const td=document.createElement('td'); td.className='num'+(val<0?' neg':''); td.textContent=fmt(val); tr.appendChild(td); });
+    const fyVal = yearSum(r.d, year);
+    const ftd=document.createElement('td'); ftd.className='num fy-col'+(fyVal<0?' neg':''); ftd.textContent=fmt(fyVal); tr.appendChild(ftd);
+    tb.appendChild(tr);
+  });
+  addTotalRow(tb,'TOTAL OPERATING EXPENSES', M.oTotal, year, 'sum');
+
+  // EBITDA
+  const ebTr=document.createElement('tr'); ebTr.className='ebitda-row';
+  const ebLbl=document.createElement('td'); ebLbl.className='row-label'; ebLbl.textContent='EBITDA'; ebTr.appendChild(ebLbl);
+  yearSlice(M.ebitda, year).forEach(val=>{
+    const td=document.createElement('td');
+    td.className='num'+(val<0?' neg':' pos');
+    td.style.fontFamily="'DM Mono',monospace"; td.style.fontWeight='600';
+    td.textContent=fmt(val); ebTr.appendChild(td);
+  });
+  const fyEBVal = yearSum(M.ebitda, year);
+  const ebFtd=document.createElement('td'); ebFtd.className='num fy-col'; ebFtd.textContent=fmt(fyEBVal); ebTr.appendChild(ebFtd);
+  tb.appendChild(ebTr);
+
+  // Cumulative EBITDA
+  const ceTr=document.createElement('tr');
+  const ceLbl=document.createElement('td'); ceLbl.className='row-label'; ceLbl.textContent='  Cumulative EBITDA'; ceTr.appendChild(ceLbl);
+  yearSlice(M.cumEbitda, year).forEach(val=>{ const td=document.createElement('td'); td.className='num'+(val<0?' neg':' pos'); td.textContent=fmt(val); ceTr.appendChild(td); });
+  const ceFtd=document.createElement('td'); ceFtd.className='num fy-col'; ceFtd.textContent=fmt(yearLast(M.cumEbitda, year)); ceTr.appendChild(ceFtd);
+  tb.appendChild(ceTr);
+
+  // EBITDA margin %
+  const emTr=document.createElement('tr');
+  const emLbl=document.createElement('td'); emLbl.className='row-label'; emLbl.textContent='  EBITDA Margin %'; emTr.appendChild(emLbl);
+  const sliceRev=yearSlice(M.rTotal, year), sliceEb=yearSlice(M.ebitda, year);
+  for(let i=0;i<12;i++){
+    const rv=sliceRev[i], ev=sliceEb[i];
+    const pctVal = rv>0 ? ev/rv : 0;
+    const td=document.createElement('td'); td.className='num'+(pctVal<0?' neg':' pos'); td.textContent=fmtPct(pctVal); emTr.appendChild(td);
+  }
+  const fyRevVal2 = yearSum(M.rTotal, year);
+  const fyPctVal = fyRevVal2>0 ? fyEBVal/fyRevVal2 : 0;
+  const emFtd=document.createElement('td'); emFtd.className='num fy-col'; emFtd.textContent=fmtPct(fyPctVal); emTr.appendChild(emFtd);
+  tb.appendChild(emTr);
+
+  tbl.appendChild(tb);
+}
+
+function renderDashboard(){
+  const M = MODEL;
+  const totalRev = M.fyRev[0]+M.fyRev[1]+M.fyRev[2];
+  const totalEb = M.fyEb[0]+M.fyEb[1]+M.fyEb[2];
+  const ebMarginY3 = M.fyRev[2]>0 ? M.fyEb[2]/M.fyRev[2] : 0;
+
+  document.getElementById('dk-rev').textContent = 'QAR '+fmt(totalRev);
+  const dkEb=document.getElementById('dk-eb'); dkEb.textContent='QAR '+fmt(totalEb); dkEb.className='dkpi-val '+(totalEb>=0?'accent':'red');
+  const dkEbm=document.getElementById('dk-ebm'); dkEbm.textContent=fmtPct(ebMarginY3); dkEbm.className='dkpi-val '+(ebMarginY3>=0?'green':'red');
+  document.getElementById('dk-be').textContent = M.beMonth;
+  document.getElementById('dk-fund').textContent = 'QAR '+fmt(M.fundReq);
+  document.getElementById('dk-peak').textContent = 'QAR '+fmt(M.peakShortfall);
+
+  const labels36=Array.from({length:N},(_,i)=>monthLabel(i));
+
+  // Cumulative EBITDA hero chart
+  if(charts.dashCumeb) charts.dashCumeb.destroy();
+  charts.dashCumeb=new Chart(document.getElementById('chart-dash-cumeb'),{
+    type:'line',
+    data:{labels:labels36,datasets:[{
+      label:'Cumulative EBITDA',
+      data:M.cumEbitda.map(Math.round),
+      borderColor:'#26344A',
+      backgroundColor:ctx=>{ const g=ctx.chart.ctx.createLinearGradient(0,0,0,220); g.addColorStop(0,'rgba(221,85,17,0.18)'); g.addColorStop(1,'rgba(221,85,17,0.02)'); return g; },
+      tension:0.3, fill:true, pointRadius:0, borderWidth:2.5,
+      segment:{ borderColor: ctx=>ctx.p1.parsed.y<0?'rgba(200,30,58,0.9)':'rgba(38,52,74,0.9)' }
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'QAR '+fmt(c.raw)}}},scales:{x:{ticks:{maxTicksLimit:14,font:{size:9}}},y:{ticks:{font:{size:9},callback:val=>'QAR '+fmt(val)}}}}
+  });
+
+  // Revenue mix Y3 donut
+  const y3RevStreams=[
+    {label:'In-House Jobs', val:yearSum(M.rIH,3)},
+    {label:'Marketplace Commission', val:yearSum(M.rComm,3)},
+    {label:'Booking Fees', val:yearSum(M.rBook,3)},
+    {label:'Emergency Premium', val:yearSum(M.rEmerg,3)},
+    {label:'Cleaning Subs', val:yearSum(M.rClean,3)},
+    {label:'PM Plan Subs', val:yearSum(M.rPM,3)},
+  ];
+  if(charts.dashRevmix) charts.dashRevmix.destroy();
+  charts.dashRevmix=new Chart(document.getElementById('chart-dash-revmix'),{
+    type:'doughnut',
+    data:{labels:y3RevStreams.map(s=>s.label), datasets:[{data:y3RevStreams.map(s=>Math.round(s.val)), backgroundColor:['#26344A','#3E7CB1','#0B8C7D','#C9A227','#7D5BA6','#5B7C99'], borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,font:{size:10}}},tooltip:{callbacks:{label:c=>' '+c.label+': QAR '+fmt(c.raw)}}}}
+  });
+
+  // Cost structure Y3 donut
+  const cogsY3=Math.abs(yearSum(M.cTotal,3));
+  const staffY3=Math.abs(yearSum(M.oStaff,3));
+  const mktY3=Math.abs(yearSum(M.oMkt,3));
+  const platY3=Math.abs(yearSum(M.oPlat,3));
+  const adminY3=Math.abs(yearSum(M.oAdmin,3));
+  const costSegs=[
+    {label:'Cost of Revenue (COGS)', val:cogsY3},
+    {label:'Staff', val:staffY3},
+    {label:'Marketing & UA', val:mktY3},
+    {label:'Platform & Tech', val:platY3},
+    {label:'Admin & G&A', val:adminY3},
+  ];
+  if(charts.dashCost) charts.dashCost.destroy();
+  charts.dashCost=new Chart(document.getElementById('chart-dash-cost'),{
+    type:'doughnut',
+    data:{labels:costSegs.map(s=>s.label), datasets:[{data:costSegs.map(s=>Math.round(s.val)), backgroundColor:['#26344A','#3E7CB1','#0B8C7D','#C9A227','#7D5BA6'], borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,font:{size:10}}},tooltip:{callbacks:{label:c=>' '+c.label+': QAR '+fmt(c.raw)}}}}
+  });
+
+  // Subscriber tier mix Dec Y3 donut
+  const clMixVals = M.clMix, pmMixVals = M.pmMix;
+  const clDecY3 = M.cleanSubs[35], pmDecY3 = M.pmSubs[35];
+  const subSegs=[
+    {label:'Cleaning – Basic', val:clDecY3*clMixVals[0]},
+    {label:'Cleaning – Essential', val:clDecY3*clMixVals[1]},
+    {label:'Cleaning – Premium', val:clDecY3*clMixVals[2]},
+    {label:'PM – Bronze', val:pmDecY3*pmMixVals[0]},
+    {label:'PM – Silver', val:pmDecY3*pmMixVals[1]},
+    {label:'PM – Gold', val:pmDecY3*pmMixVals[2]},
+  ];
+  if(charts.dashSubs) charts.dashSubs.destroy();
+  charts.dashSubs=new Chart(document.getElementById('chart-dash-subs'),{
+    type:'doughnut',
+    data:{labels:subSegs.map(s=>s.label), datasets:[{data:subSegs.map(s=>Math.round(s.val)), backgroundColor:['#0B8C7D','#3FA897','#8FCABD','#26344A','#5C6E89','#A6B3C6'], borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,font:{size:9.5}}},tooltip:{callbacks:{label:c=>' '+c.label+': '+fmt(c.raw)}}}}
+  });
+
+  // Revenue vs EBITDA by year grouped bar
+  if(charts.dashYearbar) charts.dashYearbar.destroy();
+  charts.dashYearbar=new Chart(document.getElementById('chart-dash-yearbar'),{
+    type:'bar',
+    data:{labels:['FY1','FY2','FY3'], datasets:[
+      {label:'Revenue', data:M.fyRev.map(Math.round), backgroundColor:'#3E7CB1', borderRadius:4},
+      {label:'EBITDA', data:M.fyEb.map(Math.round), backgroundColor:'#0B8C7D', borderRadius:4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,font:{size:10}}},tooltip:{callbacks:{label:c=>c.dataset.label+': QAR '+fmt(c.raw)}}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:9},callback:val=>'QAR '+fmt(val)}}}}
+  });
+
+  // Market funnel — concentric circles
+}
+
+
+recalc();
+
+// ── Funnel year selector ──
+function setFunnelYear(y){
+  funnelYear = y;
+  [1,2,3].forEach(n=>{
+    const btn = document.getElementById('funnelbtn-'+n);
+    if(btn) btn.classList.toggle('active', n===y);
+  });
+  renderFunnelDiagram();
+}
+
+function renderFunnelDiagram(){
+  const M = MODEL;
+  if(!M.downloads) return;
+  const idx = funnelYear*12-1;
+  const steps = [
+    { label:'Qatar Population',      val:3170000,              pct:null },
+    { label:'Total Residential Units', val:399542,             pct:null },
+    { label:'Family Households',     val:220000,               pct:null },
+    { label:'App-Ready HH (SAM)',    val:Math.round(M.sam),    pct:null },
+    { label:'Cumulative Downloads',  val:Math.round(M.downloads[idx]), pct:null },
+    { label:'Active Customers',      val:Math.round(M.activeCust[idx]), pct:null },
+  ];
+  // compute drop % vs previous
+  for(let i=1;i<steps.length;i++){
+    steps[i].pct = steps[i-1].val>0 ? (steps[i].val/steps[i-1].val*100) : 0;
+  }
+
+  const maxW = 100;
+  const colors = ['#26344A','#3E5A7A','#3E7CB1','#0B8C7D','#7D5BA6','#DD5511'];
+  const container = document.getElementById('funnel-diagram');
+  if(!container) return;
+
+  let html = '<div style="display:flex;flex-direction:column;gap:4px;width:100%;">';
+  steps.forEach((s, i)=>{
+    const widthPct = maxW - (i * (maxW - 30) / (steps.length-1));
+    const pctLabel = s.pct !== null ? `<span style="font-size:10px;color:var(--muted);margin-left:6px;">↓ ${s.pct.toFixed(1)}% of prev</span>` : '';
+    html += `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:${widthPct}%;background:${colors[i]};border-radius:5px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;min-width:200px;">
+          <span style="font-size:12px;font-weight:600;color:#fff;">${s.label}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#fff;">${s.val.toLocaleString()}</span>
+        </div>
+        ${i<steps.length-1?`<div style="font-size:10px;color:var(--muted);text-align:center;">${steps[i+1].pct!==null?'↓ '+steps[i+1].pct.toFixed(1)+'% of prev':''}</div>`:''}
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ── Dynamic CapEx ──
+function addCapexItem(){
+  const list = document.getElementById('capex-list');
+  const row = document.createElement('div');
+  row.className = 'input-row capex-item';
+  row.style.position = 'relative';
+  row.innerHTML = `<div><input class="inp" type="text" placeholder="Item name" style="text-align:left;font-size:12px;" oninput="recalc()"></div><input class="inp yellow" type="number" value="0" min="0" step="1000" oninput="recalc()">`;
+  list.appendChild(row);
+  recalc();
+}
+
+</script>
+</body>
+</html>
