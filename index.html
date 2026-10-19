@@ -16,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#101014;
@@ -37,7 +37,7 @@
   --radius-lg:26px;
   --font-display:'Manrope',sans-serif;
   --font-body:'Manrope',sans-serif;
-  --font-mono:'IBM Plex Mono',monospace;
+  --font-mono:ui-monospace,'SF Mono','Roboto Mono',Menlo,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 /* no scroll-behavior:smooth — it conflicts with y-mandatory snap in Chromium (snap re-resolves backwards mid-animation); native snapping animates on its own */
@@ -51,9 +51,6 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 
 /* ---------- pages ---------- */
 .page{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100svh;padding:72px 0;text-align:center}
-/* p-cards is a pinned scrub section: the section grows tall (JS), .pin stays on screen */
-#p-cards{display:block;padding:0}
-#p-cards .pin{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100svh;padding:72px 0;text-align:center}
 @media(min-width:960px) and (min-height:560px){
   /* page alignment is handled by the JS settle controller (CSS y-mandatory snap rubber-bands discrete wheel notches in Chromium) */
   .page{height:100svh;min-height:0;justify-content:flex-start;padding:64px 0 44px}
@@ -61,10 +58,6 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   #p-final{position:relative;padding-bottom:0}
   #p-final .foot{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;width:100%;max-width:1080px;margin-top:0}
   .page .fill{flex:1;display:flex;flex-direction:column;justify-content:center;width:100%;min-height:0}
-  #p-cards{height:auto;min-height:100svh;padding:0}
-  #p-cards .pin{position:sticky;top:0;height:100svh;min-height:0;padding:0;overflow:hidden;width:100%}
-  #p-cards .wrap-full{flex:none}
-  #p-cards .fill{flex:none}
 }
 @media(min-width:960px) and (min-height:560px) and (max-height:830px){
   .page{padding:44px 0 32px}
@@ -79,7 +72,6 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   .page-title{font-size:clamp(24px,3.8vw,38px)}
   .page-sub{font-size:clamp(16px,2.4vw,22px);margin-top:12px}
   .page .fill{zoom:.85}
-  #p-cards .page-title{margin-bottom:clamp(18px,3.5vh,32px)}
 }
 @media(max-width:959.5px),(max-height:559.5px){
   .page .fill{width:100%}
@@ -119,83 +111,33 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 #p-problem h1{font-size:clamp(32px,6vw,64px);font-weight:800;max-width:900px;margin:0 auto}
 #p-problem .even{display:block;font-family:var(--font-display);font-size:clamp(18px,2.8vw,28px);font-weight:500;color:var(--dark-dim);margin-top:18px;letter-spacing:-.01em}
 
-/* ---------- carousel (section 2) ---------- */
-.wrap-full{width:100%;display:flex;flex-direction:column;flex:1;min-height:0}
-.wrap-full .page-title{padding:0 20px}
-#p-cards .page-title{margin-bottom:clamp(32px,6vh,56px)}
-.car-wrap{position:relative;width:100%;margin-top:0}
-.car{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px max(24px,calc((100vw - 1240px)/2));scrollbar-width:none}
-@media(min-width:960px) and (min-height:560px){
-  /* desktop: page scroll drives the carousel — kill x-snap & manual x-scroll so JS owns scrollLeft */
-  .car{overflow-x:hidden;scroll-snap-type:none}
+/* ---------- services (section 2) ---------- */
+.svc-sub{color:var(--ink-soft);font-size:clamp(15px,1.9vw,18px);margin-top:10px}
+.svc-rows{width:100%;display:flex;flex-direction:column;gap:22px;text-align:left;margin-top:30px}
+.svc-row-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+.svc-row-h h3{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.svc-row-h span{color:var(--ink-soft);font-size:13px;font-weight:600;margin-left:8px}
+.svc-nav{display:none;gap:6px}
+.svc-nav button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:15px;line-height:1;display:grid;place-items:center;transition:.15s}
+.svc-nav button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.svc-nav button:disabled{opacity:.35;cursor:default}
+.svc-strip{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:2px;scrollbar-width:none;padding:2px 2px 6px;margin:0 -2px;-webkit-overflow-scrolling:touch}
+.svc-strip::-webkit-scrollbar{display:none}
+.svc-strip.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 46px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 46px),transparent)}
+.svc-strip.more.mid{-webkit-mask-image:linear-gradient(90deg,transparent,#000 36px,#000 calc(100% - 46px),transparent);mask-image:linear-gradient(90deg,transparent,#000 36px,#000 calc(100% - 46px),transparent)}
+.svc-strip.more.end{-webkit-mask-image:linear-gradient(90deg,transparent,#000 36px);mask-image:linear-gradient(90deg,transparent,#000 36px)}
+.svc-tile{flex:0 0 244px;scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px 15px;display:flex;flex-direction:column;min-height:136px}
+.svc-tile h4{font-size:15.5px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+.svc-tile p{margin-top:6px;color:var(--ink-soft);font-size:13.5px;line-height:1.4}
+.svc-tag{margin-top:auto;padding-top:10px;font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.02em}
+.svc-tag.m{color:var(--accent)}
+.svc-note{margin-top:20px;color:var(--ink-soft);font-size:13px;text-align:center}
+@media(hover:hover) and (pointer:fine){.svc-strip.drag{cursor:grab}.svc-strip.dragging{cursor:grabbing;scroll-snap-type:none}.svc-strip.more~*{}}
+@media(hover:hover) and (pointer:fine){.svc-nav.on{display:flex}}
+@media(max-width:959.5px),(max-height:559.5px){
+  .svc-tile{flex-basis:min(72vw,270px)}
+  .svc-rows{gap:26px}
 }
-.car::-webkit-scrollbar{display:none}
-.cardx{position:relative;flex:0 0 258px;aspect-ratio:3/4.05;border-radius:22px;overflow:hidden;scroll-snap-align:center;background:#14141C;text-align:left;box-shadow:0 16px 40px rgba(20,20,40,.15)}
-@media(min-width:900px){.cardx{flex-basis:286px}}
-.cardx img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.cardx .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,14,.62) 0%,rgba(8,8,14,.12) 42%,rgba(8,8,14,.28) 100%)}
-.cardx h3{position:absolute;top:18px;left:19px;right:19px;color:#fff;font-size:22px;font-weight:800;line-height:1.1;letter-spacing:-.01em;text-shadow:0 2px 12px rgba(0,0,0,.35)}
-.cardx h3 span{display:block;font-size:11.5px;font-weight:600;opacity:.88;margin-top:4px;white-space:nowrap}
-.gchip{position:absolute;left:15px;right:15px;bottom:18px;height:104px;background:rgba(255,255,255,.96);border-radius:14px;padding:10px 12px;box-shadow:0 12px 30px rgba(0,0,0,.3);display:flex;flex-direction:column;justify-content:center}
-.crm-row{display:flex;align-items:center;gap:8px;padding:6px 0}
-.crm-row + .crm-row{border-top:1px solid var(--line)}
-.sil{width:23px;height:23px;border-radius:50%;background:#D9D8D2;position:relative;flex:none;overflow:hidden}
-.sil::before{content:"";position:absolute;top:4px;left:7px;width:9px;height:9px;border-radius:50%;background:#B7B6AF}
-.sil::after{content:"";position:absolute;top:14px;left:2px;width:19px;height:13px;border-radius:50%;background:#B7B6AF}
-.blob{height:8px;border-radius:99px;background:#E3E2DC;flex:1}
-.crm-row:nth-child(2) .blob{max-width:64%}
-.money{font-weight:800;font-size:11px;color:var(--ink-soft);flex:none;letter-spacing:.05em}
-.tagc{font-size:9px;font-weight:800;padding:3px 8px;border-radius:99px;flex:none}
-.tagc.closed{background:#DBEAFE;color:#2563EB}
-.tagc.hot{background:#DCF5E7;color:var(--pos)}
-.dt{font-size:9.5px;color:#B9B8B2;font-weight:600;flex:none}
-.gantt{display:flex;flex-direction:column;gap:7px}
-.g{height:10px;border-radius:99px;background:#E3E2DC;position:relative}
-.g i{position:absolute;top:0;bottom:0;border-radius:99px;background:var(--accent)}
-.g:nth-child(1) i{left:0;width:52%}
-.g:nth-child(2) i{left:18%;width:44%;background:#2563EB}
-.g:nth-child(3) i{left:38%;width:40%}
-.g:nth-child(4) i{left:58%;width:34%;background:var(--pos)}
-.cash{position:relative;height:100%;display:flex;align-items:center;gap:6px}
-.cash::before{content:"";position:absolute;left:0;right:0;top:56%;height:1.5px;background:var(--line)}
-.cm{flex:1;position:relative;height:100%}
-.cm i{position:absolute;left:20%;right:20%;border-radius:3px}
-.cm .up{background:var(--pos);bottom:44%}
-.cm .dn{background:#2563EB;top:56%}
-.duel{display:flex;flex-direction:column;gap:12px;justify-content:center}
-.prow{display:flex;align-items:center;gap:9px}
-.pico{width:24px;height:24px;border-radius:7px;flex:none;display:grid;place-items:center;color:#fff}
-.pico.ig{background:radial-gradient(circle at 30% 110%,#FDB75D 0%,#D5307A 55%,#7A3AC2 100%)}
-.pico.fb{background:#1877F2;font-weight:800;font-size:14px;font-family:Georgia,serif}
-.pico svg{width:14px;height:14px}
-.pword{font-size:11.5px;font-weight:800;width:66px;flex:none;color:var(--ink-soft)}
-.pbarm{flex:1;height:8px;border-radius:99px;background:#E3E2DC;position:relative;overflow:hidden}
-.pbarm i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
-.prow.win .pbarm i{width:86%;background:var(--pos);box-shadow:0 0 10px rgba(10,135,84,.6)}
-.prow.lose .pbarm i{width:36%;background:#C9C8D6}
-.tkc{display:flex;align-items:center;gap:12px}
-.ringx{position:relative;width:50px;height:50px;flex:none;display:grid;place-items:center}
-.ringx svg{position:absolute;inset:0;transform:rotate(-90deg)}
-.ringx circle{fill:none;stroke-width:4}
-.ringx .b{stroke:#E3E2DC}
-.ringx .f{stroke:#2563EB;stroke-linecap:round;stroke-dasharray:150.8;stroke-dashoffset:26}
-.ringx .face{width:34px;height:34px;border-radius:50%;background:#D9D8D2;position:relative;overflow:hidden}
-.ringx .face::before{content:"";position:absolute;top:6px;left:11px;width:12px;height:12px;border-radius:50%;background:#B7B6AF}
-.ringx .face::after{content:"";position:absolute;top:20px;left:4px;width:26px;height:16px;border-radius:50%;background:#B7B6AF}
-.tk-bars{flex:1;display:flex;flex-direction:column;gap:8px}
-.tkb{height:8px;border-radius:99px;background:#E3E2DC;position:relative}
-.tkb i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--pos)}
-.tkb:nth-child(1) i{width:82%}
-.tkb:nth-child(2) i{width:58%;background:var(--accent)}
-.tkb:nth-child(3) i{width:74%}
-.flow{display:flex;align-items:center;padding:6px 2px}
-.node{width:27px;height:27px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff}
-.node.ok{background:var(--pos)}
-.node.stuck{background:#DC2626;animation:pulse 1.4s ease infinite}
-.node.wait{background:#D9D8D2}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.45)}50%{box-shadow:0 0 0 7px rgba(220,38,38,0)}}
-.link{flex:1;height:3px;background:#E3E2DC}
-.link.done{background:var(--pos)}
 
 /* ---------- before / after ---------- */
 .ba-grid{display:grid;gap:16px;margin-top:22px;width:100%;text-align:left}
@@ -472,7 +414,7 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 .res-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:840px;margin:30px auto 0;width:100%}
 .res-card{display:block;text-align:left;background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px;text-decoration:none;color:var(--ink);transition:transform .15s ease,box-shadow .15s ease}
 .res-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(20,20,40,.10)}
-.res-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:rgba(53,51,205,.08);padding:4px 10px;border-radius:999px}
+.res-tag{font-family:var(--font-display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:rgba(53,51,205,.08);padding:4px 10px;border-radius:999px}
 .res-card h3{font-size:clamp(19px,2.2vw,23px);font-weight:800;margin:14px 0 6px}
 .res-card p{color:var(--ink-2);font-size:15px}
 .res-open{display:inline-block;margin-top:16px;font-weight:700;color:var(--accent)}
@@ -531,6 +473,20 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   .plan{padding:22px 24px}
   .plan ul{margin:16px 0 18px}
   #p-final p{margin:12px auto 24px}
+  /* services: compact tiles for 150%-scaled laptops */
+  .svc-rows{gap:12px;margin-top:14px}
+  .svc-row-h{margin-bottom:6px}
+  .svc-tile{min-height:104px;padding:11px 14px 10px}
+  .svc-tile p{margin-top:4px;font-size:12.5px;line-height:1.35}
+  .svc-tag{padding-top:6px;font-size:10.5px}
+  .svc-note{margin-top:10px}
+}
+@media(min-width:960px) and (min-height:560px) and (max-height:600px){
+  .svc-rows{gap:8px;margin-top:10px}
+  .svc-tile{min-height:92px;padding:9px 13px 8px}
+  .svc-tile h4{font-size:14.5px}
+  .svc-tile p{font-size:12px}
+  .svc-note{margin-top:6px}
 }
 </style>
 </head>
@@ -552,91 +508,50 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   </div>
 </section>
 
-<!-- ============ PAGE 2 — GET AN ANALYST (carousel) ============ -->
-<section class="page" id="p-cards">
-  <div class="pin">
-  <div class="wrap-full">
-    <h2 class="page-title">Get an Analyst for Your Business</h2>
+<!-- ============ PAGE 2 — SERVICES ============ -->
+<section class="page" id="p-services">
+  <div class="wrap">
+    <h2 class="page-title">Services</h2>
+    <p class="svc-sub">Get an analyst for your business &mdash; set up once, run monthly.</p>
     <div class="fill">
-    <div class="car-wrap">
-      <div class="car" id="car">
-
-        <div class="cardx">
-          <img class="bg" src="assets/cards/sales.jpg" alt="">
-          <div class="shade"></div>
-          <h3>Sales<span>Stay on top of every lead</span></h3>
-          <div class="gchip">
-            <div class="crm-row"><span class="sil"></span><span class="blob"></span><span class="money">$$$</span><span class="tagc hot">Hot</span><span class="dt">12 Mar</span></div>
-            <div class="crm-row"><span class="sil"></span><span class="blob"></span><span class="money">$</span><span class="tagc closed">Closed</span><span class="dt">28 Mar</span></div>
-          </div>
+      <div class="svc-rows">
+      <div class="svc-row" data-row="financial">
+        <div class="svc-row-h"><h3>Financial<span>8</span></h3>
+          <div class="svc-nav"><button type="button" data-d="-1" aria-label="Previous">&#8249;</button><button type="button" data-d="1" aria-label="Next">&#8250;</button></div></div>
+        <div class="svc-strip">
+          <article class="svc-tile"><h4>Financial Model Setup</h4><p>See what next year looks like in numbers.</p><span class="svc-tag">One-time</span></article>
+          <article class="svc-tile"><h4>Business Model Setup</h4><p>Map how the business makes money on one page.</p><span class="svc-tag">One-time</span></article>
+          <article class="svc-tile"><h4>Budgeting &amp; Forecasting</h4><p>Know what to spend this month and what to expect next.</p><span class="svc-tag m">Monthly</span></article>
+          <article class="svc-tile"><h4>P&amp;L Analysis</h4><p>See what earns, what costs, and what is left.</p><span class="svc-tag m">Monthly</span></article>
+          <article class="svc-tile"><h4>Cashflow Analysis</h4><p>Find out where your money is going.</p><span class="svc-tag m">Monthly</span></article>
+          <article class="svc-tile"><h4>Pricing &amp; Profitability</h4><p>Find the price and volume where you start making money.</p><span class="svc-tag">One-time</span></article>
+          <article class="svc-tile"><h4>Financial Reporting for Stakeholders</h4><p>Numbers your partners and lenders can read in minutes.</p><span class="svc-tag m">Monthly</span></article>
+          <article class="svc-tile"><h4>Investment &amp; Sponsorship Decks</h4><p>Put your numbers in front of backers, clearly.</p><span class="svc-tag">One-time</span></article>
         </div>
-
-        <div class="cardx">
-          <img class="bg" src="assets/cards/project.jpg" alt="">
-          <div class="shade"></div>
-          <h3>Project<span>Every project, crystal clear</span></h3>
-          <div class="gchip"><div class="gantt"><div class="g"><i></i></div><div class="g"><i></i></div><div class="g"><i></i></div><div class="g"><i></i></div></div></div>
-        </div>
-
-        <div class="cardx">
-          <img class="bg" src="assets/cards/financial.jpg" alt="">
-          <div class="shade"></div>
-          <h3>Financial<span>See where the money goes</span></h3>
-          <div class="gchip">
-            <div class="cash">
-              <div class="cm"><i class="up" style="height:34%"></i><i class="dn" style="height:22%"></i></div>
-              <div class="cm"><i class="up" style="height:26%"></i><i class="dn" style="height:30%"></i></div>
-              <div class="cm"><i class="up" style="height:40%"></i><i class="dn" style="height:24%"></i></div>
-              <div class="cm"><i class="up" style="height:32%"></i><i class="dn" style="height:20%"></i></div>
-              <div class="cm"><i class="up" style="height:44%"></i><i class="dn" style="height:26%"></i></div>
-              <div class="cm"><i class="up" style="height:38%"></i><i class="dn" style="height:18%"></i></div>
-              <div class="cm"><i class="up" style="height:48%"></i><i class="dn" style="height:22%"></i></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="cardx">
-          <img class="bg" src="assets/cards/marketing.jpg" alt="">
-          <div class="shade"></div>
-          <h3>Marketing<span>Know which posts generate leads</span></h3>
-          <div class="gchip">
-            <div class="duel">
-              <div class="prow win"><span class="pico ig"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.15" fill="white" stroke="none"/></svg></span><span class="pword">Reel</span><div class="pbarm"><i></i></div></div>
-              <div class="prow lose"><span class="pico fb">f</span><span class="pword">Campaign</span><div class="pbarm"><i></i></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="cardx">
-          <img class="bg" src="assets/cards/team.jpg" alt="">
-          <div class="shade"></div>
-          <h3>Team<span>Manage without micromanaging</span></h3>
-          <div class="gchip">
-            <div class="tkc">
-              <div class="ringx"><svg viewBox="0 0 56 56"><circle class="b" cx="28" cy="28" r="24"/><circle class="f" cx="28" cy="28" r="24"/></svg><div class="face"></div></div>
-              <div class="tk-bars"><div class="tkb"><i></i></div><div class="tkb"><i></i></div><div class="tkb"><i></i></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="cardx">
-          <img class="bg" src="assets/cards/operations.jpg" alt="">
-          <div class="shade"></div>
-          <h3>Operations<span>Find what's holding you back</span></h3>
-          <div class="gchip">
-            <div class="flow">
-              <span class="node ok">✓</span><span class="link done"></span>
-              <span class="node ok">✓</span><span class="link done"></span>
-              <span class="node stuck">!</span><span class="link"></span>
-              <span class="node wait"></span>
-            </div>
-          </div>
-        </div>
-
       </div>
+      <div class="svc-row" data-row="performance">
+        <div class="svc-row-h"><h3>Business Performance<span>4</span></h3>
+          <div class="svc-nav"><button type="button" data-d="-1" aria-label="Previous">&#8249;</button><button type="button" data-d="1" aria-label="Next">&#8250;</button></div></div>
+        <div class="svc-strip">
+          <article class="svc-tile"><h4>KPI Creation &amp; Tracking</h4><p>Pick the numbers that matter, then watch them every month.</p><span class="svc-tag m">One-time &amp; monthly</span></article>
+          <article class="svc-tile"><h4>Dashboards &amp; Reporting</h4><p>Your key numbers on one screen, updated every month.</p><span class="svc-tag m">Monthly</span></article>
+          <article class="svc-tile"><h4>Workflow Automation &amp; AI Implementation</h4><p>Hand repeat tasks to software.</p><span class="svc-tag">One-time</span></article>
+          <article class="svc-tile"><h4>Process Mapping &amp; Improvement</h4><p>See every step of a process, then cut the slow ones.</p><span class="svc-tag">One-time</span></article>
+        </div>
+      </div>
+      <div class="svc-row" data-row="growth">
+        <div class="svc-row-h"><h3>Growth<span>4</span></h3>
+          <div class="svc-nav"><button type="button" data-d="-1" aria-label="Previous">&#8249;</button><button type="button" data-d="1" aria-label="Next">&#8250;</button></div></div>
+        <div class="svc-strip">
+          <article class="svc-tile"><h4>Sales &amp; Marketing Plans</h4><p>A plan with targets you can check every month.</p><span class="svc-tag">One-time</span></article>
+          <article class="svc-tile"><h4>Growth Strategy</h4><p>A route to your next stage, with the numbers behind it.</p><span class="svc-tag">One-time</span></article>
+          <article class="svc-tile"><h4>Projects &amp; Programs Management</h4><p>Every project on track, with owners and dates.</p><span class="svc-tag m">Monthly</span></article>
+          <article class="svc-tile"><h4>All-in-one Social Media Dashboard</h4><p>Every social account, one screen.</p><span class="svc-tag m">Monthly</span></article>
+        </div>
+      </div>
+      </div>
+      <p class="svc-note">Audit, tax filing and other licensed work are not offered.</p>
     </div>
-    </div>
-  </div>
   </div>
 </section>
 
@@ -963,44 +878,12 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 </a>
 
 <script>
-/* ---------- carousel: desktop = scroll-linked scrub (pinned section), mobile = swipe + auto-advance ---------- */
-const scrubMQ = window.matchMedia('(min-width:960px) and (min-height:560px)');
-
-(function(){
-  const sec=document.getElementById('p-cards');
-  const car=document.getElementById('car');
-  if(!sec||!car) return;
-  let top=0, len=1, max=0;
-
-  function measure(){
-    if(!scrubMQ.matches){ sec.style.height=''; return; }
-    sec.style.height='';                                  // reset before measuring
-    max = car.scrollWidth - car.clientWidth;              // horizontal travel
-    len = Math.max(1, Math.round(max));                   // 1px page scroll : 1px card scroll
-    sec.style.height = (window.innerHeight + len) + 'px'; // pin travel = card travel
-    top = sec.getBoundingClientRect().top + window.scrollY;
-    update();
-  }
-  function update(){
-    if(!scrubMQ.matches) return;
-    const p = Math.min(1, Math.max(0, (window.scrollY - top) / len));
-    car.scrollLeft = p * max;
-  }
-  let raf=0;
-  window.addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(()=>{raf=0;update();}); },{passive:true});
-  window.addEventListener('resize',measure);
-  scrubMQ.addEventListener('change',measure);
-  window.addEventListener('load',measure);
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-  measure();
-})();
-
 /* ---------- page settle: after scrolling stops, glide to the nearest page start ----------
    Gated on pointer type (mouse/trackpad), NOT window size — runs at any viewport so
    non-maximized windows / OS display scaling / toolbars can't disable it.
-   Sections taller than the window (the pinned card scrub on desktop, or any long
-   section in the small-window natural-flow layout) allow free rest in their interior
-   and expose two targets: top-aligned and bottom-aligned. */
+   Sections taller than the window (services, or any long section in the small-window
+   natural-flow layout) allow free rest in their interior and expose two targets:
+   top-aligned and bottom-aligned. */
 (function(){
   const fine=window.matchMedia('(pointer:fine)');
   let settling=false, tmr=0;
@@ -1011,7 +894,7 @@ const scrubMQ = window.matchMedia('(min-width:960px) and (min-height:560px)');
       const r=s.getBoundingClientRect();
       const top=Math.round(r.top+window.scrollY), h=Math.round(r.height);
       pts.push(top);
-      if(h>vh+120){                   // meaningfully taller than the window: free interior + bottom-aligned target
+      if(h>vh+120){
         pts.push(top+h-vh);
         zones.push([top+4, top+h-vh-4]);
       }
@@ -1022,11 +905,11 @@ const scrubMQ = window.matchMedia('(min-width:960px) and (min-height:560px)');
     if(!fine.matches||settling) return;
     const y=window.scrollY;
     const {pts,zones}=snapData();
-    if(zones.some(z=>y>z[0]&&y<z[1])) return;          // resting mid-section is intentional
+    if(zones.some(z=>y>z[0]&&y<z[1])) return;
     const maxY=document.documentElement.scrollHeight-window.innerHeight;
     let best=0,d=Infinity;
     pts.forEach(p=>{ p=Math.min(p,maxY); const dd=Math.abs(p-y); if(dd<d){d=dd;best=p;} });
-    if(Math.abs(best-y)<2) return;                     // already clean
+    if(Math.abs(best-y)<2) return;
     settling=true;
     window.scrollTo({top:best,behavior:'smooth'});
     const iv=setInterval(()=>{ if(Math.abs(window.scrollY-best)<2){clearInterval(iv);settling=false;} },80);
@@ -1036,20 +919,42 @@ const scrubMQ = window.matchMedia('(min-width:960px) and (min-height:560px)');
   ['wheel','touchstart','keydown'].forEach(ev=>window.addEventListener(ev,()=>{settling=false;},{passive:true}));
 })();
 
+/* ---------- services: horizontal strips (drag, arrows, edge fade) ---------- */
 (function(){
-  const car=document.getElementById('car'); if(!car) return;
-  const step=()=>car.querySelector('.cardx').getBoundingClientRect().width+14;
-  const atEnd=()=>car.scrollLeft>=car.scrollWidth-car.clientWidth-10;
-  const slide=dir=>car.scrollBy({left:dir*step(),behavior:'smooth'});
-  let idle=true, t;
-  const pause=()=>{idle=false; clearTimeout(t); t=setTimeout(()=>idle=true,5000);};
-  ['pointerdown','touchstart'].forEach(ev=>car.addEventListener(ev,pause,{passive:true}));
-  setInterval(()=>{
-    if(scrubMQ.matches) return;   // desktop: page scroll owns the carousel
-    if(!idle) return;
-    if(atEnd()) car.scrollTo({left:0,behavior:'smooth'});
-    else slide(1);
-  },3500);
+  const fine=window.matchMedia('(pointer:fine)');
+  document.querySelectorAll('.svc-row').forEach(row=>{
+    const strip=row.querySelector('.svc-strip');
+    const nav=row.querySelector('.svc-nav');
+    const [prev,next]=nav.querySelectorAll('button');
+    let told=false;
+    function state(){
+      const max=strip.scrollWidth-strip.clientWidth;
+      const over=max>6;
+      strip.classList.toggle('more',over);
+      strip.classList.toggle('mid',over && strip.scrollLeft>6 && strip.scrollLeft<max-6);
+      strip.classList.toggle('end',over && strip.scrollLeft>=max-6);
+      strip.classList.toggle('drag',over);
+      nav.classList.toggle('on',over);
+      prev.disabled = !over || strip.scrollLeft<=6;
+      next.disabled = !over || strip.scrollLeft>=max-6;
+    }
+    const step=()=>{const t=strip.querySelector('.svc-tile');return t.getBoundingClientRect().width+14;};
+    prev.addEventListener('click',()=>strip.scrollBy({left:-step()*2,behavior:'smooth'}));
+    next.addEventListener('click',()=>strip.scrollBy({left: step()*2,behavior:'smooth'}));
+    strip.addEventListener('scroll',()=>{
+      state();
+      if(!told){told=true; if(window.gtag) gtag('event','services_row_scroll',{row:row.dataset.row});}
+    },{passive:true});
+    // mouse drag-to-scroll
+    let down=false,sx=0,sl=0;
+    strip.addEventListener('pointerdown',e=>{ if(e.pointerType!=='mouse') return; down=true; sx=e.clientX; sl=strip.scrollLeft; strip.classList.add('dragging'); });
+    window.addEventListener('pointermove',e=>{ if(!down) return; strip.scrollLeft = sl-(e.clientX-sx); });
+    window.addEventListener('pointerup',()=>{ if(!down) return; down=false; strip.classList.remove('dragging'); });
+    window.addEventListener('resize',state);
+    window.addEventListener('load',state);
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(state);
+    state();
+  });
 })();
 
 /* ---------- rotors — inside-out reveal (width collapse/expand) ---------- */
