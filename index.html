@@ -109,34 +109,35 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 /* ---------- page 1 — problem ---------- */
 #p-problem{position:relative;background:radial-gradient(1100px 560px at 50% -10%,rgba(53,51,205,.30),transparent 62%),var(--dark)}
 #p-problem h1{font-size:clamp(32px,6vw,64px);font-weight:800;max-width:900px;margin:0 auto}
+.cue{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--dark-dim)}
+.cue i{position:relative;width:1.5px;height:44px;background:var(--dark-line);overflow:hidden}
+.cue i::after{content:"";position:absolute;left:0;right:0;top:0;height:40%;background:var(--accent);animation:cue 1.8s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes cue{from{transform:translateY(-100%)}to{transform:translateY(260%)}}
 #p-problem .even{display:block;font-family:var(--font-display);font-size:clamp(18px,2.8vw,28px);font-weight:500;color:var(--dark-dim);margin-top:18px;letter-spacing:-.01em}
 
-/* ---------- services (section 2) ---------- */
-.svc-sub{color:var(--ink-soft);font-size:clamp(15px,1.9vw,18px);margin-top:10px}
-.svc-rows{width:100%;display:flex;flex-direction:column;gap:22px;text-align:left;margin-top:30px}
-.svc-row-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
-.svc-row-h h3{font-size:20px;font-weight:800;letter-spacing:-.02em}
-.svc-row-h span{color:var(--ink-soft);font-size:13px;font-weight:600;margin-left:8px}
-.svc-nav{display:none;gap:6px}
-.svc-nav button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-size:15px;line-height:1;display:grid;place-items:center;transition:.15s}
-.svc-nav button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-.svc-nav button:disabled{opacity:.35;cursor:default}
-.svc-strip{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:2px;scrollbar-width:none;padding:2px 2px 6px;margin:0 -2px;-webkit-overflow-scrolling:touch}
-.svc-strip::-webkit-scrollbar{display:none}
-.svc-strip.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 46px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 46px),transparent)}
-.svc-strip.more.mid{-webkit-mask-image:linear-gradient(90deg,transparent,#000 36px,#000 calc(100% - 46px),transparent);mask-image:linear-gradient(90deg,transparent,#000 36px,#000 calc(100% - 46px),transparent)}
-.svc-strip.more.end{-webkit-mask-image:linear-gradient(90deg,transparent,#000 36px);mask-image:linear-gradient(90deg,transparent,#000 36px)}
-.svc-tile{flex:0 0 244px;scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px 15px;display:flex;flex-direction:column;min-height:136px}
-.svc-tile h4{font-size:15.5px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
-.svc-tile p{margin-top:6px;color:var(--ink-soft);font-size:13.5px;line-height:1.4}
-.svc-tag{margin-top:auto;padding-top:10px;font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.02em}
-.svc-tag.m{color:var(--accent)}
-.svc-note{margin-top:20px;color:var(--ink-soft);font-size:13px;text-align:center}
-@media(hover:hover) and (pointer:fine){.svc-strip.drag{cursor:grab}.svc-strip.dragging{cursor:grabbing;scroll-snap-type:none}.svc-strip.more~*{}}
-@media(hover:hover) and (pointer:fine){.svc-nav.on{display:flex}}
+/* ---------- services (section 2): pinned frame, vertical scroll drives a horizontal track ---------- */
+#p-services{display:block;height:auto;min-height:0;padding:0;text-align:left;--svc-pad:max(20px,calc((100vw - 1040px) / 2))}
+.svc-pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;overflow:hidden;padding:clamp(40px,8vh,68px) 0 clamp(18px,3.6vh,36px)}
+.svc-head{text-align:center}
+.svc-rail{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:6px 26px;margin-top:clamp(16px,3vh,28px)}
+.svc-rail button{position:relative;background:none;border:0;padding:0 0 9px;font:600 14px/1.2 var(--font-body);color:var(--ink-soft);cursor:pointer;transition:color .2s}
+.svc-rail button::before,.svc-rail button::after{content:"";position:absolute;left:0;bottom:0;height:2px;border-radius:2px}
+.svc-rail button::before{right:0;background:var(--line)}
+.svc-rail button::after{width:calc(var(--seen,0) * 100%);background:var(--accent)}
+.svc-rail button.on,.svc-rail button:hover{color:var(--ink)}
+.svc-view{flex:1;min-height:0;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;margin-top:clamp(18px,3.6vh,40px)}
+.svc-view::-webkit-scrollbar{display:none}
+.svc-view.pinned{overflow:hidden}
+.svc-track{position:relative;display:flex;gap:clamp(64px,8vw,128px);padding:0 var(--svc-pad);will-change:transform}
+.svc-cat{flex:none}
+.svc-cat h3{font-size:clamp(38px,min(5.4vw,8.4vh),78px);font-weight:800;letter-spacing:-.04em;line-height:1;white-space:nowrap;margin-bottom:clamp(18px,3.6vh,36px)}
+.svc-cat h3::after{content:".";color:var(--accent)}
+.svc-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:clamp(250px,27vw,360px);gap:clamp(18px,3.4vh,34px) clamp(28px,3vw,48px)}
+.svc-item{border-top:1.5px solid var(--ink);padding-top:clamp(12px,2vh,18px)}
+.svc-item h4{font-size:clamp(21px,min(2.6vw,4.1vh),34px);font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.svc-item p{margin-top:clamp(6px,1vh,10px);color:var(--ink-soft);font-size:clamp(15px,min(1.5vw,2.4vh),19px);line-height:1.45}
 @media(max-width:959.5px),(max-height:559.5px){
-  .svc-tile{flex-basis:min(72vw,270px)}
-  .svc-rows{gap:26px}
+  .svc-grid{grid-auto-columns:min(74vw,300px)}
 }
 
 /* ---------- before / after ---------- */
@@ -375,7 +376,11 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 
 /* ---------- zero hassle ---------- */
 .hassle-grid{display:grid;gap:48px;margin-top:36px;align-items:center;width:100%}
-@media(min-width:900px){.hassle-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.hassle-grid{grid-template-columns:1fr auto;gap:48px}.hassle-grid .phone{width:300px}}
+.incl{list-style:none;display:grid;grid-template-columns:1fr;column-gap:36px;text-align:left}
+@media(min-width:640px){.incl{grid-template-columns:1fr 1fr;column-gap:28px}}
+.incl li{display:flex;align-items:flex-start;gap:12px;padding:clamp(11px,1.9vh,17px) 0;border-top:1px solid var(--line);font-family:var(--font-display);font-size:clamp(15px,min(1.4vw,2.2vh),18px);font-weight:600;line-height:1.35;letter-spacing:-.01em}
+.incl li::before{content:"";flex:none;width:22px;height:22px;margin-top:1px;border-radius:50%;background:#E6F6EE url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%230A8754" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg>') center/12px no-repeat}
 .ticks{list-style:none;text-align:left}
 .ticks li{font-family:var(--font-display);font-size:clamp(15px,1.9vw,18px);font-weight:600;padding:5.5px 0;display:flex;align-items:flex-start;gap:12px}
 .ticks li::before{content:"";flex:none;width:22px;height:22px;margin-top:1px;border-radius:50%;background:#E6F6EE url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%230A8754" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg>') center/12px no-repeat}
@@ -395,48 +400,65 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 .bub time{display:block;font-size:10px;color:var(--ink-soft);margin-top:5px;text-align:right}
 
 /* ---------- your analyst ---------- */
-.id-grid{display:grid;gap:44px;margin-top:36px;width:100%;text-align:left}
-@media(min-width:900px){.id-grid{grid-template-columns:.8fr 1.2fr;align-items:start}}
-.id-photo{text-align:center}
-
-.portrait{display:block;width:100%;max-width:245px;aspect-ratio:3/4;object-fit:cover;border-radius:24px;margin:0 auto 14px;box-shadow:0 24px 60px rgba(53,51,205,.28)}
-.id-photo h3{font-size:26px}
-.id-photo .role{font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.02em;color:var(--ink-soft);margin-top:5px}
-.id-info .across{font-family:var(--font-display);font-weight:700;font-size:clamp(17px,2vw,21px);margin-top:16px;text-align:center}
-@media(min-width:900px){.id-info .across{text-align:left}}
-.logos{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-start;max-width:560px}
-.lg{width:100px;aspect-ratio:1/1;border:1px solid var(--line);border-radius:14px;object-fit:cover;background:#fff}
-@media(max-width:900px){.logos{justify-content:center;margin:0 auto}}
+.id-grid{display:grid;gap:36px;margin-top:36px;width:100%;text-align:left;align-items:center}
+@media(min-width:900px){.id-grid{grid-template-columns:auto 1fr;gap:64px}}
+.id-photo{margin:0;text-align:center}
+.portrait{display:block;width:auto;height:clamp(240px,40vh,380px);max-width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:24px;margin:0 auto 16px;box-shadow:0 24px 60px rgba(53,51,205,.28)}
+@media(max-width:899.5px){.portrait{height:clamp(200px,30vh,280px)}}
+.id-photo b{display:block;font-family:var(--font-display);font-size:22px;font-weight:800;letter-spacing:-.02em}
+.id-photo span{display:block;font-weight:600;font-size:14px;letter-spacing:.02em;color:var(--ink-soft);margin-top:4px}
+.id-info{min-width:0}
+.across{font-family:var(--font-display);font-weight:800;font-size:clamp(28px,min(3.6vw,5.6vh),50px);line-height:1.12;letter-spacing:-.03em;text-align:center}
+@media(min-width:900px){.across{text-align:left}}
+.mq{margin-top:clamp(22px,4vh,40px);display:flex;flex-direction:column;gap:12px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.mq-row{display:flex;gap:12px;width:max-content;animation:mq 46s linear infinite}
+.mq-row.rev{animation-direction:reverse;animation-duration:52s}
+.mq:hover .mq-row{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(calc(-50% - 6px))}}
+.lg{width:clamp(78px,11vh,100px);aspect-ratio:1/1;border:1px solid var(--line);border-radius:16px;object-fit:cover;background:#fff;flex:none}
+@media(prefers-reduced-motion:reduce){.mq{-webkit-mask-image:none;mask-image:none}.mq-row{flex-wrap:wrap;width:auto;justify-content:center}.mq-row [aria-hidden]{display:none}}
 
 /* ---------- page 7 — pricing ---------- */
 /* ---------- free resources ---------- */
-.res-sub{text-align:center;color:var(--ink-2);font-size:clamp(15px,1.9vw,18px)}
-.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:840px;margin:30px auto 0;width:100%}
-.res-card{display:block;text-align:left;background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px;text-decoration:none;color:var(--ink);transition:transform .15s ease,box-shadow .15s ease}
-.res-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(20,20,40,.10)}
-.res-tag{font-family:var(--font-display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:rgba(53,51,205,.08);padding:4px 10px;border-radius:999px}
-.res-card h3{font-size:clamp(19px,2.2vw,23px);font-weight:800;margin:14px 0 6px}
-.res-card p{color:var(--ink-2);font-size:15px}
-.res-open{display:inline-block;margin-top:16px;font-weight:700;color:var(--accent)}
-.res-all{display:block;text-align:center;margin-top:26px;font-weight:700;color:var(--accent);font-size:15.5px}
-@media(max-width:720px){.res-grid{grid-template-columns:1fr;max-width:440px}}
-@media(min-width:960px) and (min-height:560px) and (max-height:700px){.res-grid{margin-top:18px;gap:16px}.res-card{padding:20px 22px}}
+.res-sub{text-align:center;color:var(--ink-soft);font-size:clamp(15px,1.9vw,18px);margin-top:10px}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:960px;margin:0 auto;width:100%}
+.res-card{position:relative;display:flex;flex-direction:column;text-align:left;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:clamp(24px,4vh,36px) clamp(24px,3vw,36px);min-height:clamp(220px,36vh,320px);color:var(--ink);overflow:hidden;transition:transform .25s ease,box-shadow .25s ease,background .25s ease,color .25s ease}
+.res-card:hover{transform:translateY(-4px);background:var(--accent);color:#fff;box-shadow:0 22px 50px rgba(53,51,205,.28)}
+.res-tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:999px;transition:inherit}
+.res-card:hover .res-tag{background:rgba(255,255,255,.16);color:#fff}
+.res-card h3{font-size:clamp(26px,min(3vw,4.6vh),40px);font-weight:800;letter-spacing:-.03em;margin-top:auto;padding-top:28px}
+.res-card p{color:var(--ink-soft);font-size:clamp(15px,1.4vw,17px);margin-top:8px;max-width:34ch;transition:color .25s}
+.res-card:hover p{color:rgba(255,255,255,.82)}
+.res-open{position:absolute;top:clamp(22px,3.6vh,32px);right:clamp(22px,3vw,32px);width:48px;height:48px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:20px;transition:transform .25s ease,border-color .25s}
+.res-card:hover .res-open{transform:rotate(-45deg);border-color:rgba(255,255,255,.5)}
+.res-all{display:inline-block;margin-top:26px;font-weight:700;color:var(--accent);font-size:15.5px}
+@media(max-width:720px){.res-grid{grid-template-columns:1fr;max-width:440px}.res-card{min-height:200px}}
+@media(min-width:960px) and (min-height:560px) and (max-height:700px){.res-all{margin-top:14px}}
 
-.plans{display:grid;gap:18px;margin-top:52px;width:100%;text-align:left}
-@media(min-width:960px){.plans{grid-template-columns:repeat(3,1fr);align-items:stretch}}
-.plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:30px 28px;display:flex;flex-direction:column}
-.plan.hero-plan{border:2px solid var(--accent);box-shadow:0 20px 50px rgba(53,51,205,.14);position:relative}
-.tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;white-space:nowrap}
-.plan h3{font-size:24px;font-weight:600;text-align:center}
-.price{font-family:var(--font-display);font-weight:700;font-size:32px;margin-top:12px;text-align:center}
-.price small{font-family:var(--font-body);font-weight:500;font-size:14px;color:var(--ink-soft)}
-.plan ul{margin:24px 0 26px;flex:1}
-.plan .ticks li{font-size:14px;font-weight:500;font-family:var(--font-body);padding:7px 0}
+.plans{display:grid;gap:18px;margin:44px auto 0;width:100%;max-width:900px;text-align:left}
+@media(min-width:760px){.plans{grid-template-columns:1fr 1fr;align-items:stretch}}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:clamp(24px,4vh,36px) clamp(24px,3vw,36px);display:flex;flex-direction:column;position:relative}
+.plan h3{font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--ink-soft)}
+.price{font-family:var(--font-display);font-weight:800;font-size:clamp(36px,min(4.2vw,6.4vh),54px);letter-spacing:-.035em;line-height:1.05;margin-top:10px}
+.price small{font-family:var(--font-body);font-weight:600;font-size:15px;letter-spacing:0;color:var(--ink-soft)}
+.price .from{display:block;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:2px}
+.plan ul{margin:clamp(16px,3vh,28px) 0 clamp(18px,3vh,28px);flex:1;padding-top:clamp(14px,2.4vh,22px);border-top:1px solid var(--line)}
+.plan .ticks li{font-size:15px;font-weight:500;font-family:var(--font-body);padding:6px 0}
 .plan .ticks li::before{width:19px;height:19px;background-size:10px}
 .plan .ticks li.plain{font-weight:700}
 .plan .ticks li.plain::before{background:var(--accent-soft) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2328279B" stroke-width="3.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>') center/10px no-repeat}
-.plan-spacer{flex:1;min-height:24px}
 .plan .btn{justify-content:center}
+.plan.hero-plan{background:radial-gradient(520px 280px at 100% 0,rgba(53,51,205,.45),transparent 70%),var(--dark);border-color:var(--dark);color:var(--dark-text);box-shadow:0 26px 60px rgba(53,51,205,.25)}
+.hero-plan h3,.hero-plan .price small,.hero-plan .price .from{color:var(--dark-dim)}
+.hero-plan ul{border-top-color:var(--dark-line)}
+.hero-plan .ticks li::before{background-color:rgba(10,135,84,.22)}
+.hero-plan .ticks li.plain::before{background-color:rgba(53,51,205,.35)}
+.tag{position:absolute;top:clamp(24px,4vh,36px);right:clamp(24px,3vw,36px);background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:999px;white-space:nowrap}
+.plan-custom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;max-width:900px;margin:18px auto 0;width:100%;text-align:left;border:1.5px dashed #CFCEC6;border-radius:var(--radius-lg);padding:18px clamp(22px,3vw,36px);transition:border-color .2s,background .2s}
+.plan-custom:hover{border-color:var(--accent);background:var(--accent-soft)}
+.plan-custom b{font-family:var(--font-display);font-size:clamp(18px,1.8vw,22px);font-weight:800;letter-spacing:-.02em}
+.plan-custom b span{color:var(--ink-soft);font-weight:600}
+.plan-custom em{font-style:normal;font-weight:700;color:var(--accent)}
 
 /* ---------- page 8 — final cta ---------- */
 #p-final{background:radial-gradient(900px 480px at 50% 120%,rgba(53,51,205,.32),transparent 62%),var(--dark);padding-bottom:28px}
@@ -470,23 +492,7 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
   .hassle-grid{margin-top:18px;gap:36px}
   .id-grid{margin-top:18px;gap:32px}
   .plans{margin-top:22px}
-  .plan{padding:22px 24px}
-  .plan ul{margin:16px 0 18px}
   #p-final p{margin:12px auto 24px}
-  /* services: compact tiles for 150%-scaled laptops */
-  .svc-rows{gap:12px;margin-top:14px}
-  .svc-row-h{margin-bottom:6px}
-  .svc-tile{min-height:104px;padding:11px 14px 10px}
-  .svc-tile p{margin-top:4px;font-size:12.5px;line-height:1.35}
-  .svc-tag{padding-top:6px;font-size:10.5px}
-  .svc-note{margin-top:10px}
-}
-@media(min-width:960px) and (min-height:560px) and (max-height:600px){
-  .svc-rows{gap:8px;margin-top:10px}
-  .svc-tile{min-height:92px;padding:9px 13px 8px}
-  .svc-tile h4{font-size:14.5px}
-  .svc-tile p{font-size:12px}
-  .svc-note{margin-top:6px}
 }
 </style>
 </head>
@@ -506,51 +512,50 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
       <span class="even">Even though you have all the numbers</span>
     </h1>
   </div>
+  <div class="cue" aria-hidden="true">Scroll<i></i></div>
 </section>
 
 <!-- ============ PAGE 2 — SERVICES ============ -->
 <section class="page" id="p-services">
-  <div class="wrap">
-    <h2 class="page-title">Services</h2>
-    <p class="svc-sub">Get an analyst for your business &mdash; set up once, run monthly.</p>
-    <div class="fill">
-      <div class="svc-rows">
-      <div class="svc-row" data-row="financial">
-        <div class="svc-row-h"><h3>Financial<span>8</span></h3>
-          <div class="svc-nav"><button type="button" data-d="-1" aria-label="Previous">&#8249;</button><button type="button" data-d="1" aria-label="Next">&#8250;</button></div></div>
-        <div class="svc-strip">
-          <article class="svc-tile"><h4>Financial Model Setup</h4><p>See what next year looks like in numbers.</p><span class="svc-tag">One-time</span></article>
-          <article class="svc-tile"><h4>Business Model Setup</h4><p>Map how the business makes money on one page.</p><span class="svc-tag">One-time</span></article>
-          <article class="svc-tile"><h4>Budgeting &amp; Forecasting</h4><p>Know what to spend this month and what to expect next.</p><span class="svc-tag m">Monthly</span></article>
-          <article class="svc-tile"><h4>P&amp;L Analysis</h4><p>See what earns, what costs, and what is left.</p><span class="svc-tag m">Monthly</span></article>
-          <article class="svc-tile"><h4>Cashflow Analysis</h4><p>Find out where your money is going.</p><span class="svc-tag m">Monthly</span></article>
-          <article class="svc-tile"><h4>Pricing &amp; Profitability</h4><p>Find the price and volume where you start making money.</p><span class="svc-tag">One-time</span></article>
-          <article class="svc-tile"><h4>Financial Reporting for Stakeholders</h4><p>Numbers your partners and lenders can read in minutes.</p><span class="svc-tag m">Monthly</span></article>
-          <article class="svc-tile"><h4>Investment &amp; Sponsorship Decks</h4><p>Put your numbers in front of backers, clearly.</p><span class="svc-tag">One-time</span></article>
+  <div class="svc-pin">
+    <div class="wrap svc-head">
+      <h2 class="page-title">Services</h2>
+      <nav class="svc-rail" aria-label="Service categories"><button type="button" data-i="0">Financial</button><button type="button" data-i="1">Business Performance</button><button type="button" data-i="2">Growth</button></nav>
+    </div>
+    <div class="svc-view">
+      <div class="svc-track">
+        <div class="svc-cat" data-row="financial">
+          <h3>Financial</h3>
+          <div class="svc-grid">
+            <article class="svc-item"><h4>Financial Model Setup</h4><p>See what next year looks like in numbers.</p></article>
+            <article class="svc-item"><h4>Business Model Setup</h4><p>Map how the business makes money on one page.</p></article>
+            <article class="svc-item"><h4>Budgeting &amp; Forecasting</h4><p>Know what to spend this month and what to expect next.</p></article>
+            <article class="svc-item"><h4>P&amp;L Analysis</h4><p>See what earns, what costs, and what is left.</p></article>
+            <article class="svc-item"><h4>Cashflow Analysis</h4><p>Find out where your money is going.</p></article>
+            <article class="svc-item"><h4>Pricing &amp; Profitability</h4><p>Find the price and volume where you start making money.</p></article>
+            <article class="svc-item"><h4>Financial Reporting for Stakeholders</h4><p>Numbers your partners and lenders can read in minutes.</p></article>
+            <article class="svc-item"><h4>Investment &amp; Sponsorship Decks</h4><p>Put your numbers in front of backers, clearly.</p></article>
+          </div>
+        </div>
+        <div class="svc-cat" data-row="performance">
+          <h3>Business Performance</h3>
+          <div class="svc-grid">
+            <article class="svc-item"><h4>KPI Creation &amp; Tracking</h4><p>Pick the numbers that matter, then watch them every month.</p></article>
+            <article class="svc-item"><h4>Dashboards &amp; Reporting</h4><p>Your key numbers on one screen, updated every month.</p></article>
+            <article class="svc-item"><h4>Workflow Automation &amp; AI Implementation</h4><p>Hand repeat tasks to software.</p></article>
+            <article class="svc-item"><h4>Process Mapping &amp; Improvement</h4><p>See every step of a process, then cut the slow ones.</p></article>
+          </div>
+        </div>
+        <div class="svc-cat" data-row="growth">
+          <h3>Growth</h3>
+          <div class="svc-grid">
+            <article class="svc-item"><h4>Sales &amp; Marketing Plans</h4><p>A plan with targets you can check every month.</p></article>
+            <article class="svc-item"><h4>Growth Strategy</h4><p>A route to your next stage, with the numbers behind it.</p></article>
+            <article class="svc-item"><h4>Projects &amp; Programs Management</h4><p>Every project on track, with owners and dates.</p></article>
+            <article class="svc-item"><h4>All-in-one Social Media Dashboard</h4><p>Every social account, one screen.</p></article>
+          </div>
         </div>
       </div>
-      <div class="svc-row" data-row="performance">
-        <div class="svc-row-h"><h3>Business Performance<span>4</span></h3>
-          <div class="svc-nav"><button type="button" data-d="-1" aria-label="Previous">&#8249;</button><button type="button" data-d="1" aria-label="Next">&#8250;</button></div></div>
-        <div class="svc-strip">
-          <article class="svc-tile"><h4>KPI Creation &amp; Tracking</h4><p>Pick the numbers that matter, then watch them every month.</p><span class="svc-tag m">One-time &amp; monthly</span></article>
-          <article class="svc-tile"><h4>Dashboards &amp; Reporting</h4><p>Your key numbers on one screen, updated every month.</p><span class="svc-tag m">Monthly</span></article>
-          <article class="svc-tile"><h4>Workflow Automation &amp; AI Implementation</h4><p>Hand repeat tasks to software.</p><span class="svc-tag">One-time</span></article>
-          <article class="svc-tile"><h4>Process Mapping &amp; Improvement</h4><p>See every step of a process, then cut the slow ones.</p><span class="svc-tag">One-time</span></article>
-        </div>
-      </div>
-      <div class="svc-row" data-row="growth">
-        <div class="svc-row-h"><h3>Growth<span>4</span></h3>
-          <div class="svc-nav"><button type="button" data-d="-1" aria-label="Previous">&#8249;</button><button type="button" data-d="1" aria-label="Next">&#8250;</button></div></div>
-        <div class="svc-strip">
-          <article class="svc-tile"><h4>Sales &amp; Marketing Plans</h4><p>A plan with targets you can check every month.</p><span class="svc-tag">One-time</span></article>
-          <article class="svc-tile"><h4>Growth Strategy</h4><p>A route to your next stage, with the numbers behind it.</p><span class="svc-tag">One-time</span></article>
-          <article class="svc-tile"><h4>Projects &amp; Programs Management</h4><p>Every project on track, with owners and dates.</p><span class="svc-tag m">Monthly</span></article>
-          <article class="svc-tile"><h4>All-in-one Social Media Dashboard</h4><p>Every social account, one screen.</p><span class="svc-tag m">Monthly</span></article>
-        </div>
-      </div>
-      </div>
-      <p class="svc-note">Audit, tax filing and other licensed work are not offered.</p>
     </div>
   </div>
 </section>
@@ -722,7 +727,7 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
     <h2 class="page-title">Everything Included</h2>
 <div class="fill">
     <div class="hassle-grid">
-      <ul class="ticks">
+      <ul class="incl">
         <li>For businesses of any size, in any industry</li>
         <li>No new software/training/credentials</li>
         <li><span class="tkx">Monthly business reports as a<br class="brm"> <span class="rotor" data-words="PDF,spreadsheet,dashboard,summary video">PDF</span></span></li>
@@ -757,13 +762,14 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
     <h2 class="page-title">Your Analyst</h2>
 <div class="fill">
     <div class="id-grid">
-      <div class="id-photo">
+      <figure class="id-photo">
         <img class="portrait" src="assets/hashir.jpg" alt="Hashir Faraz">
-        <h3>Hashir Faraz</h3>
-        <div class="role">MBA, BIDA®, FPAP</div>
-      </div>
+        <figcaption><b>Hashir Faraz</b><span>MBA, BIDA&reg;, FPAP</span></figcaption>
+      </figure>
       <div class="id-info">
-        <div class="logos">
+        <div class="across">5+ years of experience<br> across <span class="rotor" data-words="F&amp;B,Real Estate,SaaS,Sports &amp; Media,Services">F&amp;B</span></div>
+        <div class="mq">
+          <div class="mq-row">
           <img class="lg" src="assets/logos/dohabank.jpg" alt="Doha Bank">
           <img class="lg" src="assets/logos/discoverqatar.jpg" alt="Discover Qatar">
           <img class="lg" src="assets/logos/binyousef.jpg" alt="Bin Yousef">
@@ -772,6 +778,8 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
           <img class="lg" src="assets/logos/totalpay.jpg" alt="TotalPay">
           <img class="lg" src="assets/logos/cargoz.jpg" alt="Cargoz">
           <img class="lg" src="assets/logos/homes4life.jpg" alt="Homes4Life">
+          </div>
+          <div class="mq-row rev">
           <img class="lg" src="assets/logos/entertainerbiz.jpg" alt="The Entertainer Business">
           <img class="lg" src="assets/logos/walco.jpg" alt="Walco">
           <img class="lg" src="assets/logos/housemap.jpg" alt="House Map Properties">
@@ -779,8 +787,8 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
           <img class="lg" src="assets/logos/dynatech.jpg" alt="Dynatech">
           <img class="lg" src="assets/logos/highcamp.jpg" alt="Highcamp Holding">
           <img class="lg" src="assets/logos/qool.jpg" alt="Qool Qatar">
+          </div>
         </div>
-        <div class="across">5+ years of experience across <span class="rotor" data-words="F&amp;B,Real Estate,SaaS,Sports &amp; Media,Services">F&amp;B</span></div>
       </div>
     </div>
 </div>
@@ -795,7 +803,7 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
     <div class="plans">
       <div class="plan">
         <h3>One-Time Setup</h3>
-        <div class="price">QAR 499 <small>one-time</small></div>
+        <div class="price"><span class="from">&nbsp;</span>QAR 499 <small>one-time</small></div>
         <ul class="ticks">
           <li>1 tracking sheet, built for your business</li>
           <li>1 live dashboard, connected to it</li>
@@ -807,22 +815,17 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
       <div class="plan hero-plan">
         <span class="tag">Most chosen</span>
         <h3>Personal Analyst</h3>
-        <div class="price">from QAR 699 <small>/month</small></div>
+        <div class="price"><span class="from">from</span>QAR 699 <small>/month</small></div>
         <ul class="ticks">
           <li class="plain">Everything in One-Time Setup</li>
           <li>Monthly performance report — PDF, sheet, or dashboard</li>
           <li>Numbers updated, tracked, and read for you</li>
           <li>1 monthly review conversation on WhatsApp</li>
         </ul>
-        <a class="btn btn-ghost" data-wa="pricing_monthly" href="https://wa.me/97455299831?text=Hi%20Hashir%2C%20I%20want%20a%20Personal%20Analyst%20%E2%80%94%20tell%20me%20about%20the%20monthly%20plan." target="_blank" rel="noopener">Contact me</a>
-      </div>
-      <div class="plan">
-        <h3>Custom</h3>
-        <div class="price">Your scope<small>, your price</small></div>
-        <div class="plan-spacer"></div>
-        <a class="btn btn-ghost" data-wa="pricing_custom" href="https://wa.me/97455299831?text=Hi%20Hashir%2C%20I%20need%20something%20custom%20%E2%80%94%20can%20we%20talk%3F" target="_blank" rel="noopener">Contact me</a>
+        <a class="btn btn-wa" data-wa="pricing_monthly" href="https://wa.me/97455299831?text=Hi%20Hashir%2C%20I%20want%20a%20Personal%20Analyst%20%E2%80%94%20tell%20me%20about%20the%20monthly%20plan." target="_blank" rel="noopener">Contact me</a>
       </div>
     </div>
+    <a class="plan-custom" data-wa="pricing_custom" href="https://wa.me/97455299831?text=Hi%20Hashir%2C%20I%20need%20something%20custom%20%E2%80%94%20can%20we%20talk%3F" target="_blank" rel="noopener"><b>Custom <span>— your scope, your price</span></b><em>Contact me &rarr;</em></a>
 </div>
   </div>
 </section>
@@ -831,23 +834,23 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 <section class="page" id="p-resources">
   <div class="wrap">
     <h2 class="page-title">Free Resources</h2>
+    <p class="res-sub">Interactive tools that read your numbers. Free, no sign-up.</p>
     <div class="fill">
-      <p class="res-sub">Interactive tools that read your numbers. Free, no sign-up.</p>
       <div class="res-grid">
         <a class="res-card" data-tool="pricing_planner" href="/tools/agency-pricing-planner/">
           <span class="res-tag">Interactive tool</span>
           <h3>Agency Pricing Planner</h3>
           <p>Cost your team and deliverables, then price what you sell.</p>
-          <span class="res-open">Open &rarr;</span>
+          <span class="res-open" aria-hidden="true">&rarr;</span>
         </a>
         <a class="res-card" data-tool="revenue_analysis" href="/tools/revenue-analysis/">
           <span class="res-tag">Interactive tool</span>
           <h3>Revenue Analysis</h3>
           <p>See where your revenue really comes from, and your growth ceiling.</p>
-          <span class="res-open">Open &rarr;</span>
+          <span class="res-open" aria-hidden="true">&rarr;</span>
         </a>
       </div>
-      <a class="res-all" href="/free-resources/">See all free resources &rarr;</a>
+      <div><a class="res-all" href="/free-resources/">See all free resources &rarr;</a></div>
     </div>
   </div>
 </section>
@@ -878,83 +881,109 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
 </a>
 
 <script>
-/* ---------- page settle: after scrolling stops, glide to the nearest page start ----------
-   Gated on pointer type (mouse/trackpad), NOT window size — runs at any viewport so
-   non-maximized windows / OS display scaling / toolbars can't disable it.
-   Sections taller than the window (services, or any long section in the small-window
-   natural-flow layout) allow free rest in their interior and expose two targets:
-   top-aligned and bottom-aligned. */
+/* ---------- page settle: after scrolling stops, glide to the page you were heading to ----------
+   Gated on pointer type (mouse/trackpad), NOT window size, so window size / OS scaling can't disable it.
+   - Waits until wheel input (including trackpad inertia) has been quiet, so it never fights a gesture.
+   - Direction-aware: a small nudge past a page edge carries on to the next page, a small nudge
+     back returns, instead of always snapping to whichever edge happens to be nearest.
+   - Its own rAF glide, cancelled instantly by any wheel/touch/key/mouse input.
+   Sections taller than the window (pinned services, or long sections on small windows) allow
+   free rest inside and expose a top-aligned and a bottom-aligned target. */
 (function(){
   const fine=window.matchMedia('(pointer:fine)');
-  let settling=false, tmr=0;
+  const QUIET=180;
+  let anim=0, tmr=0, lastInput=0, lastY=window.scrollY, dir=0;
 
   function snapData(){
-    const vh=window.innerHeight, pts=[], zones=[];
+    const vh=window.innerHeight, maxY=document.documentElement.scrollHeight-vh, pts=new Set(), zones=[];
     document.querySelectorAll('.page').forEach(s=>{
-      const r=s.getBoundingClientRect();
-      const top=Math.round(r.top+window.scrollY), h=Math.round(r.height);
-      pts.push(top);
-      if(h>vh+120){
-        pts.push(top+h-vh);
-        zones.push([top+4, top+h-vh-4]);
-      }
+      const top=Math.round(s.getBoundingClientRect().top+window.scrollY), h=Math.round(s.offsetHeight);
+      pts.add(Math.min(top,maxY));
+      if(h>vh+120){ pts.add(Math.min(top+h-vh,maxY)); zones.push([top+4, top+h-vh-4]); }
     });
-    return {pts,zones};
+    return {pts:[...pts].sort((a,b)=>a-b),zones};
+  }
+  function stop(){ if(anim){cancelAnimationFrame(anim);anim=0;} }
+  function glide(to){
+    const from=window.scrollY, d=to-from, dur=Math.min(720,Math.max(360,Math.abs(d)*.55)), t0=performance.now();
+    stop();
+    const step=now=>{
+      const p=Math.min(1,(now-t0)/dur), e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+      window.scrollTo(0,Math.round(from+d*e));
+      if(p<1) anim=requestAnimationFrame(step); else { anim=0; lastY=window.scrollY; }
+    };
+    anim=requestAnimationFrame(step);
   }
   function settle(){
-    if(!fine.matches||settling) return;
-    const y=window.scrollY;
-    const {pts,zones}=snapData();
+    if(!fine.matches||anim) return;
+    const wait=QUIET-(performance.now()-lastInput);
+    if(wait>0){ tmr=setTimeout(settle,wait+10); return; }
+    const y=window.scrollY, {pts,zones}=snapData();
     if(zones.some(z=>y>z[0]&&y<z[1])) return;
-    const maxY=document.documentElement.scrollHeight-window.innerHeight;
-    let best=0,d=Infinity;
-    pts.forEach(p=>{ p=Math.min(p,maxY); const dd=Math.abs(p-y); if(dd<d){d=dd;best=p;} });
-    if(Math.abs(best-y)<2) return;
-    settling=true;
-    window.scrollTo({top:best,behavior:'smooth'});
-    const iv=setInterval(()=>{ if(Math.abs(window.scrollY-best)<2){clearInterval(iv);settling=false;} },80);
-    setTimeout(()=>{clearInterval(iv);settling=false;},1400);
+    let prev=null,next=null;
+    for(const p of pts){ if(p<=y) prev=p; else if(next===null) next=p; }
+    if(prev===null||next===null) { const t=prev??next; if(t!==null&&Math.abs(t-y)>1) glide(t); return; }
+    if(y-prev<2) return;
+    const f=(y-prev)/(next-prev);
+    const target = dir>0 ? (f>.1?next:prev) : dir<0 ? (f<.9?prev:next) : (f<.5?prev:next);
+    glide(target);
   }
-  window.addEventListener('scroll',()=>{ if(settling) return; clearTimeout(tmr); tmr=setTimeout(settle,140); },{passive:true});
-  ['wheel','touchstart','keydown'].forEach(ev=>window.addEventListener(ev,()=>{settling=false;},{passive:true}));
+  window.addEventListener('scroll',()=>{
+    if(anim) return;
+    const y=window.scrollY;
+    if(y!==lastY) dir=y>lastY?1:-1;
+    lastY=y;
+    clearTimeout(tmr); tmr=setTimeout(settle,QUIET);
+  },{passive:true});
+  ['wheel','touchstart','keydown','mousedown'].forEach(ev=>window.addEventListener(ev,()=>{ lastInput=performance.now(); stop(); },{passive:true}));
+  window.__glideTo=glide;
 })();
 
-/* ---------- services: horizontal strips (drag, arrows, edge fade) ---------- */
+/* ---------- services: the section pins for one frame while vertical scroll slides the track sideways ---------- */
 (function(){
-  const fine=window.matchMedia('(pointer:fine)');
-  document.querySelectorAll('.svc-row').forEach(row=>{
-    const strip=row.querySelector('.svc-strip');
-    const nav=row.querySelector('.svc-nav');
-    const [prev,next]=nav.querySelectorAll('button');
-    let told=false;
-    function state(){
-      const max=strip.scrollWidth-strip.clientWidth;
-      const over=max>6;
-      strip.classList.toggle('more',over);
-      strip.classList.toggle('mid',over && strip.scrollLeft>6 && strip.scrollLeft<max-6);
-      strip.classList.toggle('end',over && strip.scrollLeft>=max-6);
-      strip.classList.toggle('drag',over);
-      nav.classList.toggle('on',over);
-      prev.disabled = !over || strip.scrollLeft<=6;
-      next.disabled = !over || strip.scrollLeft>=max-6;
-    }
-    const step=()=>{const t=strip.querySelector('.svc-tile');return t.getBoundingClientRect().width+14;};
-    prev.addEventListener('click',()=>strip.scrollBy({left:-step()*2,behavior:'smooth'}));
-    next.addEventListener('click',()=>strip.scrollBy({left: step()*2,behavior:'smooth'}));
-    strip.addEventListener('scroll',()=>{
-      state();
-      if(!told){told=true; if(window.gtag) gtag('event','services_row_scroll',{row:row.dataset.row});}
-    },{passive:true});
-    // mouse drag-to-scroll
-    let down=false,sx=0,sl=0;
-    strip.addEventListener('pointerdown',e=>{ if(e.pointerType!=='mouse') return; down=true; sx=e.clientX; sl=strip.scrollLeft; strip.classList.add('dragging'); });
-    window.addEventListener('pointermove',e=>{ if(!down) return; strip.scrollLeft = sl-(e.clientX-sx); });
-    window.addEventListener('pointerup',()=>{ if(!down) return; down=false; strip.classList.remove('dragging'); });
-    window.addEventListener('resize',state);
-    window.addEventListener('load',state);
-    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(state);
-    state();
-  });
+  const sec=document.getElementById('p-services');
+  const pin=sec.querySelector('.svc-pin'), view=sec.querySelector('.svc-view'), track=sec.querySelector('.svc-track');
+  const cats=[...track.querySelectorAll('.svc-cat')], tabs=[...sec.querySelectorAll('.svc-rail button')];
+  const told=new Set();
+  let dist=0, pad=0, raf=0;
+  view.classList.add('pinned');
+  function measure(){
+    track.style.transform='none';
+    dist=Math.max(0,track.scrollWidth-view.clientWidth);
+    pad=cats[0].offsetLeft;
+    sec.style.height=(pin.offsetHeight+dist)+'px';
+    update();
+  }
+  function update(){
+    raf=0;
+    const x=dist?Math.min(dist,Math.max(0,-sec.getBoundingClientRect().top)):0;
+    const vw=view.clientWidth;
+    track.style.transform='translate3d('+(-x)+'px,0,0)';
+    let on=0;
+    cats.forEach((c,i)=>{
+      // share of the category that has scrolled into view, drawn as the rail underline
+      const seen=Math.min(1,Math.max(0,(x+vw-c.offsetLeft)/c.offsetWidth));
+      tabs[i].style.setProperty('--seen',seen.toFixed(3));
+      if(c.offsetLeft<x+vw*.6) on=i;
+    });
+    tabs.forEach((t,i)=>t.classList.toggle('on',i===on));
+    const row=cats[on].dataset.row;
+    if(on>0&&!told.has(row)){told.add(row); if(window.gtag) gtag('event','services_row_scroll',{row});}
+  }
+  tabs.forEach((t,i)=>t.addEventListener('click',()=>{
+    const x=Math.min(dist,Math.max(0,cats[i].offsetLeft-pad));
+    const y=Math.round(sec.getBoundingClientRect().top+window.scrollY+x);
+    if(window.__glideTo) window.__glideTo(y); else window.scrollTo(0,y);
+  }));
+  // sideways trackpad swipes over the track move the page too
+  view.addEventListener('wheel',e=>{
+    if(dist&&Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();window.scrollBy(0,e.deltaX);}
+  },{passive:false});
+  window.addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(update); },{passive:true});
+  window.addEventListener('resize',measure);
+  window.addEventListener('load',measure);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(measure);
+  measure();
 })();
 
 /* ---------- rotors — inside-out reveal (width collapse/expand) ---------- */
@@ -992,6 +1021,11 @@ h1,h2,h3{font-family:var(--font-display);line-height:1.1;letter-spacing:-.02em}
     });
   }
 })();
+
+/* ---------- logo marquee: duplicate each row so translateX(-50%) loops seamlessly ---------- */
+document.querySelectorAll('.mq-row').forEach(row=>{
+  [...row.children].forEach(img=>{ const c=img.cloneNode(); c.alt=''; c.setAttribute('aria-hidden','true'); row.appendChild(c); });
+});
 
 /* ---------- floating button: hidden while page 1 is on screen ---------- */
 (function(){
