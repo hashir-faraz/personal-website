@@ -27,6 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{
   --accent:#3533CD; --accent-deep:#28279B; --accent-soft:#ECEBFB; --accent-line:#C9C8F2;
@@ -97,21 +98,16 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .stage.on{display:block}
 
 /* ───────── 1. start screen ───────── */
-#stage-start{min-height:100%;display:none;place-items:center center;padding:44px 20px 60px}
+#stage-start{min-height:100%;display:none;place-items:start center;padding:56px 20px 70px}
 #stage-start.on{display:grid}
-.intro{width:100%;max-width:600px}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-.intro h2{font-size:clamp(28px,4vw,38px);font-weight:800;letter-spacing:-.035em;line-height:1.1}
-.intro .say{font-size:15.5px;color:var(--ink-2);margin-top:10px;max-width:50ch}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 22px 20px;margin-top:26px;
-      box-shadow:0 10px 34px rgba(16,16,20,.045)}
-.q{font-size:13.5px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
-.q i{font-style:normal;width:20px;height:20px;border-radius:50%;background:var(--accent-soft);color:var(--accent);
-  font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:600;display:grid;place-items:center;flex:none}
-.qs{font-size:12.5px;color:var(--ink-hint);margin:4px 0 12px 29px}
-.card + .card{margin-top:14px}
-.bigin{width:100%;height:50px;border:1px solid var(--line);border-radius:12px;background:var(--paper);
-  padding:0 15px;font-size:16px;font-weight:700;outline:none;transition:.14s}
+.intro{width:100%;max-width:540px}
+/* a form, not a landing page: one question at a time, the answer the loudest thing on it */
+.fq{padding-top:4px}
+.fq + .fq{margin-top:32px;padding-top:28px;border-top:1px solid var(--line)}
+.q{font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.25}
+.qs{font-size:13px;color:var(--ink-hint);font-weight:600;margin:5px 0 14px}
+.bigin{width:100%;height:54px;border:1px solid var(--line);border-radius:13px;background:var(--card);
+  padding:0 16px;font-size:17px;font-weight:700;outline:none;transition:.14s}
 .bigin::placeholder{color:var(--ink-4);font-weight:600}
 .bigin:focus{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
 .inline{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
@@ -124,10 +120,11 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .svcline{display:flex;align-items:center;gap:9px}
 .svcline .n{flex:none;width:22px;height:22px;border-radius:7px;background:var(--line-2);color:var(--ink-4);
   font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:600;display:grid;place-items:center}
-.svcline input{flex:1;height:42px;border:1px solid var(--line);border-radius:11px;background:var(--paper);
-  padding:0 13px;font-size:14.5px;font-weight:600;outline:none;transition:.14s;min-width:0}
+.svcline input{flex:1;height:46px;border:1px solid var(--line);border-radius:12px;background:var(--card);
+  padding:0 14px;font-size:15px;font-weight:600;outline:none;transition:.14s;min-width:0}
 .svcline input:focus{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
 .svcline input::placeholder{color:#C4C3CC;font-weight:500}
+.svcline .n{display:none}
 .svcline .x{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--ink-4);transition:.14s}
 .svcline .x:hover{background:var(--neg-soft);color:var(--neg)}
 .svcline .x svg{width:14px;height:14px}
@@ -135,11 +132,16 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
   border:1px dashed var(--line);font-size:12.5px;font-weight:700;color:var(--ink-3);transition:.14s}
 .addbtn:hover{border-color:var(--accent-line);color:var(--accent);background:var(--accent-soft);border-style:solid}
 .addbtn svg{width:12px;height:12px}
-.egs{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;align-items:center}
-.egs .lb{font-size:11.5px;font-weight:700;color:var(--ink-4)}
-.eg{height:27px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);
-  font-size:12px;font-weight:600;color:var(--ink-3);transition:.14s}
+.egs{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.egs .lb{width:100%;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-hint);margin-bottom:2px}
+.eg{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;
+  border:1px solid var(--line);background:var(--card);font-size:12.5px;font-weight:600;color:var(--ink-2);transition:.14s}
+.eg::before{content:"+";font-weight:800;color:var(--ink-4);font-size:13px;line-height:1}
 .eg:hover{border-color:var(--accent-line);color:var(--accent);background:var(--accent-soft)}
+.eg:hover::before{color:var(--accent)}
+.eg.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.eg.on::before{content:"\2713";color:#fff}
 .go-wide{width:100%;height:54px;margin-top:18px;font-size:15.5px;border-radius:14px;justify-content:center}
 .addbtn.wide{width:100%;justify-content:center;height:42px;margin-top:12px;font-size:13px}
 
@@ -168,18 +170,21 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 /* the last section needs room below it, or the page runs out of scroll before the
    dashboard can sit under the bar */
 #v-dash{padding-bottom:90px}
-.brk{display:flex;align-items:center;gap:14px;max-width:1216px;margin:0 auto;padding:30px 18px 4px;
-  border-top:1px solid var(--line);flex-wrap:wrap}
+:root{--gut:22px;--measure:1560px}
+/* every section sits in the same column, with the same gutter either side */
+.brk{display:flex;align-items:center;gap:12px;max-width:var(--measure);margin:0 auto;
+  padding:26px var(--gut) 12px;flex-wrap:wrap}
+#v-sheet .brk,#v-dash .brk{border-top:1px solid var(--line);padding-top:30px}
 .brk .bn{flex:none;width:26px;height:26px;border-radius:9px;background:var(--accent-soft);color:var(--accent);
-  font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:16px}
-.brk .bl2{flex:1;min-width:200px;margin-top:14px}
-.brk h3{font-size:18px;font-weight:800;letter-spacing:-.025em}
-.brk p{font-size:12.5px;color:var(--ink-hint);font-weight:600;margin-top:1px}
+  font-size:12px;font-weight:700;display:grid;place-items:center}
+.brk .bl2{flex:1;min-width:120px}
+.brk h3{font-size:19px;font-weight:800;letter-spacing:-.025em}
+.brkb{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
 
 /* ── build view: editor beside the table ── */
-.split{display:grid;grid-template-columns:minmax(500px,560px) minmax(0,1fr);gap:18px;
-  align-items:start;padding:18px 18px 70px}
+.split{display:grid;grid-template-columns:minmax(480px,600px) minmax(0,1fr);gap:20px;
+  align-items:start;max-width:var(--measure);margin:0 auto;padding:6px var(--gut) 70px}
 /* min-width:0 on both columns, or the twelve-column table inside .mini would stretch
    the grid wider than the window and take the editor off-screen */
 .edit{min-width:0}
@@ -242,45 +247,59 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .vtop .xb:hover{background:var(--neg-soft);color:var(--neg)}
 .vtop .xb svg{width:13px;height:13px}
 
-.ctrl{display:grid;grid-template-columns:1fr 148px 148px;gap:9px;align-items:stretch}
+.ctrl{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:stretch}
 .lblr{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-hint);
   display:block;margin-bottom:3px}
 
-/* the three growth buttons */
-.modes{display:flex;flex-direction:column}
-.mbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--line-2);border-radius:11px;
-  padding:3px;flex:1;align-items:stretch}
-.mb{border-radius:8px;padding:7px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;transition:.15s;text-align:center;min-width:0}
-.mb .ic{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--ink-4);line-height:1;transition:.15s}
-.mb .tx{font-size:10.5px;font-weight:700;color:var(--ink-4);line-height:1.15;transition:.15s;white-space:nowrap}
+/* one rail carries all four choices — three ways the number moves, plus the custom drawer */
+.mgrp{display:flex;align-items:stretch;background:var(--line-2);border-radius:11px;padding:3px;margin-top:9px}
+.mbtns{display:grid;grid-template-columns:repeat(3,1fr);flex:1;min-width:0}
+.mdiv{flex:none;width:1px;background:var(--line);margin:6px 5px}
+.mb{border-radius:8px;padding:7px 4px;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:.15s;text-align:center;min-width:0}
+.mb .ic{font-size:12px;font-weight:800;color:var(--ink-4);line-height:1;transition:.15s;flex:none}
+.mb .ic svg{width:12px;height:12px;display:block}
+.mb .tx{font-size:11.5px;font-weight:700;color:var(--ink-3);line-height:1.15;transition:.15s;white-space:nowrap}
 .mb:hover .tx,.mb:hover .ic{color:var(--ink-2)}
 .mb.on{background:#fff;box-shadow:0 1px 3px rgba(16,16,20,.13)}
 .mb.on .ic{color:var(--accent)}
 .mb.on .tx{color:var(--ink)}
+.mb.mcustom{flex:none;padding:7px 12px}
+.mb.mcustom.has .tx,.mb.mcustom.has .ic{color:var(--accent)}
+.mb.mcustom.open{background:var(--accent);box-shadow:none}
+.mb.mcustom.open .tx,.mb.mcustom.open .ic{color:#fff}
 
 /* number field with its label inside the box */
 .nf{display:block}
-.nfb{display:flex;align-items:center;gap:6px;background:var(--paper);border:1px solid var(--line);
-  border-radius:11px;padding:6px 11px 5px;transition:.14s;height:100%}
+.nfb{display:flex;flex-direction:column;justify-content:center;gap:1px;background:var(--paper);
+  border:1px solid var(--line);border-radius:11px;padding:7px 11px 6px;transition:.14s;min-height:55px;height:100%}
+.nfb:hover{border-color:var(--ink-4)}
+/* the label sits inside the box, so the box itself reads as the question */
+.nfl{font-size:9.5px;font-weight:700;letter-spacing:.085em;text-transform:uppercase;color:var(--ink-hint);
+  line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nfv{display:flex;align-items:center;gap:6px;min-width:0}
+/* up or down is a decision, not decoration: two buttons far enough apart to aim at */
+.sgn{display:inline-flex;gap:4px;flex:none;margin-right:3px}
+.sgn button{width:27px;height:27px;border-radius:8px;background:var(--line-2);color:var(--ink-3);
+  font-size:15px;font-weight:800;display:grid;place-items:center;line-height:1;transition:.14s;
+  font-family:var(--font)}
+.sgn button:hover{background:#E4E3DE;color:var(--ink)}
+.sgn button.on{background:var(--accent);color:#fff;box-shadow:0 2px 7px rgba(53,51,205,.3)}
+.sgn button.on.dn{background:var(--neg);box-shadow:0 2px 7px rgba(200,55,75,.3)}
 .nfb:focus-within{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
+.nfb:focus-within .nfl{color:var(--accent)}
 .nfb .pre,.nfb .suf{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-4);flex:none;
   font-style:normal;margin-top:1px}
 .nfb input{width:100%;border:0;background:none;outline:none;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;
   font-weight:600;padding:0;min-width:0;font-variant-numeric:tabular-nums}
 .nfb input::placeholder{color:var(--ink-4);font-weight:500}
-.nf.sampled .nfb{border-style:dashed}
-.nostep{display:flex;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:11px;
-  font-size:11.5px;font-weight:600;color:var(--ink-4);text-align:center;padding:6px 10px;line-height:1.25}
+.nostep{display:flex;flex-direction:column;justify-content:center;gap:1px;border:1px dashed var(--line);
+  border-radius:11px;padding:7px 11px 6px;min-height:55px;line-height:1.2}
+.nostep .nfl{color:var(--ink-4)}
+.nostep .ns{font-size:13px;font-weight:600;color:var(--ink-4)}
 
 /* month-by-month drawer */
-.vfoot{display:flex;align-items:center;gap:10px;margin-top:9px}
-.mtog{display:inline-flex;align-items:center;gap:6px;height:27px;padding:0 10px;border-radius:999px;
-  font-size:11.5px;font-weight:700;color:var(--ink-3);background:var(--line-2);transition:.14s}
-.mtog:hover{color:var(--ink);background:#EDECE7}
-.mtog.has{background:var(--accent-soft);color:var(--accent)}
-.mtog svg{width:11px;height:11px}
-.mtog.open{background:var(--accent);color:#fff}
+.vfoot{display:flex;align-items:center;gap:10px;margin-top:8px}
 .vtot{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-2);white-space:nowrap}
 .vtot em{font-style:normal;color:var(--ink-4);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
   font-family:var(--font);font-weight:700;margin-right:5px}
@@ -329,19 +348,22 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 /* ───────── sheet + dashboard ───────── */
 /* 60px is the view bar above it — the sheet and the dashboard each own exactly one screen.
    scroll-margin lands them under the sticky bar when the control jumps to them. */
-.screen{min-height:calc(100vh - var(--topH) - 60px);display:flex;flex-direction:column;align-items:center;
-  padding:16px 18px 34px;scroll-margin-top:0}
-.fitbox{width:100%;max-width:1180px;display:flex;justify-content:center}
+.screen{display:flex;flex-direction:column;align-items:center;
+  max-width:var(--measure);margin:0 auto;padding:4px var(--gut) 34px;scroll-margin-top:0}
+.fitbox{width:100%;display:flex;justify-content:center}
 /* align-self stops the flex box stretching the card to the height fit() just set on the
    box — stretched, the card clips its own notes and footer */
 .fitbox>.sheet,.fitbox>.dash{transform-origin:top center;align-self:flex-start}
 .sheet{width:1120px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 30px 24px;
   box-shadow:0 10px 36px rgba(16,16,20,.06)}
 .sh-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.sh-head>div:first-child,.dash .dh .dl{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.sh-head h3,.dash .dh h3{margin-left:-1px}
 .sh-head h3{font-size:25px;font-weight:800;letter-spacing:-.025em;line-height:1.1}
-.sh-head .meta{font-size:12.5px;color:var(--ink-2);margin-top:5px;font-weight:600}
-.sh-head .rt{text-align:right;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-4);line-height:1.6}
-.sh-head .rt b{display:block;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:0;color:var(--ink-2);text-transform:none}
+.sh-head .meta{font-size:12.5px;color:var(--ink-hint);margin-top:6px;font-weight:600}
+.sh-head .rt{text-align:right;font-size:13px;font-weight:700;color:var(--ink-2);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.sh-head .meta a{color:var(--accent);font-weight:700}
 table.pl{width:100%;border-collapse:collapse;margin-top:4px}
 table.pl th,table.pl td{padding:0;font-variant-numeric:tabular-nums}
 table.pl thead th{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-hint);
@@ -362,29 +384,37 @@ table.pl tr.strong td{font-weight:700;color:var(--ink)}
 table.pl tr.strong td:first-child{font-weight:800}
 table.pl tr.pct td{color:var(--ink-3);font-size:10.5px;padding-top:1px;padding-bottom:7px}
 table.pl tr.pct td:first-child{font-size:11px;font-weight:500;color:var(--ink-3)}
-table.pl tr.net td{background:var(--ink);color:#fff;padding-top:8px;padding-bottom:8px;font-weight:700;font-size:12px}
-table.pl tr.net td:first-child{color:#fff;font-weight:800;font-size:13px;border-radius:9px 0 0 9px;padding-left:10px}
-table.pl tr.net td.tc{border-left-color:rgba(255,255,255,.22);border-radius:0 9px 9px 0}
+/* one blank line so revenue, costs and the result read as three separate blocks */
+table.pl tr.gap td{padding:0;height:13px;border:0}
+/* the bottom line is the point of the sheet, so it is marked out in the brand rather than
+   blacked out - a black bar reads as a header, not as an answer */
+table.pl tr.net td{background:var(--accent-soft);border-top:2px solid var(--accent);
+  border-bottom:2px solid var(--accent);padding-top:9px;padding-bottom:9px;font-weight:700;font-size:12.5px;color:var(--ink)}
+table.pl tr.net td:first-child{color:var(--accent-deep);font-weight:800;font-size:13.5px;padding-left:10px}
+table.pl tr.net td.tc{border-left-color:var(--accent-line);color:var(--accent-deep);font-weight:800}
 table.pl td.neg{color:var(--neg)}
-table.pl tr.net td.neg{color:#FF9DA8}
+table.pl tr.net td.neg,table.pl tr.net td.tc.neg{color:var(--neg)}
 
 /* a line still running on sample figures sits right back; the moment one of the numbers
    feeding it is the user's own it comes forward to full ink — that jump is the point */
 table.pl tr.samp td{color:#C4C3CC;transition:color .18s}
 table.pl tr.samp td:first-child{color:#AEADB7}
 table.pl tr.samp td.neg{color:#DDBAC0}
-table.pl tr.net.samp td{background:#C2C1C9;color:#fff}
-table.pl tr.net.samp td:first-child{color:#fff}
-table.pl tr.net.samp td.neg{color:#FFE2E6}
+table.pl tr.net.samp td{background:#F3F3F6;border-color:#DCDBE3;color:#A9A8B2}
+table.pl tr.net.samp td:first-child,table.pl tr.net.samp td.tc{color:#A9A8B2}
+table.pl tr.net.samp td.neg{color:#CFB2B8}
 table.pl td{transition:color .18s}
+/* the twelve months of a total are ranked against each other and tinted by rank, so the
+   shape of the year is visible in the sheet without reading a single figure */
+table.pl td.ht{transition:color .18s,background-color .25s}
 
 /* the small i beside a measure */
 .ib{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;margin-left:5px;
   vertical-align:1px;background:var(--line-2);color:var(--ink-4);font-size:9.5px;font-weight:800;
   font-style:italic;line-height:1;transition:.14s;flex:none}
 .ib:hover{background:var(--accent);color:#fff}
-table.pl tr.net .ib{background:rgba(255,255,255,.22);color:#fff}
-table.pl tr.net .ib:hover{background:#fff;color:var(--ink)}
+table.pl tr.net .ib{background:var(--accent-line);color:var(--accent-deep)}
+table.pl tr.net .ib:hover{background:var(--accent);color:#fff}
 .sh-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:11px;
   border-top:1px solid var(--line);font-size:10.5px;color:var(--ink-4);font-weight:600}
 .sh-foot b{color:var(--accent);font-weight:700}
@@ -415,12 +445,17 @@ table.pl tr.net .ib:hover{background:#fff;color:var(--ink)}
   box-shadow:0 10px 36px rgba(16,16,20,.06);overflow:hidden}
 /* a brand band across the top, and the header sitting on a brand rule */
 .dash::before{content:"";display:block;height:5px;background:var(--accent);margin:0 -26px 20px}
+/* the header carries the name, who built it and the window it covers - nothing else */
 .dash .dh{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:16px;
-  padding-bottom:12px;border-bottom:1px solid var(--accent-line)}
-.dash .dh .pip{display:inline-block;width:9px;height:9px;border-radius:3px;background:var(--accent);
-  margin-right:9px;vertical-align:2px}
-.dash .dh h3{font-size:22px;font-weight:800;letter-spacing:-.025em}
-.dash .dh .meta{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:3px}
+  padding-bottom:13px;border-bottom:2px solid var(--ink)}
+.dash .dh h3{font-size:25px;font-weight:800;letter-spacing:-.028em;line-height:1.1}
+.dash .dh .meta{font-size:12.5px;color:var(--ink-hint);font-weight:600;margin-top:5px}
+.dash .dh .meta a{color:var(--accent);font-weight:700}
+.dash .dh .rt{text-align:right;font-size:13px;font-weight:700;color:var(--ink-2);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.kpi .v em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--ink-hint);margin-right:4px;
+  letter-spacing:0;vertical-align:1px}
+.kpi.brand .v em{color:#6A69B4}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .kpi{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:12px 14px}
 .kpi.brand{background:var(--accent-soft);border-color:var(--accent-line)}
@@ -467,10 +502,74 @@ svg.chart .hit{fill:transparent;cursor:default}
 .tt.on{opacity:1;transform:translateY(0)}
 .tt b{color:#fff;font-weight:800}
 .tt .eq{font-family:var(--mono);font-variant-numeric:tabular-nums;color:#C9C8F2;font-weight:500;display:block;margin-top:2px;font-size:11px}
+.coach{position:fixed;z-index:420;max-width:276px;background:var(--accent);color:#fff;border-radius:13px;
+  padding:12px 30px 12px 14px;box-shadow:0 14px 36px rgba(53,51,205,.34);opacity:0;transform:translateY(5px);
+  transition:opacity .16s,transform .16s;pointer-events:none}
+.coach.on{opacity:1;transform:translateY(0);pointer-events:auto}
+.coach .st{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C9C8F2;margin-bottom:4px}
+.coach p{font-size:13px;font-weight:600;line-height:1.4}
+.coach .cx{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:7px;display:grid;
+  place-items:center;color:#C9C8F2}
+.coach .cx:hover{background:rgba(255,255,255,.16);color:#fff}
+.coach .cx svg{width:11px;height:11px}
+.coach::after{content:"";position:absolute;width:11px;height:11px;background:var(--accent);transform:rotate(45deg)}
+.coach.up::after{top:-5px;left:26px}
+.coach.down::after{bottom:-5px;left:26px}
+/* the field the coach is pointing at */
+.coachlit{box-shadow:0 0 0 3px rgba(53,51,205,.3)!important;border-color:var(--accent)!important}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:500;background:var(--ink);color:#fff;
   font-size:13px;font-weight:600;padding:11px 18px;border-radius:999px;opacity:0;transition:.2s;pointer-events:none;
   box-shadow:0 10px 30px rgba(16,16,20,.28)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* Names belong to whoever typed them: a business called استوديو نورلاين keeps that name
+   on the English sheet. Isolating each one stops it dragging the punctuation around it
+   to the wrong side of the line. */
+.sh-head h3,.dash .dh h3,.mini .mt h3,.sh-foot span,.blk .bt,
+table.pl td:first-child,.bl .nm,.note strong,.vname{unicode-bidi:isolate}
+
+/* ───────── Arabic ───────── */
+/* Latin first, Arabic second: fallback runs per glyph, so every figure stays in Manrope
+   and only the words come from Cairo. The two languages then line up digit for digit. */
+html[dir="rtl"]{--font:'Manrope','Cairo',system-ui,-apple-system,sans-serif;
+                --mono:'Manrope','Cairo',system-ui,-apple-system,sans-serif}
+html[dir="rtl"] body{font-family:var(--font)}
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3,html[dir="rtl"] h4,
+html[dir="rtl"] .q,html[dir="rtl"] .top h1,html[dir="rtl"] .sh-head h3,
+html[dir="rtl"] .dash .dh h3{letter-spacing:0;line-height:1.3}
+html[dir="rtl"] button{text-align:right}
+/* the figures themselves are left-to-right inside a right-to-left page */
+html[dir="rtl"] table.pl td,html[dir="rtl"] table.pl th,
+html[dir="rtl"] .nfb input,html[dir="rtl"] .mc input,html[dir="rtl"] .kpi .v,
+html[dir="rtl"] .vtot,html[dir="rtl"] .bh .bv,html[dir="rtl"] .statlet .v,
+html[dir="rtl"] .bl .vv,html[dir="rtl"] .chip b{direction:ltr}
+html[dir="rtl"] table.pl td:first-child,html[dir="rtl"] table.pl th:first-child{direction:rtl;text-align:right}
+html[dir="rtl"] table.pl td,html[dir="rtl"] table.pl th{text-align:left}
+html[dir="rtl"] table.pl td.tc,html[dir="rtl"] table.pl th.tc{border-left:0;border-right:1px solid var(--line)}
+html[dir="rtl"] table.pl tr.net td.tc{border-right-color:var(--accent-line)}
+html[dir="rtl"] table.pl tr.sub td:first-child{padding-left:0;padding-right:14px}
+html[dir="rtl"] table.pl tr.det td:first-child{padding-left:0;padding-right:26px}
+html[dir="rtl"] table.pl tr.net td:first-child{padding-left:0;padding-right:10px}
+html[dir="rtl"] .bh .bv{padding-left:0;padding-right:10px;border-left:0;border-right:1px solid var(--line);text-align:left}
+html[dir="rtl"] .ib{margin-left:0;margin-right:5px}
+html[dir="rtl"] .vtot{margin-left:0;margin-right:auto}
+html[dir="rtl"] .vtot em{margin-right:0;margin-left:5px}
+html[dir="rtl"] .rin{margin-left:0;margin-right:-6px}
+html[dir="rtl"] .note{border-left:0;border-right:3px solid var(--accent-line)}
+html[dir="rtl"] .dash .dh .pip{margin-right:0;margin-left:10px}
+html[dir="rtl"] .sgn{margin-right:0;margin-left:3px}
+/* the charts are drawn left-to-right; so is every dashboard anyone has ever read */
+html[dir="rtl"] svg.chart,html[dir="rtl"] .bl .tr,html[dir="rtl"] .legend{direction:ltr}
+html[dir="rtl"] .legend{justify-content:flex-end}
+html[dir="rtl"] .toggle .sw::after{left:auto;right:2px}
+html[dir="rtl"] .toggle.on .sw::after{transform:translateX(-11px)}
+html[dir="rtl"] .mc.ov::after{right:auto;left:4px}
+html[dir="rtl"] .mc .un{right:auto;left:3px}
+/* the language switch */
+.lng{height:34px;padding:0 13px;border-radius:10px;border:1px solid var(--line);font-size:12.5px;
+  font-weight:700;color:var(--ink-2);background:var(--card);display:inline-flex;align-items:center;
+  gap:6px;transition:.14s;white-space:nowrap;flex:none}
+.lng:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 
 /* ───────── responsive ───────── */
 @media(max-width:1100px){
@@ -507,7 +606,7 @@ svg.chart .hit{fill:transparent;cursor:default}
 @media print{
   @page{size:A4 landscape;margin:9mm}
   html,body{height:auto;overflow:visible;background:#fff}
-  .top,.vbar,.tt,.toast,.menu,.sampveil,.edit,.minifoot,.brk,.ib{display:none!important}
+  .top,.vbar,.tt,.toast,.menu,.sampveil,.edit,.minifoot,.brk,.ib,.coach{display:none!important}
   main{overflow:visible;scroll-behavior:auto}
   .view{display:none!important}
   .view.printing{display:block!important}
@@ -519,15 +618,19 @@ svg.chart .hit{fill:transparent;cursor:default}
   #v-dash{padding-bottom:0}
   .split{display:block;padding:0}
   .fitbox{display:block;max-width:none}
-  /* the sheet reflows happily to the page width */
-  .fitbox>.sheet{transform:none!important;width:100%!important}
-  .sheet,.mini{border:0;box-shadow:none;border-radius:0;padding:0;width:100%!important}
-  /* the dashboard does not: widening it makes the charts taller, so it keeps its design
-     width and printOne() scales it to fit exactly one page */
-  .fitbox>.dash{transform-origin:top left}
+  /* both sheets are laid out at the printable width and scaled by printOne() to land on
+     exactly one page — the sheet reflows to that width first, the dashboard cannot
+     (widening it makes the charts taller, so the gains cancel) and keeps its design width */
+  .fitbox>.sheet,.fitbox>.dash{transform-origin:top left}
+  .sheet,.mini{border:0;box-shadow:none;border-radius:0;padding:0}
   .dash{border:0;box-shadow:none;border-radius:0}
   table.pl tr.net td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.pl tr.net.samp td{background:var(--accent-soft)!important;border-color:var(--accent)!important;color:var(--ink)!important}
+  table.pl tr.net.samp td:first-child,table.pl tr.net.samp td.tc{color:var(--accent-deep)!important}
   .kpi,.dcard,.note,.bl .tr i,.dash::before,.dash .dh{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.pl td.ht{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* the links stay real links in the saved PDF, and keep their colour so they look it */
+  a{text-decoration:none}
 }
 </style>
 </head>
@@ -538,10 +641,9 @@ svg.chart .hit{fill:transparent;cursor:default}
     <img src="/assets/logo-dark.png" alt="Hashir Faraz">
     <span class="bar"></span>
   </a>
-  <h1>Budget Planner <em>·</em> 12 months</h1>
-  <span class="who" id="who" hidden></span>
+  <h1><span data-th="Financial Plan">Financial Plan</span> <em>·</em> <span data-th="12 months">12 months</span></h1>
   <span class="sp"></span>
-  <span class="chip" id="chip"></span>
+  <a class="lng" id="btn-lang" href="#" hreflang="ar" lang="ar">العربية</a>
   <button class="ghost" id="btn-setup" type="button" hidden data-tt="Change the business name or your list of products and services">Setup</button>
   <button class="ghost" id="btn-reset" type="button" hidden data-act="reset" data-tt="Clear this plan and start from the beginning">Start over</button>
 </header>
@@ -551,24 +653,18 @@ svg.chart .hit{fill:transparent;cursor:default}
   <!-- ═══ stage 1 — the two questions ═══ -->
   <section class="stage on" id="stage-start">
     <div class="intro">
-      <div class="card">
-        <div class="q"><i>1</i>What is the business called?</div>
-        <div class="qs">This is the name that goes on the printed sheet.</div>
+      <div class="fq">
+        <div class="q">What is the business called?</div>
+        <div class="qs">This is the name that goes on the plan.</div>
         <input class="bigin" id="q-biz" placeholder="e.g. Northline Studio" autocomplete="organization">
       </div>
 
-      <div class="card">
-        <div class="q"><i>2</i>What do you sell?</div>
-        <div class="qs">One line per product or service you charge for. You can add more later.</div>
+      <div class="fq">
+        <div class="q">What do you sell?</div>
+        <div class="qs">One line per thing you charge for. Tap a common one or type your own.</div>
         <div class="svclist" id="q-svc"></div>
         <button class="addbtn wide" id="q-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add product / service</button>
-        <div class="egs">
-          <span class="lb">Not sure? Try</span>
-          <button class="eg" data-pre="agency">Agency</button>
-          <button class="eg" data-pre="cafe">Café</button>
-          <button class="eg" data-pre="clinic">Clinic</button>
-          <button class="eg" data-pre="shop">Online shop</button>
-        </div>
+        <div class="egs" id="q-egs"><span class="lb">Common for agencies</span></div>
       </div>
 
       <button class="solid go-wide" id="q-go">Build my plan
@@ -583,19 +679,22 @@ svg.chart .hit{fill:transparent;cursor:default}
         <button class="on" type="button" aria-current="true" data-view="build">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h7v14H4zM14 5h6v6h-6zM14 15h6v4h-6z"/></svg>Build</button>
         <button type="button" aria-current="false" data-view="sheet">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M10 4v16"/></svg>Sheet</button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M10 4v16"/></svg>Spreadsheet</button>
         <button type="button" aria-current="false" data-view="dash">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></svg>Dashboard</button>
       </div>
       <span class="sp"></span>
       <button class="toggle" type="button" aria-pressed="false" data-act="detail"><span class="sw"></span>Cost detail</button>
       <button class="toggle" type="button" aria-pressed="false" data-act="thou"><span class="sw"></span>Thousands</button>
-      <button class="ghost" data-act="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>CSV</button>
-      <button class="solid" data-act="print-here"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg><span id="pl">Print the sheet</span></button>
+      <button class="ghost" data-act="share" data-tt="Copy a link that opens this exact plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>Share</button>
     </div>
 
     <!-- the three live below one another; the control above jumps between them -->
     <section class="view" id="v-build">
+      <div class="brk">
+        <span class="bn">1</span>
+        <div class="bl2"><h3 data-th="Build">Build</h3></div>
+      </div>
       <div class="split">
         <div class="edit">
           <div class="optbar">
@@ -619,7 +718,12 @@ svg.chart .hit{fill:transparent;cursor:default}
     <section class="view" id="v-sheet">
       <div class="brk">
         <span class="bn">2</span>
-        <div class="bl2"><h3>The sheet</h3><p>The same year, cleaned up for printing and sharing. Use the bar above to print it.</p></div>
+        <div class="bl2"><h3 data-th="Spreadsheet">Spreadsheet</h3></div>
+        <div class="brkb">
+          <button class="ghost" data-act="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg><span data-th="CSV">CSV</span></button>
+          <button class="ghost" data-act="print-sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg><span data-th="Print">Print</span></button>
+          <button class="solid" data-act="pdf-sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg><span data-th="Save as PDF">Save as PDF</span></button>
+        </div>
       </div>
       <div class="screen"><div class="fitbox" id="fit-sheet"><div class="sheet" id="sheet"></div></div></div>
     </section>
@@ -627,7 +731,11 @@ svg.chart .hit{fill:transparent;cursor:default}
     <section class="view" id="v-dash">
       <div class="brk">
         <span class="bn">3</span>
-        <div class="bl2"><h3>The dashboard</h3><p>The year read as pictures instead of rows.</p></div>
+        <div class="bl2"><h3 data-th="Dashboard">Dashboard</h3></div>
+        <div class="brkb">
+          <button class="ghost" data-act="print-dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg><span data-th="Print">Print</span></button>
+          <button class="solid" data-act="pdf-dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg><span data-th="Save as PDF">Save as PDF</span></button>
+        </div>
       </div>
       <div class="screen"><div class="fitbox" id="fit-dash"><div class="dash" id="dash"></div></div></div>
     </section>
@@ -637,15 +745,179 @@ svg.chart .hit{fill:transparent;cursor:default}
 
 <div class="menu" id="menu"></div>
 <div class="tt" id="tt"></div>
+<div class="coach" id="coach"></div>
 <div class="toast" id="toast"></div>
 
 <script>
 (function(){
 "use strict";
 
+/* ═══════════ language ═══════════ */
+/* ?lang=ar switches the whole tool; the choice is remembered, so following a link from the
+   Arabic site once is enough. tl() passes anything it does not know straight through, which
+   is what keeps the names people type for their own services untouched. */
+var LKEY='hf_lang';
+var LANG=(function(){
+  var q=(location.search.match(/[?&]lang=(ar|en)/i)||[])[1];
+  if(q){ q=q.toLowerCase(); try{ localStorage.setItem(LKEY,q); }catch(e){} return q; }
+  try{ if(localStorage.getItem(LKEY)==='ar') return 'ar'; }catch(e){}
+  return 'en';
+})();
+var AR = LANG==='ar';
+if(AR){ document.documentElement.lang='ar'; document.documentElement.dir='rtl'; }
+var DICT = {
+  /* chrome */
+  'Budget Planner':'مخطّط الميزانية','12 months':'12 شهر',
+  'Setup':'الإعداد','Start over':'ابدأ من جديد',
+  'Build':'البناء','Sheet':'الجدول','Dashboard':'لوحة المتابعة',
+  'Cost detail':'تفاصيل التكاليف','Thousands':'بالآلاف',
+  'Share':'مشاركة','CSV':'CSV',
+  'Print the sheet':'اطبع الجدول','Print the dashboard':'اطبع اللوحة',
+  'Currency':'العملة','Year starts':'السنة تبدأ','Year':'السنة',
+  'Real months':'أشهر حقيقية',
+  'Revenue':'الإيراد','Net profit':'صافي الربح','Loss':'خسارة',
+  /* the two questions */
+  'What is the business called?':'شنو اسم الشغل؟',
+  'This is the name that goes on the plan.':'هذا الاسم اللي بيطلع على الخطة.',
+  'e.g. Northline Studio':'مثال: استوديو نورلاين',
+  'What do you sell?':'وش تبيع؟',
+  'One line per thing you charge for. Tap a common one or type your own.':'سطر لكل شي تاخذ عليه فلوس. اضغط على وحد من الجاهزين أو اكتب حقك.',
+  'Add product / service':'ضف منتج أو خدمة',
+  'Common for agencies':'شائعة عند وكالات التسويق',
+  'Build my plan':'ابنِ خطتي','Update my plan':'حدّث خطتي',
+  'e.g. Monthly retainer':'مثال: عقد شهري','e.g. One-off project':'مثال: مشروع لمرة وحدة',
+  /* the editor */
+  'What you sell':'وش تبيع','What it costs':'وش يكلّف',
+  'What this is called':'اسم هالشي','Name this service':'سمِّ هالخدمة',
+  'Name this line':'سمِّ هالسطر',
+  'Price per customer':'السعر لكل عميل','Customers':'العملاء',
+  'what one customer pays':'كم يدفع العميل الواحد','how many pay you':'كم واحد يدفع لك',
+  'How many':'كم واحد','How many people':'كم شخص','in this position':'في هالمنصب',
+  'monthly salary each':'راتب شهري للواحد','Salary':'الراتب',
+  'Starts at':'يبدأ عند','Each month by':'كل شهر بـ','Each month':'كل شهر',
+  'No change':'بدون تغيير',
+  'Constant':'ثابت','Percent':'نسبة','Amount':'مبلغ','Custom':'مخصص',
+  'Average':'المتوسط',
+  'Add another thing you sell':'ضف شي ثاني تبيعه',
+  'Add a position':'ضف منصب',
+  'Revenue = price × customers, worked out for all twelve months.':'الإيراد = السعر × العملاء، محسوب لكل الاثناشر شهر.',
+  'Cost = salary × how many':'التكلفة = الراتب × عدد الأشخاص',
+  'No one on the payroll yet.':'ما في أحد على الرواتب لحقّه.',
+  'Nothing here yet.':'ما في شي هنا لحقّه.',
+  'line':'سطر','lines':'سطور','position':'منصب','positions':'مناصب',
+  /* the sheet */
+  'Financial Plan':'الخطة المالية','Your business':'شغلك',
+  'Costs':'التكاليف',
+  'Total revenue':'إجمالي الإيراد','Total costs':'إجمالي التكاليف',
+  'Net margin':'هامش صافي الربح','Profit to date':'الربح المتراكم',
+  'Prepared':'أُعدّ بتاريخ','Built with':'مبني بـ','Make your own at':'ابنِ مثلها على',
+  'Live':'مباشر',
+  /* the dashboard */
+  'Total Revenue':'إجمالي الإيراد','Total Costs':'إجمالي التكاليف',
+  'Net Profit':'صافي الربح','Net Margin':'هامش صافي الربح',
+  'Revenue vs Cost':'الإيراد مقابل التكلفة','Cost Distribution':'توزيع التكاليف',
+  'Monthly Net Profit':'صافي الربح الشهري','Revenue Distribution':'توزيع الإيراد',
+  'All costs':'كل التكاليف',
+  'Best month':'أحسن شهر','Biggest revenue':'أكبر مصدر دخل','Biggest cost':'أكبر تكلفة',
+  'No revenue entered yet.':'ما في إيراد مدخل لحقّه.',
+  'No costs entered yet.':'ما في تكاليف مدخلة لحقّه.',
+  /* the categories we seed */
+  'Direct costs':'تكاليف مباشرة','Team':'الفريق','Workspace':'المكتب',
+  'Sales & marketing':'المبيعات والتسويق','Travel':'السفر',
+  'Admin & professional':'الإدارة والخدمات المهنية','Other':'أخرى',
+  'Freelancers & contractors':'المستقلّون والمتعاقدون',
+  'Media / ad spend for clients':'شراء إعلانات للعملاء',
+  'Rent':'الإيجار','Electricity & water':'الكهرباء والماء','Internet & phone':'الإنترنت والهاتف',
+  'Advertising':'الإعلانات','Software & tools':'البرامج والأدوات',
+  'Accounting & bookkeeping':'المحاسبة ومسك الدفاتر',
+  'Trade licence & government fees':'السجل التجاري والرسوم الحكومية',
+  'Founder / owner':'المؤسّس / المالك','Specialist':'مختصّ',
+  'New service':'خدمة جديدة','New cost':'تكلفة جديدة','New position':'منصب جديد',
+  /* the agency presets */
+  'Monthly retainer':'عقد شهري','Social Media Management':'إدارة السوشال ميديا',
+  'SEO':'تحسين محركات البحث','Website Development':'تطوير المواقع',
+  'Paid Ads Management':'إدارة الإعلانات المدفوعة','Content Creation':'صناعة المحتوى',
+  'Brand Guidelines Development':'دليل الهوية البصرية','Logo Design':'تصميم الشعار',
+  'Photography':'التصوير','Videography':'تصوير الفيديو',
+  'Email Marketing':'التسويق بالإيميل','Consulting & strategy':'الاستشارات والاستراتيجية'
+};
+{
+  var MORE = {
+    'Stays the same in all twelve months':'يبقى نفسه في كل الاثناشر شهر',
+    'Each month is the one before it, up or down by a percentage':'كل شهر = الشهر اللي قبله، زائد أو ناقص نسبة',
+    'Each month is the one before it, up or down by a fixed amount':'كل شهر = الشهر اللي قبله، زائد أو ناقص مبلغ ثابت',
+    'Set any single month by hand. The months after it pick the trend back up.':'عدّل أي شهر بنفسك. والأشهر اللي بعده تكمّل على نفس النمط.',
+    'How much it moves each month, as a percentage of the month before':'كم يتغير كل شهر، كنسبة من الشهر اللي قبله',
+    'How much it moves each month, as a fixed amount':'كم يتغير كل شهر، كمبلغ ثابت',
+    'Each month is higher than the one before':'كل شهر أعلى من اللي قبله',
+    'Each month is lower than the one before':'كل شهر أقل من اللي قبله',
+    'Up or down':'زيادة أو نقص','Goes up':'يزيد','Goes down':'ينقص',
+    'What one customer pays you in a month. For a retainer, the monthly fee.':'كم يدفع لك العميل الواحد بالشهر. لو عقد شهري، قيمة العقد.',
+    'How many customers pay you in that month. For a retainer, your live client count.':'كم عميل يدفع لك في ذاك الشهر. لو عقود، عدد عملائك النشطين.',
+    'How many customers pay you in that month.':'كم عميل يدفع لك في ذاك الشهر.',
+    'What one person in this position is paid per month, all in.':'كم ياخذ الشخص الواحد في هالمنصب بالشهر، شامل كل شي.',
+    'How many people you have in this position. Type over a later month to add a hire.':'كم شخص عندك في هالمنصب. اكتب فوق شهر لاحق عشان تضيف توظيف.',
+    'Type over a later month to add a hire.':'اكتب فوق شهر لاحق عشان تضيف توظيف.',
+    'Remove':'حذف','Remove this line':'احذف هالسطر',
+    'Clear this month':'امسح هالشهر',
+    'Clear this and follow the trend again':'امسحه وخلّه يرجع على النمط',
+    'Common positions':'مناصب شائعة','Common in':'شائع في','All added':'كلها مضافة',
+    'Something else…':'شي ثاني…','Add a cost to':'ضف تكلفة إلى',
+    'Change the business name or your list of products and services':'غيّر اسم الشغل أو قائمة منتجاتك وخدماتك',
+    'Clear this plan and start from the beginning':'امسح هالخطة وابدأ من الأول',
+    'Copy a link that opens this exact plan':'انسخ رابط يفتح هالخطة بالضبط',
+    'Turn this off to label the columns M1 to M12 instead of real months':'طفّيها عشان تصير الأعمدة شر1 إلى شر12 بدال الأشهر الحقيقية',
+    'is your starting figure. Type over any other month and':'هو رقمك الأول. اكتب فوق أي شهر ثاني وـ',
+    'the months after it pick the trend back up':'الأشهر اللي بعده تكمّل على نفس النمط',
+    'from whatever you put in.':'من الرقم اللي حطيته.',
+    'Link copied — it opens this exact plan':'تم نسخ الرابط — يفتح هالخطة بالضبط',
+    'Copy this link':'انسخ هالرابط',
+    'Could not build the link':'ما قدرنا نسوي الرابط',
+    'CSV downloaded':'تم تنزيل ملف CSV',
+    'Cleared':'تم المسح',
+    'Updated — your numbers are still here':'تم التحديث — أرقامك لا زالت موجودة',
+    'Change what you need, then build again':'غيّر اللي تبي، وبعدين ابنِ من جديد',
+    'Opened a shared plan — change anything and it becomes yours':'فتحنا خطة مشارَكة — غيّر أي شي وتصير حقك',
+    'Clear everything and start from scratch?':'نمسح كل شي ونبدأ من الأول؟',
+    'Step 1 of 3':'الخطوة 1 من 3','Step 2 of 3':'الخطوة 2 من 3','Step 3 of 3':'الخطوة 3 من 3',
+    'Type what one customer pays you in a month. Every figure on the page moves as you type.':'اكتب كم يدفع لك العميل الواحد بالشهر. كل رقم بالصفحة يتحرك وأنت تكتب.',
+    'Now say how that number moves — flat, a percentage, or a fixed amount each month.':'الحين حدّد كيف يتحرك الرقم — ثابت، أو بنسبة، أو بمبلغ ثابت كل شهر.',
+    'That is the whole idea. Every line works this way. Open a section to fill in the rest.':'هذي كل الفكرة. كل سطر يشتغل بنفس الطريقة. افتح قسم وكمّل الباقي.',
+    'Dismiss these tips':'إخفاء التلميحات',
+    'Spreadsheet':'الجدول','Print':'طباعة','Save as PDF':'حفظ PDF',
+    'Pick Save as PDF in the dialog':'اختر ـ Save as PDF في نافذة الطباعة',
+    'revenue line':'مصدر دخل','revenue lines':'مصادر دخل',
+    'a month on average':'بالشهر وسطياً',
+    'of every':'من كل','you invoice':'تفوترها'
+  };
+  for(var mk in MORE) DICT[mk]=MORE[mk];
+}
+function tl(x){ return (AR && DICT[x]) || x; }
+/* The seeded categories, positions and cost lines are written into the plan in whichever
+   language built it, so they are data by the time the switch is flipped. Anything that is
+   still word for word one of ours gets swapped; anything the user renamed is left alone. */
+function remapNames(to){
+  var map={};
+  for(var k in DICT){ if(DICT.hasOwnProperty(k)) { if(to==='ar') map[k]=DICT[k]; else map[DICT[k]]=k; } }
+  var fix=function(o){ if(o && map[o.name]) o.name=map[o.name]; };
+  (st.svc||[]).forEach(fix);
+  (st.cat||[]).forEach(function(c){ fix(c); (c.items||[]).forEach(fix); (c.roles||[]).forEach(fix); });
+  st.names  = (st.svc||[]).map(function(x){ return x.name; });
+  st.nameIds= (st.svc||[]).map(function(x){ return x.id; });
+}
+/* "3 lines" / "2 positions" reads the other way round in Arabic */
+function tcount(k, c){
+  if(!AR) return c+' '+tl(c===1?k:k+'s');
+  if(k==='line')     return c===1 ? 'سطر واحد' : (c===2 ? 'سطرين' : c+' سطور');
+  if(k==='position') return c===1 ? 'منصب واحد' : (c===2 ? 'منصبين' : c+' مناصب');
+  return c+' '+tl(k);
+}
+
 /* ═══════════ constants ═══════════ */
-var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-var MFULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var M = AR ? ['ينا','فبر','مار','أبر','ماي','يون','يول','أغس','سبت','أكت','نوف','ديس']
+             : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MFULL = AR ? ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+                 : ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var CURS = ['QAR','AED','SAR','KWD','BHD','OMR','USD','EUR','GBP','PKR','INR','EGP'];
 var KEY = 'hf_budget_v2';
 var CATCOL = ['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s6)'];
@@ -660,12 +932,12 @@ var SUGGEST = {
 };
 var ROLES = ['Founder / owner','Manager','Senior specialist','Specialist','Junior','Designer','Developer','Accountant','Sales executive','Admin assistant','Barista','Nurse','Driver','Part-time help'];
 
-var PRESETS = {
-  agency:['Monthly retainer','Website build','Content package'],
-  cafe:['Coffee & drinks','Food & pastries','Catering orders'],
-  clinic:['Consultations','Treatments','Packages'],
-  shop:['Bestseller product','Second product','Shipping & extras']
-};
+/* the questionnaire is for marketing agencies for now; the model changes with the
+   trade, so this list moves when the questionnaire learns to ask what the business is */
+var AGENCY = ['Monthly retainer','Social Media Management','SEO','Website Development',
+  'Paid Ads Management','Content Creation','Brand Guidelines Development','Logo Design',
+  'Photography','Videography','Email Marketing','Consulting & strategy'];
+var TOOL = 'https://hashirfaraz.com/tools/budget-planner/';
 
 /* ═══════════ state ═══════════ */
 var st, view='build', detail=false, thou=false, openRows={};
@@ -686,7 +958,7 @@ function fresh(){
 
 /* the plan we hand someone the moment they press Build — real structure, sample figures */
 function build(biz, cur, smo, syr, names){
-  var s = { biz:biz, cur:cur, sm:smo, sy:syr, mlabels:st.mlabels!==false, built:true, names:names.slice(), svc:[], cat:[] };
+  var s = { biz:biz, cur:cur, sm:smo, sy:syr, mlabels:st.mlabels!==false, built:true, lang:LANG, names:names.slice(), svc:[], cat:[] };
   var rev=0;
   names.forEach(function(n,i){
     var price = Math.max(2500, 12000 - i*2500), qty = 3;
@@ -700,29 +972,29 @@ function build(biz, cur, smo, syr, names){
   s.cat = [
     /* seeded for an agency: people you buy in, and media you buy on a client's behalf.
        Stock and materials belong to a retail model, which the questionnaire will ask for later. */
-    {id:'direct', name:'Direct costs', cogs:true, open:false, items:[
-      it('Freelancers & contractors', sh(.24), 'flat', 0, true),
-      it('Media / ad spend for clients', sh(.09), 'flat', 0, true)
+    {id:'direct', name:tl('Direct costs'), cogs:true, open:false, items:[
+      it(tl('Freelancers & contractors'), sh(.24), 'flat', 0, true),
+      it(tl('Media / ad spend for clients'), sh(.09), 'flat', 0, true)
     ]},
-    {id:'people', name:'Team', team:true, open:false, roles:[
-      role('Founder / owner', sh(.20), 1, true),
-      role('Specialist', sh(.12), 1, true)
+    {id:'people', name:tl('Team'), team:true, open:false, roles:[
+      role(tl('Founder / owner'), sh(.20), 1, true),
+      role(tl('Specialist'), sh(.12), 1, true)
     ]},
-    {id:'workspace', name:'Workspace', open:false, items:[
-      it('Rent', sh(.085), 'flat', 0, true),
-      it('Electricity & water', sh(.012), 'flat', 0, true),
-      it('Internet & phone', sh(.007), 'flat', 0, true)
+    {id:'workspace', name:tl('Workspace'), open:false, items:[
+      it(tl('Rent'), sh(.085), 'flat', 0, true),
+      it(tl('Electricity & water'), sh(.012), 'flat', 0, true),
+      it(tl('Internet & phone'), sh(.007), 'flat', 0, true)
     ]},
-    {id:'marketing', name:'Sales & marketing', open:false, items:[
-      it('Advertising', sh(.048), 'flat', 0, true),
-      it('Software & tools', sh(.013), 'flat', 0, true)
+    {id:'marketing', name:tl('Sales & marketing'), open:false, items:[
+      it(tl('Advertising'), sh(.048), 'flat', 0, true),
+      it(tl('Software & tools'), sh(.013), 'flat', 0, true)
     ]},
-    {id:'travel', name:'Travel', open:false, items:[]},
-    {id:'admin', name:'Admin & professional', open:false, items:[
-      it('Accounting & bookkeeping', sh(.016), 'flat', 0, true),
-      it('Trade licence & government fees', sh(.006), 'flat', 0, true)
+    {id:'travel', name:tl('Travel'), open:false, items:[]},
+    {id:'admin', name:tl('Admin & professional'), open:false, items:[
+      it(tl('Accounting & bookkeeping'), sh(.016), 'flat', 0, true),
+      it(tl('Trade licence & government fees'), sh(.006), 'flat', 0, true)
     ]},
-    {id:'other', name:'Other', open:false, items:[]}
+    {id:'other', name:tl('Other'), open:false, items:[]}
   ];
   return s;
 }
@@ -778,8 +1050,10 @@ function calc(){
     }
     if(!any) sm=false;
     r.cat.push({ref:cat,items:items,v:tot,sm:sm});
-    if(cat.cogs){ addTo(r.cogs,tot); if(any){ r.anyCogs=true; if(!sm) r.cogsSm=false; } }
-    else { addTo(r.opex,tot); if(any && !sm) r.opexSm=false; }
+    /* the sheet reads revenue, costs, profit. Splitting cost of sales out of the rest
+       only pays off when there is a cost per unit sold, and this plan prices a team,
+       not a unit - so every category lands in the one cost block. */
+    addTo(r.opex,tot); if(any && !sm) r.opexSm=false;
   });
   if(!r.anyCogs) r.cogsSm=false;
   r.gpSm  = r.revSm && (r.cogsSm || !r.anyCogs);
@@ -824,12 +1098,12 @@ function axK(n){
 function pct(a,b){ if(!b) return '—'; var v=a/b*100; return v.toFixed(v>=10||v<=-10?0:1).replace(/\.0$/,'')+'%'; }
 /* months can read as real dates or simply M1-M12, for a plan that is not tied to a calendar */
 function mlab(m){
-  if(st.mlabels===false) return 'M'+(m+1);
+  if(st.mlabels===false) return (AR?'ش':'M')+(m+1);
   var i=(st.sm+m)%12, y=st.sy+Math.floor((st.sm+m)/12);
   return M[i]+' '+String(y).slice(2);
 }
 function mfull(m){
-  if(st.mlabels===false) return 'Month '+(m+1);
+  if(st.mlabels===false) return AR ? ('الشهر '+(m+1)) : ('Month '+(m+1));
   var i=(st.sm+m)%12, y=st.sy+Math.floor((st.sm+m)/12);
   return MFULL[i]+' '+y;
 }
@@ -914,29 +1188,51 @@ function getSeries(p){
 }
 
 /* ═══════════ the value row — three buttons, then the numbers ═══════════ */
-function modeBtns(path, s){
+function modeRail(path, s){
   function b(mode, ic, tx, tip){
     return '<button class="mb'+(s.m===mode?' on':'')+'" type="button" role="radio" aria-checked="'+
            (s.m===mode?'true':'false')+'" data-mode="'+mode+'" data-p="'+path+'" data-tt="'+attr(tip)+'">'+
            '<span class="ic">'+ic+'</span><span class="tx">'+tx+'</span></button>';
   }
-  return '<div class="modes"><span class="lblr" id="lb-'+path.replace(/\|/g,'-')+'">How it changes each month</span>'+
-    '<div class="mbtns" role="radiogroup" aria-labelledby="lb-'+path.replace(/\|/g,'-')+'">'+
-    b('flat','=','Constant','Stays the same in all twelve months')+
-    b('pct','%','Percent','Each month is the one before it, up or down by a percentage')+
-    b('amt','+/−','Amount','Each month is the one before it, up or down by a fixed amount')+
-  '</div></div>';
+  var nOv=overrideCount(s), open=!!openRows[path];
+  /* the label that used to sit over these buttons is gone: the box beside them already
+     says what the step is, and it changes as you pick */
+  return '<div class="mgrp">'+
+    '<div class="mbtns" role="radiogroup" aria-label="How this number changes each month">'+
+      b('flat','=',tl('Constant'),tl('Stays the same in all twelve months'))+
+      b('pct','%',tl('Percent'),tl('Each month is the one before it, up or down by a percentage'))+
+      b('amt','±',tl('Amount'),tl('Each month is the one before it, up or down by a fixed amount'))+
+    '</div><span class="mdiv"></span>'+
+    '<button class="mb mcustom'+(nOv?' has':'')+(open?' open':'')+'" type="button" aria-expanded="'+
+      (open?'true':'false')+'" data-months="'+path+'" data-tt="'+
+      attr(tl('Set any single month by hand. The months after it pick the trend back up.'))+'">'+
+      '<span class="ic">'+PENCIL+'</span><span class="tx">'+(nOv?tl('Custom')+' · '+nOv:tl('Custom'))+'</span></button>'+
+  '</div>';
+}
+/* the sign is kept on the series so a step of zero still remembers which way it points */
+function isDown(x){ return x.r<0 || (x.r===0 && x.dn===true); }
+function signBtns(path, x){
+  var dn=isDown(x);
+  return '<span class="sgn" role="radiogroup" aria-label="'+attr(tl('Up or down'))+'">'+
+    '<button type="button" role="radio" aria-checked="'+(!dn?'true':'false')+'" aria-label="'+attr(tl('Goes up'))+'"'+
+      ' class="'+(!dn?'on':'')+'" data-sign="up" data-p="'+path+'" data-tt="'+attr(tl('Each month is higher than the one before'))+'">+</button>'+
+    '<button type="button" role="radio" aria-checked="'+(dn?'true':'false')+'" aria-label="'+attr(tl('Goes down'))+'"'+
+      ' class="'+(dn?'on dn':'')+'" data-sign="dn" data-p="'+path+'" data-tt="'+attr(tl('Each month is lower than the one before'))+'">−</button>'+
+  '</span>';
 }
 function numField(path, which, s, cfg){
   var sampled = s.sm && which==='b';
   var v = which==='b' ? s.b : s.r;
-  var shown = which==='b' ? (sampled ? '' : (v?fmt(v):'')) : (v?String(+v.toFixed(2)):'');
-  var ph = which==='b' ? (sampled ? fmt(v) : '0') : (s.m==='pct'?'5':'1,000');
-  return '<label class="nf'+(sampled?' sampled':'')+'"><span class="lblr">'+cfg.label+'</span>'+
-    '<span class="nfb">'+(cfg.pre?'<em class="pre">'+esc(cfg.pre)+'</em>':'')+
+  /* the field holds the size of the step; the two buttons beside it hold the direction */
+  var shown = which==='b' ? (sampled ? '' : (v?fmt(v):'')) : (v?String(+Math.abs(v).toFixed(2)):'');
+  var ph = which==='b' ? (sampled ? fmt(v) : '0') : (s.m==='pct'?'1':'100');
+  return '<label class="nf'+(sampled?' sampled':'')+'"><span class="nfb">'+
+    '<span class="nfl">'+esc(cfg.label)+'</span><span class="nfv">'+
+    (which==='r' ? signBtns(path, s) : '')+
+    (cfg.pre?'<em class="pre">'+esc(cfg.pre)+'</em>':'')+
     '<input inputmode="decimal" data-num="'+which+'" data-p="'+path+'" value="'+shown+'" placeholder="'+esc(ph)+'"'+
-    (cfg.tip?' data-tt="'+attr(cfg.tip)+'"':'')+'>'+
-    (cfg.suf?'<em class="suf">'+esc(cfg.suf)+'</em>':'')+'</span></label>';
+    ' aria-label="'+esc(cfg.label)+'"'+(cfg.tip?' data-tt="'+attr(cfg.tip)+'"':'')+'>'+
+    (cfg.suf?'<em class="suf">'+esc(cfg.suf)+'</em>':'')+'</span></span></label>';
 }
 var PENCIL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
 function overrideCount(s){ var n=0; for(var k in s.ov){ if(+k>0) n++; } return n; }
@@ -955,9 +1251,9 @@ function isCount(path){ return /\|qty$|\|n$/.test(path); }
 /* adding up twelve months of headcount or customer counts means nothing —
    a count row reports its average instead of a total */
 function totText(s, vals, money){
-  if(money) return '<em>Year</em>'+fmt(sum(vals));
+  if(money) return '<em>'+esc(tl('Year'))+'</em>'+fmt(sum(vals));
   var a=sum(vals)/12;
-  return '<em>Average</em>'+(Math.abs(a-Math.round(a))<0.05 ? fmt(a) : a.toFixed(1));
+  return '<em>'+esc(tl('Average'))+'</em>'+(Math.abs(a-Math.round(a))<0.05 ? fmt(a) : a.toFixed(1));
 }
 
 function vrowHTML(path, label, s, cfg){
@@ -967,32 +1263,27 @@ function vrowHTML(path, label, s, cfg){
   var h='<div class="vrow'+(s.sm?' sampled':'')+(cfg.pair?' pairtop':'')+(cfg.sub?' vsub':'')+'" data-row="'+path+'">';
 
   h+='<div class="vtop">'+
-     (cfg.rename ? '<input class="rin" data-rename="'+path+'" value="'+esc(label)+'" placeholder="Name this line">'
-                 : '<span class="vname">'+esc(label)+'</span>')+
-     (cfg.hint ? '<span class="vhint">'+esc(cfg.hint)+'</span>' : '<span class="vhint"></span>')+
-     (cfg.del ? '<button class="xb" data-del="'+cfg.del+'" aria-label="Remove" data-tt="Remove this line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>':'')+
+     (cfg.rename ? '<input class="rin" data-rename="'+path+'" value="'+esc(label)+'" placeholder="'+esc(tl('Name this line'))+'">'
+                 : '<span class="vname">'+esc(tl(label))+'</span>')+
+     (cfg.hint ? '<span class="vhint">'+esc(tl(cfg.hint))+'</span>' : '<span class="vhint"></span>')+
+     (cfg.del ? '<button class="xb" data-del="'+cfg.del+'" aria-label="'+attr(tl('Remove'))+'" data-tt="'+attr(tl('Remove this line'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>':'')+
      '</div>';
 
-  h+='<div class="ctrl">'+modeBtns(path,s);
-  h+=numField(path,'b',s,{ label: (cfg.startLabel || 'Starts at')+' · '+mlab(0),
+  h+='<div class="ctrl">';
+  h+=numField(path,'b',s,{ label: tl(cfg.startLabel || 'Starts at')+' · '+mlab(0),
                            pre: money?st.cur:'', tip: cfg.tip||'' });
   if(s.m==='flat'){
-    h+='<div class="nostep">No change —<br>same every month</div>';
+    h+='<div class="nostep"><span class="nfl">'+esc(tl('Each month'))+'</span><span class="ns">'+esc(tl('No change'))+'</span></div>';
   } else if(s.m==='pct'){
-    h+=numField(path,'r',s,{ label:'Then each month', suf:'%',
-          tip:'Put a minus in front to go down, for example −3' });
+    h+=numField(path,'r',s,{ label:tl('Each month by'), suf:'%',
+          tip:tl('How much it moves each month, as a percentage of the month before') });
   } else {
-    h+=numField(path,'r',s,{ label:'Then each month', pre:money?st.cur:'', suf:'',
-          tip:'Put a minus in front to go down, for example −500' });
+    h+=numField(path,'r',s,{ label:tl('Each month by'), pre: money ? st.cur : '',
+          tip:tl('How much it moves each month, as a fixed amount') });
   }
   h+='</div>';
-
-  h+='<div class="vfoot">'+
-     '<button class="mtog'+(nOv?' has':'')+(open?' open':'')+'" type="button" aria-expanded="'+(open?'true':'false')+'" data-months="'+path+'" '+
-       'data-tt="'+attr('Set any single month by hand. The months after it pick the trend back up.')+'">'+
-       PENCIL+(nOv ? 'Custom · '+nOv+' month'+(nOv===1?'':'s') : 'Custom')+'</button>'+
-     '<span class="vtot" data-tot="'+path+'">'+totText(s,vals,money)+'</span>'+
-     '</div>';
+  h+=modeRail(path,s);
+  h+='<div class="vfoot"><span class="vtot" data-tot="'+path+'">'+totText(s,vals,money)+'</span></div>';
 
   h+=mstripHTML(path, s, vals, open, money);
   h+='</div>';
@@ -1007,11 +1298,11 @@ function mstripHTML(path, s, vals, open, money){
        '<input inputmode="decimal" aria-label="'+esc(mfull(m))+'" value="'+(vals[m]?fmt(vals[m]):'')+'" data-tt="'+attr(explain(s,vals,m,money))+'">'+
        /* the reset button sits in every month after the first and CSS reveals it only on an
           overridden one, so a month just typed over gets it without rebuilding the strip */
-       (m>0?'<button class="un" type="button" data-undo="1" tabindex="-1" aria-label="Clear this month" data-tt="Clear this and follow the trend again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h11a5 5 0 1 1 0 10H9"/><path d="M3 10l5-5M3 10l5 5"/></svg></button>':'')+
+       (m>0?'<button class="un" type="button" data-undo="1" tabindex="-1" aria-label="'+attr(tl('Clear this month'))+'" data-tt="'+attr(tl('Clear this and follow the trend again'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h11a5 5 0 1 1 0 10H9"/><path d="M3 10l5-5M3 10l5 5"/></svg></button>':'')+
        '</div>';
   }
-  h+='<div class="mnote">'+mlab(0)+' is your starting figure. Type over any other month and '+
-     '<b>the months after it pick the trend back up</b> from whatever you put in.</div>';
+  h+='<div class="mnote">'+mlab(0)+' '+tl('is your starting figure. Type over any other month and')+' '+
+     '<b>'+tl('the months after it pick the trend back up')+'</b> '+tl('from whatever you put in.')+'</div>';
   return h+'</div>';
 }
 function explain(s, vals, m, money){
@@ -1048,22 +1339,23 @@ function blkHTML(key, title, sub, colour, bodyHTML, footHTML, total, sampled){
 
 function renderEditor(){
   var c=calc(), h='';
-  h+='<div class="secnote">What you sell</div>';
+  h+='<div class="secnote">'+esc(tl('What you sell'))+'</div>';
   st.svc.forEach(function(s,i){
     var d=c.svc[i], body='';
-    body+='<div class="namerow"><span class="lblr">What this is called</span>'+
-          '<input class="tfld" data-svcname="'+i+'" value="'+esc(s.name)+'" placeholder="Name this service"></div>';
+    body+='<div class="namerow"><span class="lblr">'+esc(tl('What this is called'))+'</span>'+
+          '<input class="tfld" data-svcname="'+i+'" value="'+esc(s.name)+'" placeholder="'+esc(tl('Name this service'))+'"></div>';
     body+=vrowHTML('s|'+i+'|price','Price per customer',s.price,
-      {hint:'what one customer pays', tip:'What one customer pays you in a month. For a retainer, the monthly fee.'});
+      {hint:'what one customer pays', tip:tl('What one customer pays you in a month. For a retainer, the monthly fee.')});
     body+=vrowHTML('s|'+i+'|qty','Customers',s.qty,
       {unit:'count', hint:'how many pay you', startLabel:'How many',
-       tip:'How many customers pay you in that month. For a retainer, your live client count.'});
-    var foot='<div class="bfoot"><span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">Revenue = price × customers, worked out for all twelve months.</span></div>';
-    h+=blkHTML('s'+i, s.name, 'Revenue', CATCOL[i%6], body, foot, sum(d.rev), s.price.sm||s.qty.sm);
+       tip:tl('How many customers pay you in that month. For a retainer, your live client count.')});
+    var foot='<div class="bfoot"><span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">'+
+      esc(tl('Revenue = price × customers, worked out for all twelve months.'))+'</span></div>';
+    h+=blkHTML('s'+i, s.name, tl('Revenue'), CATCOL[i%6], body, foot, sum(d.rev), s.price.sm||s.qty.sm);
   });
-  h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add another thing you sell</button></div>';
+  h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add another thing you sell'))+'</button></div>';
 
-  h+='<div class="secnote">What it costs</div>';
+  h+='<div class="secnote">'+esc(tl('What it costs'))+'</div>';
   st.cat.forEach(function(cat,ci){
     var d=c.cat[ci], body='', foot='', sampled=false, n;
     if(cat.team){
@@ -1072,25 +1364,25 @@ function renderEditor(){
         body+='<div style="padding-top:4px"></div>';
         body+=vrowHTML('t|'+ci+'|'+ri+'|pay', ro.name, ro.pay,
           {rename:true, hint:'monthly salary each', startLabel:'Salary', pair:true,
-           del:'t|'+ci+'|'+ri, tip:'What one person in this position is paid per month, all in.'});
+           del:'t|'+ci+'|'+ri, tip:tl('What one person in this position is paid per month, all in.')});
         body+=vrowHTML('t|'+ci+'|'+ri+'|n','How many people',ro.n,
           {unit:'count', sub:true, hint:'in this position', startLabel:'How many',
-           tip:'How many people you have in this position. Type over a later month to add a hire.'});
+           tip:tl('How many people you have in this position. Type over a later month to add a hire.')});
       });
-      if(!cat.roles.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">No one on the payroll yet.</div>';
-      foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a position</button>'+
-           '<span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">Cost = salary × how many</span></div>';
-      n=cat.roles.length+' position'+(cat.roles.length===1?'':'s');
+      if(!cat.roles.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">'+esc(tl('No one on the payroll yet.'))+'</div>';
+      foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a position'))+'</button>'+
+           '<span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">'+esc(tl('Cost = salary × how many'))+'</span></div>';
+      n=tcount('position', cat.roles.length);
     } else {
       cat.items.forEach(function(item,ii){
         if(item.s.sm) sampled=true;
         body+=vrowHTML('c|'+ci+'|'+ii, item.name, item.s, {rename:true, del:'c|'+ci+'|'+ii});
       });
-      if(!cat.items.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">Nothing here yet.</div>';
-      foot='<div class="bfoot"><button class="addbtn" data-addcost="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a cost to '+esc(cat.name.toLowerCase())+'</button></div>';
-      n=cat.items.length+' line'+(cat.items.length===1?'':'s');
+      if(!cat.items.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">'+esc(tl('Nothing here yet.'))+'</div>';
+      foot='<div class="bfoot"><button class="addbtn" data-addcost="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a cost to'))+' '+esc(AR?cat.name:cat.name.toLowerCase())+'</button></div>';
+      n=tcount('line', cat.items.length);
     }
-    h+=blkHTML('c'+ci, cat.name, cat.cogs?'Cost of sales · '+n:n, CATCOL[ci%6], body, foot, sum(d.v), sampled);
+    h+=blkHTML('c'+ci, cat.name, n, CATCOL[ci%6], body, foot, sum(d.v), sampled);
   });
 
   document.getElementById('editor').innerHTML=h;
@@ -1108,86 +1400,120 @@ function anySample(){
 /* ═══════════ P&L table (shared by the mini copy and the full sheet) ═══════════ */
 /* plain-language notes behind the small i on each line that is a measure, not a cost */
 var INFO = {
-  'Direct costs':'The costs that only happen because you made the sale — freelancers, production, media you buy on a client’s behalf. No sale, no cost.',
-  'Gross profit':'Revenue minus direct costs. What the work itself leaves you, before any of the bills you pay whether or not you sell anything.',
-  'Gross margin':'Gross profit as a share of revenue. It tells you how much of every riyal you invoice survives delivering the work.',
-  'Total running costs':'Everything you pay to keep the doors open — team, rent, software, admin — whether or not you sell a thing. Often called overheads.',
+  'Total revenue':'Everything you invoice in the month, every revenue line added together. Nothing has been taken off it yet.',
+  'Total costs':'Everything you pay out that month — team, freelancers, rent, software, admin — added together.',
   'Net profit':'What is actually left: revenue, minus direct costs, minus running costs. This is the line that pays you.',
   'Net margin':'Net profit as a share of revenue. Ten percent means ten fils of every riyal you invoice ends up as profit.',
   'Profit to date':'Every month’s profit added up from the start of the year. It shows when a slow start has been paid back — the month it turns positive is when you are ahead for the year.'
 };
+var INFO_AR = {
+  'Total revenue':'كل اللي تفوتره في الشهر، كل مصادر الدخل مجموعة. ما نزل منه شي لحقّه.',
+  'Total costs':'كل اللي تدفعه في الشهر — الفريق، المستقلّون، الإيجار، البرامج، الإدارة — مجموعاً.',
+  'Net profit':'اللي يتبقّى فعلاً: الإيراد ناقص كل التكاليف. هذا السطر اللي يدفع لك.',
+  'Net margin':'صافي الربح كنسبة من الإيراد. عشرة بالمية يعني من كل 100 ريال تفوترها يبقى لك 10.',
+  'Profit to date':'ربح كل شهر مجموعاً من بداية السنة. يوريك متى تعوّضت البداية البطيئة — الشهر اللي يصير فيه موجب هو اللي تكون فيه رابح للسنة.'
+};
+function infoText(label){ return (AR && INFO_AR[label]) || INFO[label]; }
 function infoBtn(label){
-  if(!INFO[label]) return '';
-  return '<button class="ib" type="button" aria-label="What is '+esc(label)+'?" data-tt="'+
-         attr('<b>'+safe(label)+'</b><span class="eq">'+safe(INFO[label])+'</span>')+'">i</button>';
+  if(!infoText(label)) return '';
+  var q = AR ? ('وش يعني '+label+'؟') : ('What is '+label+'?');
+  return '<button class="ib" type="button" aria-label="'+attr(AR?tl(label):esc(label))+'" title="'+attr(safe(q))+'" data-tt="'+
+         attr('<b>'+safe(tl(label))+'</b><span class="eq">'+safe(infoText(label))+'</span>')+'">i</button>';
 }
 
+/* the position of each month among the twelve, so a total can be shaded by rank */
+function ranks(vals){
+  var idx=vals.map(function(_,i){ return i; });
+  idx.sort(function(a,b){ return Math.abs(vals[a])-Math.abs(vals[b]); });
+  var r=[]; idx.forEach(function(i,k){ r[i]=k; });
+  return r;
+}
 function plTable(c, f){
-  var h='<table class="pl"><thead><tr><th>&nbsp;</th>';
+  var h='<table class="pl"><thead><tr><th class="cu">'+esc(st.cur)+(thou?' ’000':'')+'</th>';
   for(var m=0;m<12;m++) h+='<th>'+mlab(m)+'</th>';
-  h+='<th class="tc">Year</th></tr></thead><tbody>';
+  h+='<th class="tc">'+esc(tl('Year'))+'</th></tr></thead><tbody>';
 
   /* sm greys a line right down until one of the numbers feeding it is the user’s own */
-  function tr(label, vals, cls, sm, totOverride){
-    var r='<tr class="'+(cls||'')+(sm?' samp':'')+'"><td>'+esc(label)+infoBtn(label)+'</td>';
-    for(var m=0;m<12;m++){ var v=vals[m]; r+='<td'+(v<0?' class="neg"':'')+'>'+f(v)+'</td>'; }
+  function tr(label, vals, cls, sm, totOverride, heat){
+    /* a total earns a tint that follows its rank among the twelve months - the shape of the
+       year becomes visible before a single figure is read. Samples stay flat and grey. */
+    var rk = null;
+    if(heat && !sm && sum(vals)){
+      /* a flat year has no shape to show - ranking twelve identical months would invent one */
+      var av=vals.map(function(v){ return Math.abs(v); });
+      var lo=Math.min.apply(null,av), hi=Math.max.apply(null,av);
+      if(hi-lo > hi*0.005) rk=ranks(vals);
+    }
+    var r='<tr class="'+(cls||'')+(sm?' samp':'')+'"><td>'+esc(tl(label))+infoBtn(label)+'</td>';
+    for(var m=0;m<12;m++){
+      var v=vals[m], cc=[], sty='';
+      if(v<0) cc.push('neg');
+      if(rk){ cc.push('ht');
+        sty=' style="background:rgba('+(heat==='pos'?'10,135,84,':'200,55,75,')+
+            (0.05+0.17*rk[m]/11).toFixed(3)+')"'; }
+      r+='<td'+(cc.length?' class="'+cc.join(' ')+'"':'')+sty+'>'+f(v)+'</td>';
+    }
     var t = totOverride!==undefined ? totOverride : sum(vals);
     r+='<td class="tc'+(t<0?' neg':'')+'">'+f(t)+'</td></tr>';
     return r;
   }
   function trPct(label, nums, dens, sm){
-    var r='<tr class="pct'+(sm?' samp':'')+'"><td>'+esc(label)+infoBtn(label)+'</td>';
+    var r='<tr class="pct'+(sm?' samp':'')+'"><td>'+esc(tl(label))+infoBtn(label)+'</td>';
     for(var m=0;m<12;m++) r+='<td>'+pct(nums[m],dens[m])+'</td>';
     return r+'<td class="tc">'+pct(sum(nums),sum(dens))+'</td></tr>';
   }
   var neg=function(v){ return -v; };
 
-  h+='<tr class="sec"><td colspan="14">Revenue</td></tr>';
+  /* everything that comes in, everything that goes out, what is left of the two */
+  var gap='<tr class="gap"><td colspan="14"></td></tr>';
+
+  h+='<tr class="sec"><td colspan="14">'+esc(tl('Revenue'))+'</td></tr>';
   c.svc.forEach(function(d){ h+=tr(d.ref.name, d.rev, 'sub', d.sm); });
-  h+=tr('Total revenue', c.rev, 'rule strong', c.revSm);
-  if(sum(c.cogs)){
-    h+=tr('Direct costs', c.cogs.map(neg), 'sub', c.cogsSm);
-    h+=tr('Gross profit', c.gp, 'rule strong', c.gpSm);
-    h+=trPct('Gross margin', c.gp, c.rev, c.gpSm);
-  }
-  h+='<tr class="sec"><td colspan="14">Running costs</td></tr>';
+  h+=tr('Total revenue', c.rev, 'rule strong', c.revSm, undefined, 'pos');
+  h+=gap;
+
+  h+='<tr class="sec"><td colspan="14">'+esc(tl('Costs'))+'</td></tr>';
   c.cat.forEach(function(d){
-    if(d.ref.cogs) return;
     if(!sum(d.v) && !d.items.length) return;
     h+=tr(d.ref.name, d.v.map(neg), 'sub', d.sm);
     if(detail) d.items.forEach(function(i){ if(sum(i.v)) h+=tr(i.ref.name, i.v.map(neg), 'det', i.sm); });
   });
-  h+=tr('Total running costs', c.opex.map(neg), 'rule strong', c.opexSm);
+  h+=tr('Total costs', c.opex.map(neg), 'rule strong', c.opexSm, undefined, 'neg');
+  h+=gap;
+
   h+=tr('Net profit', c.net, 'net', c.netSm);
   h+=trPct('Net margin', c.net, c.rev, c.netSm);
   h+=tr('Profit to date', c.cum, 'rule', c.netSm, c.cum[11]);
   return h+'</tbody></table>';
 }
 
+function bizName(){ return st.biz || tl('Your business'); }
+function planTitle(){ return esc(bizName())+' — '+esc(tl('Financial Plan')); }
+function builtWith(){ return esc(tl('Built with'))+' <a href="'+TOOL+(AR?'?lang=ar':'')+'">hashirfaraz.com</a>'; }
 function renderSheet(c){
   c=c||calc();
-  var h='<div class="sh-head"><div><h3>'+esc(st.biz||'Your business')+'</h3>'+
-    '<div class="meta">Budget · '+mfull(0)+' to '+mfull(11)+'</div></div>'+
-    '<div class="rt">Figures in<b>'+esc(st.cur)+(thou?' thousands':'')+'</b></div></div>';
+  var h='<div class="sh-head"><div><h3>'+planTitle()+'</h3>'+
+    '<div class="meta">'+builtWith()+'</div></div>'+
+    '<div class="rt">'+mlab(0)+' – '+mlab(11)+'</div></div>';
   h+=plTable(c, fmtK);
-  h+='<div class="sh-foot"><span>'+esc(st.biz||'Your business')+' · 12-month budget · prepared '+
-     new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+
-     '</span><span>Built with the free Budget Planner at <b>hashirfaraz.com</b></span></div>';
+  h+='<div class="sh-foot"><span>'+esc(tl('Prepared'))+' '+
+     new Date().toLocaleDateString(AR?'ar-QA-u-nu-latn':'en-GB',{day:'numeric',month:'short',year:'numeric'})+
+     '</span><span>'+esc(tl('Make your own at'))+' <a href="'+TOOL+(AR?'?lang=ar':'')+'"><b>hashirfaraz.com</b></a></span></div>';
   document.getElementById('sheet').innerHTML=h;
 }
 
 function renderMini(c){
   c=c||calc();
   var rev=sum(c.rev), net=sum(c.net), gp=sum(c.gp);
-  var h='<div class="mt"><div><h3>'+esc(st.biz||'Your business')+'</h3>'+
-    '<div class="mm">'+mfull(0)+' to '+mfull(11)+'</div></div>'+
-    '<div class="rt">Live<br>'+esc(st.cur)+'</div></div>';
+  var h='<div class="mt"><div><h3>'+esc(bizName())+'</h3>'+
+    '<div class="mm">'+mlab(0)+' – '+mlab(11)+'</div></div>'+
+    '<div class="rt">'+esc(tl('Live'))+'<br>'+esc(st.cur)+'</div></div>';
   h+=plTable(c, fmt);
   h+='<div class="minifoot">'+
-     statlet('Revenue', fmt(rev),'')+
-     statlet('Gross margin', pct(gp,rev),'')+
-     statlet('Running costs', fmt(sum(c.opex)),'')+
-     statlet('Net profit', fmt(net), net>=0?'good':'bad')+
+     statlet(tl('Revenue'), fmt(rev),'')+
+     statlet(tl('Total costs'), fmt(sum(c.opex)),'')+
+     statlet(tl('Net profit'), fmt(net), net>=0?'good':'bad')+
+     statlet(tl('Net margin'), pct(net,rev), net>=0?'good':'bad')+
      '</div>';
   document.getElementById('mini').innerHTML=h;
 }
@@ -1278,45 +1604,56 @@ function renderDash(c){
                 .filter(function(r){ return r.v>0; }).sort(function(a,b){ return b.v-a.v; });
   var spend=cogs+opex;
 
-  var h='<div class="dh"><div><h3><span class="pip"></span>'+esc(st.biz||'Your business')+' — the year at a glance</h3>'+
-    '<div class="meta">'+mfull(0)+' to '+mfull(11)+' · all figures in '+esc(st.cur)+'</div></div></div>';
+  /* the single biggest line, not the category it sits in - a category called Team says
+     nothing, where the position inside it that costs the most says a great deal */
+  var lines=[];
+  c.cat.forEach(function(d){
+    d.items.forEach(function(i){ var v=sum(i.v); if(v>0) lines.push({name:i.ref.name, cat:d.ref.name, v:v}); });
+  });
+  lines.sort(function(a,b){ return b.v-a.v; });
+
+  var cu=function(v){ return '<em>'+esc(st.cur)+'</em>'+fmt(v); };
+  var h='<div class="dh"><div class="dl"><h3>'+planTitle()+'</h3>'+
+    '<div class="meta">'+builtWith()+'</div></div>'+
+    '<div class="rt">'+mlab(0)+' – '+mlab(11)+'</div></div>';
 
   h+='<div class="kpis">'+
-     kpi('Revenue for the year', fmt(rev), svcs.length+' revenue line'+(svcs.length===1?'':'s'),'brand')+
-     kpi('Gross margin', pct(gp,rev), fmt(gp)+' after direct costs','')+
-     kpi('Running costs', fmt(opex), fmt(opex/12)+' a month on average','')+
-     kpi('Net profit', fmt(net), pct(net,rev)+' of revenue', net>=0?'good':'bad')+
+     kpi(tl('Total Revenue'), cu(rev), AR ? (svcs.length+' '+tl(svcs.length===1?'revenue line':'revenue lines'))
+                                          : (svcs.length+' revenue line'+(svcs.length===1?'':'s')),'brand')+
+     kpi(tl('Total Costs'), cu(cogs+opex), st.cur+' '+fmt((cogs+opex)/12)+' '+tl('a month on average'),'')+
+     kpi(tl('Net Profit'), cu(net), st.cur+' '+fmt(net/12)+' '+tl('a month on average'), net>=0?'good':'bad')+
+     kpi(tl('Net Margin'), pct(net,rev), tl('of every')+' '+st.cur+' 100 '+tl('you invoice'), net>=0?'good':'bad')+
      '</div>';
 
   h+='<div class="dgrid">'+
-     '<div class="dcard"><h4>Money in, money out</h4><div class="sub">Every cost you pay that month, against what you invoice</div>'+
-     '<div class="legend"><span><i style="background:var(--s1)"></i>Revenue</span><span><i style="background:var(--s2)"></i>All costs</span></div>'+
+     '<div class="dcard"><h4>'+esc(tl('Revenue vs Cost'))+'</h4>'+
+     '<div class="legend"><span><i style="background:var(--s1)"></i>'+esc(tl('Revenue'))+'</span><span><i style="background:var(--s2)"></i>'+esc(tl('All costs'))+'</span></div>'+
      chartRevCost(c)+'</div>'+
-     '<div class="dcard"><h4>Where the money goes</h4><div class="sub">Share of everything you spend in the year</div>'+
+     '<div class="dcard"><h4>'+esc(tl('Cost Distribution'))+'</h4>'+
      barList(cats, spend, function(i,r){ return CATCOL[r.i%6]; })+'</div>'+
      '</div>';
 
   h+='<div class="dgrid" style="margin-top:12px">'+
-     '<div class="dcard"><h4>Profit each month</h4><div class="sub">Above the line is a profit, below it is a loss</div>'+chartProfit(c)+'</div>'+
-     '<div class="dcard"><h4>Where revenue comes from</h4><div class="sub">Share of the year&rsquo;s revenue by what you sell</div>'+
+     '<div class="dcard"><h4>'+esc(tl('Monthly Net Profit'))+'</h4>'+chartProfit(c)+'</div>'+
+     '<div class="dcard"><h4>'+esc(tl('Revenue Distribution'))+'</h4>'+
      barList(svcs, rev, function(i,r){ return CATCOL[r.i%6]; })+'</div>'+
      '</div>';
 
-  var biggest=cats[0];
+  var topLine=lines[0], topSvc=svcs[0];
   h+='<div class="notes">'+
-     note('Best month', '<strong>'+mfull(best)+'</strong> — '+fmt(c.net[best])+' of profit on '+fmt(c.rev[best])+' of revenue.')+
-     note('In the black', breakEven>=0
-        ? 'You are ahead for the year from <strong>'+mfull(breakEven)+'</strong> onwards.'
-        : (firstPos>=0
-            ? 'First profitable month is <strong>'+mfull(firstPos)+'</strong>, but the year still ends behind by '+fmt(-c.cum[11])+'.'
-            : 'No profitable month yet — the year ends behind by <strong>'+fmt(-c.cum[11])+'</strong>.'))+
-     note('Biggest cost', biggest
-        ? '<strong>'+esc(biggest.name)+'</strong> takes '+pct(biggest.v,spend)+' of everything you spend ('+fmt(biggest.v)+').'
-        : 'No costs entered yet.')+
+     note(tl('Best month'), AR
+        ? '<strong>'+mfull(best)+'</strong> — ربح '+st.cur+' '+fmt(c.net[best])+' على إيراد '+st.cur+' '+fmt(c.rev[best])+'.'
+        : '<strong>'+mfull(best)+'</strong> — '+st.cur+' '+fmt(c.net[best])+' of profit on '+st.cur+' '+fmt(c.rev[best])+' of revenue.')+
+     note(tl('Biggest revenue'), !topSvc ? tl('No revenue entered yet.') : (AR
+        ? '<strong>'+esc(topSvc.name)+'</strong> يجيب '+pct(topSvc.v,rev)+' من إيراد السنة ('+st.cur+' '+fmt(topSvc.v)+').'
+        : '<strong>'+esc(topSvc.name)+'</strong> brings in '+pct(topSvc.v,rev)+' of the year’s revenue ('+st.cur+' '+fmt(topSvc.v)+').'))+
+     note(tl('Biggest cost'), !topLine ? tl('No costs entered yet.') : (AR
+        ? '<strong>'+esc(topLine.name)+'</strong> أكبر سطر عندك — '+pct(topLine.v,spend)+' من كل ما تصرفه ('+st.cur+' '+fmt(topLine.v)+').'
+        : '<strong>'+esc(topLine.name)+'</strong> is your single largest line — '+pct(topLine.v,spend)+' of everything you spend ('+st.cur+' '+fmt(topLine.v)+').'))+
      '</div>';
 
-  h+='<div class="sh-foot"><span>'+esc(st.biz||'Your business')+' · 12-month budget</span>'+
-     '<span>Built with the free Budget Planner at <b>hashirfaraz.com</b></span></div>';
+  h+='<div class="sh-foot"><span>'+esc(bizName())+' · '+mlab(0)+' – '+mlab(11)+'</span>'+
+     '<span>'+esc(tl('Make your own at'))+' <a href="'+TOOL+(AR?'?lang=ar':'')+'"><b>hashirfaraz.com</b></a></span></div>';
   el.innerHTML=h;
 }
 function kpi(k,v,d,cls){ return '<div class="kpi '+(cls||'')+'"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="d">'+d+'</div></div>'; }
@@ -1328,13 +1665,13 @@ function fitPass(box, el){
   box.style.height='auto';
   /* below laptop width, shrinking a 1120px sheet makes it unreadable — let it scroll sideways */
   if(innerWidth<860) return;
-  var bar=document.querySelector('.vbar');
   var availW=box.clientWidth;
-  var availH=main.clientHeight - (bar?bar.offsetHeight:56) - 52;   /* bar + the screen's padding */
   var w=el.offsetWidth, hgt=el.offsetHeight;
-  if(!w || !hgt || availH<160) return;
-  var k=Math.min(availW/w, availH/hgt, 1);
-  if(k>0.999) return;
+  if(!w || !hgt) return;
+  /* width only. Both sheets then come out exactly as wide as each other and as wide as the
+     window allows; the dashboard being the taller of the two is what scrolling is for. */
+  var k=Math.min(availW/w, 1.5);
+  if(k>0.995 && k<1.005) return;
   el.style.transform='scale('+k+')';
   /* measure AFTER the transform — the rect is the real on-screen height, so the box
      reserves exactly what the scaled sheet occupies and the page stops overflowing */
@@ -1368,11 +1705,20 @@ function paintRow(path, skipEl){
   }
   var tot=row.querySelector('[data-tot]');
   if(tot) tot.innerHTML=totText(s, vals, money);
-  var mt=row.querySelector('.mtog');
+  var sg=row.querySelector('.sgn');
+  if(sg){
+    var dn=isDown(s);
+    sg.querySelectorAll('button').forEach(function(b){
+      var on=(b.getAttribute('data-sign')==='dn')===dn;
+      b.className = on ? (dn?'on dn':'on') : '';
+      b.setAttribute('aria-checked', on?'true':'false');
+    });
+  }
+  var mt=row.querySelector('.mcustom');
   if(mt){
-    var n=overrideCount(s);
+    var n=overrideCount(s), tx=mt.querySelector('.tx');
     mt.classList.toggle('has', n>0);
-    mt.lastChild.nodeValue = n ? 'Custom · '+n+' month'+(n===1?'':'s') : 'Custom';
+    if(tx) tx.textContent = n ? tl('Custom')+' · '+n : tl('Custom');
   }
 }
 /* every keystroke redraws all three, coalesced to one pass per animation frame so
@@ -1395,13 +1741,9 @@ function repaintNow(){
   renderMini(c); renderSheet(c); renderDash(c); renderChip(c); syncVeil();
   requestAnimationFrame(fitAll);
 }
-function renderChip(c){
-  c=c||calc();
-  var net=sum(c.net), rev=sum(c.rev), el=document.getElementById('chip');
-  if(!st.built){ el.innerHTML=''; return; }
-  el.innerHTML='<span class="dot'+(net<0?' neg':'')+'"></span>Revenue <b>'+st.cur+' '+fmt(rev)+'</b> &nbsp;·&nbsp; '+
-    (net<0?'Loss':'Net profit')+' <b>'+st.cur+' '+fmt(Math.abs(net))+'</b>';
-}
+/* the running totals used to sit beside the logo; they are on every one of the three
+   screens already, and nobody reads a figure in a page header */
+function renderChip(){}
 
 /* ═══════════ full render ═══════════ */
 function renderPlan(){
@@ -1414,6 +1756,66 @@ function syncVeil(){
   if(v) v.hidden = !anySample();
 }
 
+/* ═══════════ the coach ═══════════ */
+/* a sheet full of sample figures reads as something already decided. Three prompts, each
+   pointing at one control, turn it into a thing somebody is being asked to fill in. */
+var CKEY='hf_budget_coach', coachEl=document.getElementById('coach');
+var coachStep=0, coachAnchor=null, coachLit=null, coachStarted=false;
+var COACH=[null,
+  [tl('Step 1 of 3'),tl('Type what one customer pays you in a month. Every figure on the page moves as you type.')],
+  [tl('Step 2 of 3'),tl('Now say how that number moves — flat, a percentage, or a fixed amount each month.')],
+  [tl('Step 3 of 3'),tl('That is the whole idea. Every line works this way. Open a section to fill in the rest.')]];
+function coachSeen(){ try{ return localStorage.getItem(CKEY)==='1'; }catch(e){ return true; } }
+function coachEnd(){ try{ localStorage.setItem(CKEY,'1'); }catch(e){} coachStep=0; coachHide(); }
+function coachHide(){
+  coachEl.classList.remove('on');
+  if(coachLit){ coachLit.classList.remove('coachlit'); coachLit=null; }
+  coachAnchor=null;
+}
+function coachShow(step){
+  var t = step===1 ? document.querySelector('#editor .blk.open input[data-num="b"]')
+        : step===2 ? document.querySelector('#editor .blk.open .mgrp')
+        : document.querySelector('#editor .blk.open .bh');
+  if(!t){ coachHide(); return; }
+  coachStep=step;
+  if(coachLit){ coachLit.classList.remove('coachlit'); }
+  coachLit = t.closest('.nfb') || t;
+  coachLit.classList.add('coachlit');
+  coachAnchor = coachLit;
+  coachEl.innerHTML='<button class="cx" type="button" data-coachx="1" aria-label="'+attr(tl('Dismiss these tips'))+'">'+
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">'+
+    '<path d="M18 6 6 18M6 6l12 12"/></svg></button>'+
+    '<div class="st">'+COACH[step][0]+'</div><p>'+COACH[step][1]+'</p>';
+  coachEl.classList.add('on');
+  coachPos();
+  if(step===3) setTimeout(function(){ if(coachStep===3) coachEnd(); }, 7000);
+}
+function coachPos(){
+  if(!coachStep) return;
+  if(!coachAnchor || !document.contains(coachAnchor)){
+    /* the row was rebuilt under it - find the same control again */
+    var again = coachStep===1 ? document.querySelector('#editor .blk.open input[data-num="b"]')
+              : coachStep===2 ? document.querySelector('#editor .blk.open .mgrp')
+              : document.querySelector('#editor .blk.open .bh');
+    if(!again){ coachHide(); return; }
+    if(coachLit) coachLit.classList.remove('coachlit');
+    coachLit = again.closest('.nfb') || again;
+    coachLit.classList.add('coachlit');
+    coachAnchor = coachLit;
+  }
+  var r=coachAnchor.getBoundingClientRect();
+  if(r.bottom<0 || r.top>innerHeight){ coachEl.classList.remove('on'); return; }
+  coachEl.classList.add('on');
+  var w=coachEl.offsetWidth, hh=coachEl.offsetHeight;
+  var below = r.top < hh+80;
+  coachEl.classList.toggle('up', below);
+  coachEl.classList.toggle('down', !below);
+  coachEl.style.left=Math.min(Math.max(8, r.left-16), innerWidth-w-8)+'px';
+  coachEl.style.top=(below ? r.bottom+11 : r.top-hh-11)+'px';
+}
+coachEl.addEventListener('click',function(e){ if(e.target.closest('[data-coachx]')) coachEnd(); });
+addEventListener('resize', coachPos);
+
 /* ═══════════ stages + views ═══════════ */
 var main=document.getElementById('main');
 function setStage(name){
@@ -1422,12 +1824,14 @@ function setStage(name){
   document.getElementById('btn-setup').hidden = name!=='plan';
   /* on a first visit there is nothing to start over from */
   document.getElementById('btn-reset').hidden = !st.built;
-  var who=document.getElementById('who');
-  who.hidden = name!=='plan';
   if(name==='plan'){
     if(!st.openBlk) st.openBlk={};
     syncSettings();
     renderPlan();
+    if(!coachStarted && !coachSeen() && anySample() && st.openBlk && st.openBlk.s0){
+      coachStarted=true;
+      setTimeout(function(){ coachShow(1); }, 460);
+    }
   }
   main.scrollTop=0;
 }
@@ -1448,9 +1852,7 @@ function markNav(v){
     b.classList.toggle('on', on);
     b.setAttribute('aria-current', on?'true':'false');
   });
-  /* the bar's print button follows whichever section you are looking at */
-  var lbl=document.getElementById('pl');
-  if(lbl) lbl.textContent = v==='dash' ? 'Print the dashboard' : 'Print the sheet';
+
 }
 /* keep the control in step with wherever the page actually is */
 (function watchScroll(){
@@ -1465,20 +1867,32 @@ function markNav(v){
         if(el && el.offsetTop<=line) best=id;
       });
       if(best!==view){ view=best; markNav(best); }
+      coachPos();
     });
   });
 })();
 
 /* ═══════════ start screen ═══════════ */
+/* tap a common service to add it, tap it again to take it back out */
+function egChips(){
+  var have={};
+  st.names.forEach(function(x){ if(x.trim()) have[x.trim().toLowerCase()]=1; });
+  var h='<span class="lb">'+esc(tl('Common for agencies'))+'</span>';
+  AGENCY.map(tl).forEach(function(x){
+    h+='<button class="eg'+(have[x.toLowerCase()]?' on':'')+'" type="button" data-eg="'+esc(x)+'">'+esc(x)+'</button>';
+  });
+  document.getElementById('q-egs').innerHTML=h;
+}
 function svcLines(){
   var h='';
   st.names.forEach(function(n,i){
     h+='<div class="svcline"><span class="n">'+(i+1)+'</span>'+
-       '<input data-sn="'+i+'" value="'+esc(n)+'" placeholder="'+(i===0?'e.g. Monthly retainer':'e.g. One-off project')+'">'+
+       '<input data-sn="'+i+'" value="'+esc(n)+'" placeholder="'+esc(tl(i===0?'e.g. Monthly retainer':'e.g. One-off project'))+'">'+
        (st.names.length>1?'<button class="x" data-rmsn="'+i+'" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>':'')+
        '</div>';
   });
   document.getElementById('q-svc').innerHTML=h;
+  egChips();
   document.getElementById('q-go').disabled = !st.names.some(function(n){ return n.trim(); });
 }
 function initStart(){
@@ -1486,7 +1900,7 @@ function initStart(){
   if(!st.nameIds || st.nameIds.length!==st.names.length)
     st.nameIds = st.names.map(function(_,i){ return st.svc[i] ? st.svc[i].id : null; });
   var go=document.getElementById('q-go');
-  go.firstChild.nodeValue = st.built ? 'Update my plan ' : 'Build my plan ';
+  go.firstChild.nodeValue = (st.built ? tl('Update my plan') : tl('Build my plan'))+' ';
   svcLines();
 }
 
@@ -1518,18 +1932,18 @@ function syncSettings(){
   var ml=document.querySelector('[data-act="mlab"]');
   if(ml) press(ml, st.mlabels!==false);
   document.title = st.built && st.biz
-    ? st.biz+' — 12-month budget'
-    : 'Free 12-Month Budget Planner — Hashir Faraz';
+    ? st.biz+' — '+tl('Financial Plan')
+    : (AR ? 'مخطّط ميزانية 12 شهر — هاشر فراز'
+          : 'Free 12-Month Budget Planner — Hashir Faraz');
   /* with real months off the start date means nothing, so it steps out of the way */
   document.getElementById('q-sm').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';
   document.getElementById('q-sy').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';
-  var who=document.getElementById('who');
-  if(who && st.built) who.innerHTML=esc(st.biz||'Your business')+' <span>'+mlab(0)+' – '+mlab(11)+'</span>';
 }
 document.getElementById('stage-start').addEventListener('input',function(e){
   var t=e.target;
   if(t.id==='q-biz'){ st.biz=t.value; return; }
   if(t.hasAttribute('data-sn')){ st.names[+t.getAttribute('data-sn')]=t.value;
+    egChips();
     document.getElementById('q-go').disabled = !st.names.some(function(n){ return n.trim(); }); }
 });
 document.getElementById('stage-start').addEventListener('click',function(e){
@@ -1542,9 +1956,16 @@ document.getElementById('stage-start').addEventListener('click',function(e){
     st.names.push(''); st.nameIds.push(null); svcLines();
     var ins=document.querySelectorAll('#q-svc input'); if(ins.length) ins[ins.length-1].focus(); return;
   }
-  if((t=e.target.closest('[data-pre]'))){
-    st.names=PRESETS[t.getAttribute('data-pre')].slice();
-    st.nameIds=st.names.map(function(){ return null; });
+  if((t=e.target.closest('[data-eg]'))){
+    var nm=t.getAttribute('data-eg'), at=-1, blank=-1;
+    st.names.forEach(function(x,i){
+      if(x.trim().toLowerCase()===nm.toLowerCase()) at=i;
+      if(blank<0 && !x.trim()) blank=i;
+    });
+    if(at>=0){ st.names.splice(at,1); st.nameIds.splice(at,1); }
+    else if(blank>=0){ st.names[blank]=nm; }
+    else { st.names.push(nm); st.nameIds.push(null); }
+    if(!st.names.length){ st.names=['']; st.nameIds=[null]; }
     svcLines(); return;
   }
   if(e.target.closest('#q-go')){
@@ -1564,15 +1985,14 @@ document.getElementById('stage-start').addEventListener('click',function(e){
       });
       st.names=picked.map(function(p){ return p.n; });
       st.nameIds=st.svc.map(function(s){ return s.id; });
-      st.openBlk={};
+      st.openBlk={s0:true};
       save(); setStage('plan'); setView('build');
-      toast('Updated — your numbers are still here');
+      toast(tl('Updated — your numbers are still here'));
     } else {
       st=build(biz, st.cur, st.sm, st.sy, picked.map(function(p){ return p.n; }));
       st.nameIds=st.svc.map(function(s){ return s.id; });
-      st.openBlk={};
+      st.openBlk={s0:true};
       save(); setStage('plan'); setView('build');
-      toast('Your plan is ready — open a section to change the numbers');
     }
   }
 });
@@ -1608,8 +2028,13 @@ main.addEventListener('input',function(e){
       t.placeholder='0';
       s.b = v===null ? 0 : v;
       delete s.ov[0];
+      if(coachStep===1 && t.value.trim()) coachShow(2);
     } else {
-      s.r = v===null ? 0 : v;
+      /* a typed minus flips the buttons rather than fighting them */
+      var mag = v===null ? 0 : Math.abs(v);
+      var down = (v!==null && v<0) ? true : isDown(s);
+      s.dn = down;
+      s.r = down ? -mag : mag;
     }
     paintRow(path); repaint(); save(); return;
   }
@@ -1677,15 +2102,34 @@ document.addEventListener('click',function(e){
     hideTT();
     rerenderRow(p); repaint(); save(); return;
   }
-  if((t=e.target.closest('.mb'))){
+  if((t=e.target.closest('[data-sign]'))){
+    var sp=t.getAttribute('data-p'), ss=getSeries(sp), down=t.getAttribute('data-sign')==='dn';
+    if(isDown(ss)===down) return;
+    ss.dn=down; ss.r = down ? -Math.abs(ss.r) : Math.abs(ss.r);
+    var grp=t.parentNode;
+    grp.querySelectorAll('button').forEach(function(b){
+      var on = (b.getAttribute('data-sign')==='dn')===down;
+      b.className = on ? (down?'on dn':'on') : '';
+      b.setAttribute('aria-checked', on?'true':'false');
+    });
+    paintRow(sp); repaint(); save();
+    var fx=grp.parentNode.querySelector('input');
+    if(fx){ fx.focus(); try{ fx.select(); }catch(err){} }
+    return;
+  }
+  if((t=e.target.closest('.mb[data-mode]'))){
     var pp=t.getAttribute('data-p'), s=getSeries(pp), mode=t.getAttribute('data-mode');
     if(s.m===mode) return;
     s.m=mode;
     /* a sensible first step: 5% either way, or +1 a month on a headcount, +1,000 on money */
-    if(mode!=='flat' && !s.r) s.r = mode==='pct' ? 5 : (isCount(pp) ? 1 : 1000);
+    if(mode!=='flat' && !s.r){
+      s.r = mode==='pct' ? 5 : (isCount(pp) ? 1 : 1000);
+      if(s.dn) s.r = -s.r;
+    }
     rerenderRow(pp); repaint(); save();
     var f=document.querySelector('.vrow[data-row="'+pp+'"] input[data-num="r"]');
     if(f){ f.focus(); try{ f.select(); }catch(err){} }
+    if(coachStep===2) coachShow(3); else coachPos();
     return;
   }
   if((t=e.target.closest('[data-months]'))){
@@ -1695,12 +2139,20 @@ document.addEventListener('click',function(e){
     t.setAttribute('aria-expanded', openRows[mp]?'true':'false');
     var strip=document.querySelector('.mstrip[data-strip="'+mp+'"]');
     if(strip) strip.classList.toggle('on', openRows[mp]);
-    return;
+    coachPos(); return;
   }
   if((t=e.target.closest('[data-togg]'))){
-    var k=t.getAttribute('data-togg');
-    st.openBlk[k]=!st.openBlk[k];
-    save(); renderEditor(); return;
+    var k=t.getAttribute('data-togg'), was=!!st.openBlk[k];
+    /* one at a time: with several open the editor turns into a very long scroll and the
+       thing you just opened is nowhere near the sheet it changes */
+    st.openBlk={};
+    if(!was) st.openBlk[k]=true;
+    save(); renderEditor(); coachPos();
+    if(!was){
+      var blk=document.querySelector('.blk[data-blk="'+k+'"]');
+      if(blk) blk.scrollIntoView({block:'nearest',behavior:'smooth'});
+    }
+    return;
   }
   if((t=e.target.closest('[data-del]'))){
     var a=t.getAttribute('data-del').split('|');
@@ -1709,7 +2161,7 @@ document.addEventListener('click',function(e){
     hideTT(); save(); renderEditor(); repaint(); return;
   }
   if(e.target.closest('[data-addsvc]')){
-    st.svc.push({id:uid(), name:'New service', price:S(0), qty:S(0)});
+    st.svc.push({id:uid(), name:tl('New service'), price:S(0), qty:S(0)});
     var si=st.svc.length-1;
     st.openBlk['s'+si]=true;
     save(); renderEditor(); repaint();
@@ -1724,26 +2176,30 @@ document.addEventListener('click',function(e){
   if((t=e.target.closest('[data-act]'))){
     var act=t.getAttribute('data-act');
     if(act==='reset'){
-      if(confirm('Clear everything and start from scratch?')){
+      if(confirm(tl('Clear everything and start from scratch?'))){
         try{ localStorage.removeItem(KEY); }catch(err){}
-        st=fresh(); openRows={}; initStart(); setStage('start'); toast('Cleared');
+        st=fresh(); openRows={}; initStart(); setStage('start'); toast(tl('Cleared'));
       }
     }
     else if(act==='mlab'){ st.mlabels = st.mlabels===false; press(t, st.mlabels!==false);
       save(); syncSettings(); renderPlan(); }
     else if(act==='detail'){ detail=!detail; press(t,detail); repaint(); }
     else if(act==='thou'){ thou=!thou; press(t,thou); repaint(); }
+    else if(act==='share'){ doShare(); }
     else if(act==='csv'){ exportCSV(); }
-    else if(act==='print-here'){ if(view==='dash') printOne('v-dash','fit-dash'); else printOne('v-sheet','fit-sheet'); }
     else if(act==='print-sheet'){ printOne('v-sheet','fit-sheet'); }
     else if(act==='print-dash'){ printOne('v-dash','fit-dash'); }
+    /* a browser cannot write a PDF on its own: Save as PDF is the print dialog with the
+       destination set to a file, so both buttons open the same dialog and this one says so */
+    else if(act==='pdf-sheet'){ toast(tl('Pick Save as PDF in the dialog')); printOne('v-sheet','fit-sheet'); }
+    else if(act==='pdf-dash'){ toast(tl('Pick Save as PDF in the dialog')); printOne('v-dash','fit-dash'); }
     return;
   }
   if(e.target.closest('#btn-setup')){
     st.names = st.svc.map(function(s){ return s.name; });
     st.nameIds = st.svc.map(function(s){ return s.id; });
     initStart(); setStage('start');
-    toast('Change what you need, then build again');
+    toast(tl('Change what you need, then build again'));
     return;
   }
   if(!e.target.closest('#menu') && !e.target.closest('[data-addcost]') && !e.target.closest('[data-addrole]')) closeMenu();
@@ -1770,12 +2226,12 @@ function rerenderRow(path){
 var menu=document.getElementById('menu');
 function openAdd(btn, ci, kind){
   var cat=st.cat[ci], used={}, list, title;
-  if(kind==='role'){ list=ROLES; title='Common positions'; cat.roles.forEach(function(r){ used[r.name.toLowerCase()]=1; }); }
-  else { list=SUGGEST[cat.id]||SUGGEST.other; title='Common in '+cat.name; cat.items.forEach(function(i){ used[i.name.toLowerCase()]=1; }); }
+  if(kind==='role'){ list=ROLES.map(tl); title=tl('Common positions'); cat.roles.forEach(function(r){ used[r.name.toLowerCase()]=1; }); }
+  else { list=(SUGGEST[cat.id]||SUGGEST.other).map(tl); title=tl('Common in')+' '+cat.name; cat.items.forEach(function(i){ used[i.name.toLowerCase()]=1; }); }
   var h='<div class="mh">'+esc(title)+'</div>', any=false;
   list.forEach(function(n){ if(used[n.toLowerCase()]) return; any=true; h+='<button data-pick="'+esc(n)+'">'+esc(n)+'</button>'; });
-  if(!any) h+='<button disabled style="color:var(--ink-4);cursor:default">All added</button>';
-  h+='<div class="sep"></div><button data-pick="__custom">Something else…</button>';
+  if(!any) h+='<button disabled style="color:var(--ink-4);cursor:default">'+esc(tl('All added'))+'</button>';
+  h+='<div class="sep"></div><button data-pick="__custom">'+esc(tl('Something else…'))+'</button>';
   menu.innerHTML=h; menu.classList.add('on');
   menu.setAttribute('data-ci',ci); menu.setAttribute('data-kind',kind);
   var r=btn.getBoundingClientRect();
@@ -1788,7 +2244,7 @@ menu.addEventListener('click',function(e){
   var b=e.target.closest('[data-pick]'); if(!b) return;
   var ci=+menu.getAttribute('data-ci'), kind=menu.getAttribute('data-kind'), n=b.getAttribute('data-pick');
   var custom = n==='__custom';
-  if(custom) n = kind==='role' ? 'New position' : 'New cost';
+  if(custom) n = kind==='role' ? tl('New position') : tl('New cost');
   if(kind==='role') st.cat[ci].roles.push(role(n,0,1,false));
   else st.cat[ci].items.push(it(n,0));
   closeMenu(); save(); renderEditor(); repaint();
@@ -1802,6 +2258,66 @@ menu.addEventListener('click',function(e){
   if(f){ f.focus(); try{ f.select(); }catch(err){} f.scrollIntoView({block:'center',behavior:'smooth'}); }
 });
 
+/* ═══════════ share ═══════════ */
+/* the whole plan is squeezed into the link itself, so sharing needs no account and no
+   server: whoever opens it gets the figures, and can carry on editing their own copy */
+function packS(x){
+  var o=[Math.round(x.b*100)/100, x.m==='pct'?1:(x.m==='amt'?2:0), (x.r||0)===0 && x.dn ? -0.0001 : (x.r||0)], ov=[];
+  for(var k in x.ov){ if(x.ov.hasOwnProperty(k)) ov.push([+k, x.ov[k]]); }
+  if(ov.length) o.push(ov);
+  return o;
+}
+function unpackS(a){
+  a=a||[];
+  var r0=a[2]||0;
+  var x=S(a[0]||0, a[1]===1?'pct':(a[1]===2?'amt':'flat'), r0===-0.0001?0:r0, false);
+  if(r0<0) x.dn=true;
+  (a[3]||[]).forEach(function(p){ x.ov[p[0]]=p[1]; });
+  return x;
+}
+function packState(){
+  return { v:1, b:st.biz, c:st.cur, m:st.sm, y:st.sy, l:st.mlabels===false?0:1, g:st.lang||LANG,
+    s: st.svc.map(function(x){ return [x.name, packS(x.price), packS(x.qty)]; }),
+    k: st.cat.map(function(cat){
+      return cat.team
+        ? [cat.id, cat.name, 2, cat.roles.map(function(r){ return [r.name, packS(r.pay), packS(r.n)]; })]
+        : [cat.id, cat.name, cat.cogs?1:0, cat.items.map(function(i){ return [i.name, packS(i.s)]; })];
+    }) };
+}
+function unpackState(o){
+  var x={ biz:o.b||'', cur:o.c||'QAR', sm:o.m||0, sy:o.y||((new Date()).getFullYear()+1),
+          mlabels:o.l!==0, built:true, lang:o.g||'en', openBlk:{}, svc:[], cat:[] };
+  (o.s||[]).forEach(function(a){ x.svc.push({id:uid(), name:a[0]||'Service', price:unpackS(a[1]), qty:unpackS(a[2])}); });
+  (o.k||[]).forEach(function(a){
+    if(a[2]===2) x.cat.push({id:a[0], name:a[1], team:true, open:false,
+      roles:(a[3]||[]).map(function(r){ return {id:uid(), name:r[0], pay:unpackS(r[1]), n:unpackS(r[2])}; })});
+    else x.cat.push({id:a[0], name:a[1], cogs:a[2]===1, open:false,
+      items:(a[3]||[]).map(function(i){ return {id:uid(), name:i[0], s:unpackS(i[1])}; })});
+  });
+  if(!x.svc.length || !x.cat.length) return null;
+  x.names=x.svc.map(function(y){ return y.name; });
+  x.nameIds=x.svc.map(function(y){ return y.id; });
+  return x;
+}
+function b64e(str){ return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function b64d(str){
+  str=str.replace(/-/g,'+').replace(/_/g,'/');
+  while(str.length%4) str+='=';
+  return decodeURIComponent(escape(atob(str)));
+}
+function shareURL(){
+  return location.origin+location.pathname+'#p='+b64e(JSON.stringify(packState()));
+}
+function doShare(){
+  var u;
+  try{ u=shareURL(); }catch(e){ toast(tl('Could not build the link')); return; }
+  var ok=function(){ toast(tl('Link copied — it opens this exact plan')); };
+  if(navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(u).then(ok, function(){ prompt(tl('Copy this link'), u); });
+  else prompt(tl('Copy this link'), u);
+  if(window.gtag) gtag('event','share',{tool:'budget_planner'});
+}
+
 /* ═══════════ export / print ═══════════ */
 function exportCSV(){
   var c=calc(), rows=[], head=[''].concat(M.map(function(_,m){ return mlab(m); })).concat(['Year']);
@@ -1812,14 +2328,15 @@ function exportCSV(){
   rows.push(['REVENUE']);
   c.svc.forEach(function(d){ line(d.ref.name, d.rev); });
   line('Total revenue', c.rev);
-  if(sum(c.cogs)){ line('Direct costs', c.cogs.map(neg)); line('Gross profit', c.gp); }
-  rows.push(['RUNNING COSTS']);
+  rows.push([]);
+  rows.push(['COSTS']);
   c.cat.forEach(function(d){
-    if(d.ref.cogs || !sum(d.v)) return;
+    if(!sum(d.v)) return;
     line(d.ref.name, d.v.map(neg));
     d.items.forEach(function(i){ if(sum(i.v)) line('   '+i.ref.name, i.v.map(neg)); });
   });
-  line('Total running costs', c.opex.map(neg));
+  line('Total costs', c.opex.map(neg));
+  rows.push([]);
   line('NET PROFIT', c.net);
   line('Profit to date', c.cum, c.cum[11]);
   var csv=rows.map(function(r){ return r.map(function(cell){
@@ -1832,7 +2349,7 @@ function exportCSV(){
   a.download=((st.biz||'budget').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'budget')+'-12-month-budget.csv';
   document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
-  toast('CSV downloaded');
+  toast(tl('CSV downloaded'));
 }
 function printOne(viewId, boxId){
   /* only the section being printed is shown; the fit scaling is lifted for the printer
@@ -1840,25 +2357,34 @@ function printOne(viewId, boxId){
   var el=document.getElementById(viewId), box=document.getElementById(boxId);
   var inner=box.firstElementChild, keepT=inner.style.transform, keepH=box.style.height;
   var keepO=inner.style.transformOrigin, keepM=inner.style.marginLeft;
+  /* every browser names the saved PDF after the document title */
+  var keepTitle=document.title;
+  document.title = tl('Financial Plan')+' - '+bizName();
+  coachHide();
+  var keepW=inner.style.width;
   el.classList.add('printing');
   inner.style.transform='none'; box.style.height='auto';
-  if(viewId==='v-dash'){
-    /* A4 landscape at 96dpi less the 9mm @page margin, in CSS pixels */
-    var PW=1054, PH=725;
-    var w=inner.offsetWidth, h=inner.offsetHeight;
-    var k=Math.min(PW/w, PH/h, 1);
-    if(k<0.999){
-      inner.style.transformOrigin='top left';
-      inner.style.transform='scale('+k+')';
-      box.style.height=Math.ceil(h*k)+'px';
-      /* scaling from the left corner leaves the page lopsided, so centre what is left */
-      inner.style.marginLeft=Math.max(0,(PW-w*k)/2)+'px';
-    }
+  /* A4 landscape at 96dpi less the 9mm @page margin, in CSS pixels. Three per cent is
+     taken off the fit: print rounding differs between browsers and one stray pixel is a
+     whole second page. */
+  var PW=1054, PH=725;
+  /* the sheet is measured at the width it will actually print at */
+  if(viewId==='v-sheet') inner.style.width=PW+'px';
+  var w=inner.offsetWidth, h=inner.offsetHeight;
+  var k=Math.min(PW/w, PH/h, 1)*0.97;
+  if(k<0.999){
+    inner.style.transformOrigin='top left';
+    inner.style.transform='scale('+k+')';
+    box.style.height=Math.ceil(h*k)+'px';
+    /* scaling from the left corner leaves the page lopsided, so centre what is left */
+    inner.style.marginLeft=Math.max(0,(PW-w*k)/2)+'px';
   }
   var restored=false;
   var done=function(){
     if(restored) return; restored=true;
     el.classList.remove('printing');
+    document.title=keepTitle;
+    inner.style.width=keepW;
     inner.style.transform=keepT; box.style.height=keepH;
     inner.style.transformOrigin=keepO; inner.style.marginLeft=keepM;
     fitAll();
@@ -1871,11 +2397,77 @@ function printOne(viewId, boxId){
   setTimeout(function(){ window.print(); setTimeout(done,700); },60);
 }
 
+/* ═══════════ the furniture ═══════════ */
+/* the parts of the page that are written in the HTML rather than built by the code.
+   Each one keeps its icon; only the words beside it change. */
+function tailText(el, txt){ if(el && el.lastChild && el.lastChild.nodeType===3) el.lastChild.nodeValue=txt; }
+function localiseChrome(){
+  var lang=document.getElementById('btn-lang');
+  if(lang){
+    var other = AR ? 'en' : 'ar';
+    lang.textContent = AR ? 'English' : 'العربية';
+    lang.setAttribute('hreflang', other);
+    lang.setAttribute('lang', other);
+    lang.setAttribute('href', location.pathname+'?lang='+other);
+    lang.setAttribute('aria-label', AR ? 'Switch to English' : 'التبديل إلى العربية');
+  }
+  if(!AR) return;
+  document.title='مخطّط ميزانية 12 شهر — هاشر فراز';
+  var q=function(sel){ return document.querySelector(sel); };
+  q('#btn-setup').textContent = tl('Setup');
+  tailText(q('#btn-reset'), tl('Start over'));
+  q('#btn-reset').textContent = tl('Start over');
+  document.querySelectorAll('#seg button').forEach(function(b){
+    var v=b.getAttribute('data-view');
+    tailText(b, v==='build' ? tl('Build') : v==='sheet' ? tl('Sheet') : tl('Dashboard'));
+  });
+  tailText(q('[data-act="detail"]'), tl('Cost detail'));
+  tailText(q('[data-act="thou"]'), tl('Thousands'));
+  tailText(q('[data-act="share"]'), tl('Share'));
+  /* the section headers and their buttons carry their English in data-th */
+  document.querySelectorAll('[data-th]').forEach(function(el){ el.textContent=tl(el.getAttribute('data-th')); });
+  tailText(q('[data-act="mlab"]'), tl('Real months'));
+  q('label[for="q-cur"]').textContent = tl('Currency');
+  q('label[for="q-sm"]').textContent = tl('Year starts');
+  q('label[for="q-sy"]').textContent = tl('Year');
+  var qs=document.querySelectorAll('#stage-start .q'), qss=document.querySelectorAll('#stage-start .qs');
+  qs[0].textContent = tl('What is the business called?');
+  qss[0].textContent = tl('This is the name that goes on the plan.');
+  qs[1].textContent = tl('What do you sell?');
+  qss[1].textContent = tl('One line per thing you charge for. Tap a common one or type your own.');
+  q('#q-biz').placeholder = tl('e.g. Northline Studio');
+  tailText(q('#q-add'), tl('Add product / service'));
+  q('#btn-setup').setAttribute('data-tt', tl('Change the business name or your list of products and services'));
+  q('#btn-reset').setAttribute('data-tt', tl('Clear this plan and start from the beginning'));
+  q('[data-act="share"]').setAttribute('data-tt', tl('Copy a link that opens this exact plan'));
+  q('[data-act="mlab"]').setAttribute('data-tt', tl('Turn this off to label the columns M1 to M12 instead of real months'));
+}
+
 /* ═══════════ boot ═══════════ */
+localiseChrome();
 initSettings();
-st = load();
-if(st){
+/* a plan arriving in the link opens as it was shared, without touching the one saved here
+   until the first edit */
+var shared=null;
+if(location.hash.indexOf('#p=')===0){
+  try{ shared=unpackState(JSON.parse(b64d(location.hash.slice(3)))); }catch(e){ shared=null; }
+}
+st = shared || load();
+if(shared){
+  st.openBlk={};
+  if(st.lang!==LANG){ remapNames(LANG); st.lang=LANG; }
+  initStart();
+  setStage('plan'); setView('build');
+  try{ history.replaceState(null,'',location.pathname); }catch(e){}
+  save();
+  toast(tl('Opened a shared plan — change anything and it becomes yours'));
+} else if(st){
   if(!st.openBlk) st.openBlk={};
+  /* built in the other language, opened in this one. A plan saved before the tool spoke
+     two languages has no stamp at all, so it is remapped too - harmlessly, since a name
+     that is not one of ours is never found in the table. */
+  if(st.lang!==LANG) remapNames(LANG);
+  st.lang=LANG;
   if(!st.names) st.names = st.svc.map(function(s){ return s.name; });
   st.nameIds = st.svc.map(function(s){ return s.id; });
   initStart();

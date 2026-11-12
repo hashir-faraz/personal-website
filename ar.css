@@ -1,0 +1,82 @@
+/* ─────────────────────────────────────────────────────────────
+   Arabic layer. Loaded after styles.css on every page under /ar/.
+   It only does three things: bring in an Arabic face, flip the
+   handful of rules that are hard-coded to one side, and keep the
+   simulated app screens left-to-right, because that is how the
+   real software they are imitating looks.
+   ───────────────────────────────────────────────────────────── */
+
+/* Latin first, Arabic second: fallback is per-glyph, so the figures
+   stay in Manrope and only the Arabic words come from Cairo. The two
+   sites then line up digit for digit. */
+:root{
+  --font-display:'Manrope','Cairo',sans-serif;
+  --font-body:'Manrope','Cairo',sans-serif;
+}
+html[dir="rtl"] body{line-height:1.75}
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3{letter-spacing:0;line-height:1.3}
+html[dir="rtl"] .page-title,html[dir="rtl"] .plan h3,html[dir="rtl"] .svc-cat h3{letter-spacing:0}
+
+/* arrows point the other way in a right-to-left page */
+html[dir="rtl"] .rtlflip{display:inline-block;transform:scaleX(-1)}
+
+/* ── the language switch, same place on every page ── */
+.lang{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 15px;border-radius:999px;
+  border:1px solid var(--line);font-family:var(--font-display);font-weight:600;font-size:14px;
+  color:var(--ink);background:var(--card);transition:transform .15s ease,border-color .15s ease;white-space:nowrap}
+.lang:hover{transform:translateY(-1px);border-color:var(--accent)}
+.lang svg{width:15px;height:15px;opacity:.6}
+.nav .lang{height:38px;padding:0 14px;font-size:13.5px}
+/* only the switch sitting on the dark hero goes light; everywhere else the nav is paper,
+   and white-on-white made it disappear */
+.dark .lang{background:transparent;border-color:var(--dark-line);color:var(--dark-text)}
+.dark .lang:hover{border-color:var(--accent);background:rgba(255,255,255,.06)}
+.lang:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.dark .lang:hover{color:#fff}
+.nav .wrap .navr{display:flex;align-items:center;gap:10px}
+
+/* ── services: the track is driven by offsetLeft and a negative translate, which only
+      works one way round. Rather than rewrite that, the whole viewport is mirrored and
+      each card mirrored back — so the rail runs right to left and the scroll follows,
+      while every card reads the right way up. ── */
+html[dir="rtl"] #p-services{text-align:right}
+/* the view keeps LTR flow so the track still starts flush against its own left edge
+   and overflows to the right, which is the geometry the JS measures */
+html[dir="rtl"] .svc-view,html[dir="rtl"] .svc-track{direction:ltr}
+html[dir="rtl"] .svc-view.pinned{transform:scaleX(-1)}
+html[dir="rtl"] .svc-view.pinned .svc-cat,
+html[dir="rtl"] .svc-view.pinned .svc-cta{transform:scaleX(-1)}
+html[dir="rtl"] .svc-view.pinned .svc-cta:hover{transform:scaleX(-1) translateY(-3px)}
+html[dir="rtl"] .svc-cat,html[dir="rtl"] .svc-cta{direction:rtl;text-align:right}
+html[dir="rtl"] .svc-cta em{align-self:flex-end}
+/* the tabs read right to left too, and their underline fills from the right */
+html[dir="rtl"] .svc-rail{direction:rtl}
+html[dir="rtl"] .svc-rail button::after{left:auto;right:0}
+
+/* ── the before/after demos are pictures of software, and software like this
+      is laid out left-to-right. The chat threads are not — those are people talking. ── */
+html[dir="rtl"] .ba-grid,html[dir="rtl"] .demo-wrap,html[dir="rtl"] .demo,
+html[dir="rtl"] .stmt,html[dir="rtl"] .sheet,html[dir="rtl"] .notes{direction:ltr;text-align:left}
+html[dir="rtl"] .ba-tag,html[dir="rtl"] .segs{direction:rtl}
+html[dir="rtl"] .mess,html[dir="rtl"] .chat{direction:rtl;text-align:right}
+html[dir="rtl"] .chat-head{flex-direction:row}
+html[dir="rtl"] .fin-x span,html[dir="rtl"] .h2h-lab{direction:ltr}
+
+/* ── lists and ticks hang off the other edge ── */
+html[dir="rtl"] .incl,html[dir="rtl"] .ticks,html[dir="rtl"] .res-points{text-align:right}
+html[dir="rtl"] .ba-grid{text-align:left}
+
+/* ── the floating WhatsApp pill ── */
+html[dir="rtl"] .float-wa{right:auto;left:20px}
+
+/* ── the hero line length works out differently in Arabic ── */
+html[dir="rtl"] #p-problem h1{max-width:980px}
+html[dir="rtl"] #p-problem .even{line-height:1.5}
+
+/* the rotor measures its words in pixels; Arabic words are wider, so give it room */
+html[dir="rtl"] .rotor{min-width:0}
+
+@media(max-width:640px){
+  .lang{height:36px;padding:0 12px;font-size:13px}
+  .nav .wrap .navr{gap:7px}
+}

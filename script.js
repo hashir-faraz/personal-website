@@ -92,9 +92,11 @@
     const y=Math.round(sec.getBoundingClientRect().top+window.scrollY+x);
     if(window.__glideTo) window.__glideTo(y); else window.scrollTo(0,y);
   }));
-  // sideways trackpad swipes over the track move the page too
+  // sideways trackpad swipes over the track move the page too; on the Arabic page the
+  // viewport is mirrored, so a swipe has to be read the other way round to feel right
+  const rtl = document.documentElement.dir === 'rtl';
   view.addEventListener('wheel',e=>{
-    if(dist&&Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();window.scrollBy(0,e.deltaX);}
+    if(dist&&Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();window.scrollBy(0,rtl?-e.deltaX:e.deltaX);}
   },{passive:false});
   window.addEventListener('scroll',()=>{ if(!raf) raf=requestAnimationFrame(update); },{passive:true});
   window.addEventListener('resize',measure);
