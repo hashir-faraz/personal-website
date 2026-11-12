@@ -3,77 +3,117 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Free Resources — Hashir Faraz</title>
-<meta name="description" content="Free interactive tools for SME owners: pricing planners and revenue analysis. No sign-up required.">
+<title>Free business tools — 12-Month Budget Planner | Hashir Faraz</title>
+<meta name="description" content="Free interactive tools for SME owners in Qatar and the UAE. Start with the 12-Month Budget Planner: a full year of revenue, costs and profit, and a P&amp;L you can print. No sign-up.">
+<link rel="canonical" href="https://hashirfaraz.com/free-resources/">
+<meta name="theme-color" content="#3533CD">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Hashir Faraz">
+<meta property="og:locale" content="en_GB">
 <meta property="og:title" content="Free tools for business owners">
-<meta property="og:description" content="Interactive tools that read your numbers. Free, no sign-up.">
+<meta property="og:description" content="Plan a full year of revenue, costs and profit — then print the P&amp;L. Free, no sign-up.">
 <meta property="og:url" content="https://hashirfaraz.com/free-resources/">
 <meta property="og:image" content="https://hashirfaraz.com/assets/og.jpg">
+<meta property="og:image:alt" content="Free financial tools for business owners">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free tools for business owners">
+<meta name="twitter:description" content="Plan a full year of revenue, costs and profit — then print the P&amp;L. Free, no sign-up.">
+<meta name="twitter:image" content="https://hashirfaraz.com/assets/og.jpg">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
 <link rel="icon" href="/assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --accent:#3533CD;
-  --ink:#101018; --ink-2:#4A4A5A; --ink-3:#75758A;
-  --line:#E7E7EC; --paper:#F7F7F2; --card:#FFFFFF;
-  --font-display:'Manrope',system-ui,sans-serif;
+  --accent:#3533CD; --accent-deep:#28279B; --accent-soft:#ECEBFB; --accent-line:#C9C8F2;
+  --ink:#101014; --ink-2:#4B4B55; --ink-3:#85858F; --ink-4:#A9A9B2;
+  --line:#E7E6E1; --paper:#FAFAF7; --card:#FFFFFF;
+  --dark:#0B0B10; --dark-line:#26262F; --dark-text:#F2F2F5; --dark-dim:#9B9BA8;
+  --pos:#0A8754;
+  --radius:18px; --radius-lg:26px;
+  --font:'Manrope',system-ui,-apple-system,sans-serif;
+  /* no second typeface anywhere on the site */
+  --mono:'Manrope',system-ui,-apple-system,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--paper);color:var(--ink);font-family:var(--font-display);line-height:1.55;-webkit-font-smoothing:antialiased}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.55;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+h1,h2,h3{letter-spacing:-.025em;line-height:1.12}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px;width:100%}
 
 /* ---------- nav ---------- */
 .nav{padding:22px 0}
-.nav .wrap{display:flex;align-items:center;justify-content:space-between}
-.nav img{height:38px;width:auto;display:block}
-.nav .back{font-weight:700;color:var(--accent);font-size:15px}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav img{height:38px;width:auto}
+.nav .right{display:flex;align-items:center;gap:10px}
+.nav .back{font-weight:700;color:var(--ink-2);font-size:14.5px;padding:9px 14px;border-radius:999px;transition:.15s}
+.nav .back:hover{background:#fff;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14.5px;padding:11px 20px;border-radius:999px;transition:transform .15s ease,box-shadow .15s ease,background .15s}
+.btn-wa{background:var(--accent);color:#fff;box-shadow:0 8px 22px rgba(53,51,205,.26)}
+.btn-wa:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(53,51,205,.34)}
+.wa-ic{width:17px;height:17px;flex:none}
 
-/* ---------- head ---------- */
-main{padding:34px 0 20px}
-h1{font-size:clamp(30px,5.2vw,54px);font-weight:800;letter-spacing:-.02em}
-.sub{color:var(--ink-2);margin-top:12px;font-size:clamp(15px,1.9vw,18px);max-width:620px}
+/* ---------- hero ---------- */
+.hero{padding:30px 0 10px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:6px 13px;border-radius:999px}
+h1{font-size:clamp(34px,6vw,60px);font-weight:800;margin-top:18px;max-width:16ch}
+.hero p{color:var(--ink-2);margin-top:16px;font-size:clamp(16px,2vw,19px);max-width:56ch}
+.hero p b{color:var(--ink);font-weight:700}
 
-/* ---------- tiles ---------- */
-.tiles{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:20px;
-  margin-top:44px;
-  justify-items:stretch;
+/* ---------- featured tool ---------- */
+.feature{
+  margin-top:42px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+  display:grid;grid-template-columns:1.08fr .92fr;overflow:hidden;
+  box-shadow:0 18px 48px rgba(20,20,40,.06);
 }
-.tile{
-  display:flex;flex-direction:column;
-  background:var(--card);border:1px solid var(--line);border-radius:22px;
-  padding:26px 26px 22px;
-  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;
+.feature .text{padding:clamp(28px,3.4vw,44px)}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
+.tag .pip{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.feature h2{font-size:clamp(27px,3.4vw,40px);font-weight:800;margin:18px 0 12px}
+.feature .lede{color:var(--ink-2);font-size:clamp(15px,1.5vw,17px);max-width:46ch}
+.feature ul{list-style:none;margin:22px 0 0;display:flex;flex-direction:column;gap:11px}
+.feature li{position:relative;padding-left:27px;font-size:15px;color:var(--ink-2);line-height:1.45}
+.feature li b{color:var(--ink);font-weight:700}
+.feature li::before{
+  content:"";position:absolute;left:0;top:4px;width:17px;height:17px;border-radius:50%;
+  background:var(--accent-soft) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233533CD' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/11px 11px no-repeat;
 }
-.tile:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(20,20,40,.10);border-color:#D9D9E4}
-.tile-tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);background:rgba(53,51,205,.08);padding:4px 10px;border-radius:999px;align-self:flex-start}
-.tile h2{font-size:21px;font-weight:800;letter-spacing:-.015em;margin:15px 0 12px;line-height:1.25}
-.tile ul{list-style:none;display:flex;flex-direction:column;gap:9px}
-.tile li{position:relative;padding-left:18px;font-size:14.5px;color:var(--ink-2);line-height:1.45}
-.tile li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--accent);opacity:.75}
-.tile .open{margin-top:auto;padding-top:20px;font-weight:700;font-size:14.5px;color:var(--accent)}
+.feature .go{display:flex;align-items:center;gap:14px;margin-top:30px;flex-wrap:wrap}
+.open{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;font-weight:700;font-size:16px;padding:15px 26px;border-radius:999px;box-shadow:0 10px 26px rgba(53,51,205,.26);transition:.16s}
+.open:hover{background:var(--accent-deep);transform:translateY(-1px);box-shadow:0 14px 30px rgba(53,51,205,.34)}
+.open svg{width:16px;height:16px;transition:transform .16s}
+.open:hover svg{transform:translateX(3px)}
+.go small{font-size:13px;color:var(--ink-3);font-weight:600}
+.shot{position:relative;background:linear-gradient(160deg,#F3F2FC 0%,#FAFAF7 52%,#F6F5F0 100%);border-left:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:26px}
+.shot svg{width:100%;height:auto;max-width:430px;filter:drop-shadow(0 14px 30px rgba(20,20,40,.12))}
 
-@media(max-width:900px){.tiles{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.tiles{grid-template-columns:1fr;gap:16px;margin-top:32px}.tile{padding:22px 22px 20px}}
+/* ---------- how it works ---------- */
 
 /* ---------- footer ---------- */
-.foot{margin:64px 0 34px;padding-top:26px;border-top:1px solid var(--line);text-align:center}
-.foot img{height:22px;display:inline-block;margin-bottom:8px;opacity:.9}
+.foot{margin:62px 0 36px;padding-top:26px;border-top:1px solid var(--line);text-align:center}
+.foot img{height:22px;display:inline-block;margin:0 auto 9px;opacity:.9}
 .foot p{font-size:12.5px;color:var(--ink-3)}
 .foot a{color:var(--accent);font-weight:600}
 
 /* ---------- floating whatsapp ---------- */
 .float-wa{position:fixed;right:22px;bottom:22px;width:56px;height:56px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(53,51,205,.38);z-index:50}
 .float-wa svg{width:28px;height:28px;color:#fff}
+
+@media(max-width:900px){
+  .feature{grid-template-columns:1fr}
+  .shot{border-left:0;border-top:1px solid var(--line);order:-1;padding:22px}
+  .shot svg{max-width:360px}
+}
+@media(max-width:560px){
+  .hero{padding-top:14px}
+  .feature .go{gap:10px}
+  .open{width:100%;justify-content:center}
+}
 </style>
 </head>
 <body>
@@ -81,43 +121,123 @@ h1{font-size:clamp(30px,5.2vw,54px);font-weight:800;letter-spacing:-.02em}
 <nav class="nav">
   <div class="wrap">
     <a href="/" aria-label="Hashir Faraz"><img src="/assets/logo-dark.png" alt="Hashir Faraz"></a>
-    <a class="back" href="/">&larr; Home</a>
+    <div class="right">
+      <a class="back" href="/">&larr; Home</a>
+      <a class="btn btn-wa" data-wa="resources_nav" href="https://wa.me/97455299831?text=Hi%20Hashir%2C%20I%20used%20your%20free%20tools%20%E2%80%94%20quick%20question." target="_blank" rel="noopener">
+        <svg class="wa-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5.2-.4c.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.2 2-.8 3.2.5 1.4 1.5 2.8 2.9 4 1.9 1.6 3.4 2.1 4.5 2.3 1 .2 1.8 0 2.4-.5.4-.4.7-1 .8-1.5.1-.4 0-.6-.2-.8-.1 0-.3-.1-.6-.2Z"/></svg>
+        Ask a question
+      </a>
+    </div>
   </div>
 </nav>
 
 <main>
   <div class="wrap">
-    <h1>Free Resources</h1>
-    <p class="sub">Interactive tools that read your numbers. Free, no sign-up.</p>
 
-    <div class="tiles">
+    <section class="hero">
+      <span class="eyebrow">Free · No sign-up</span>
+      <h1>Tools that do the financial thinking with you.</h1>
+      <p>Put in what you sell and what you spend. See what it actually adds up to. <b>Your figures stay in your browser.</b></p>
+    </section>
 
-      <a class="tile" data-tool="pricing_planner" href="/tools/agency-pricing-planner/">
-        <span class="tile-tag">Interactive tool</span>
-        <h2>Agency Pricing Planner</h2>
+    <!-- ── featured tool ── -->
+    <section class="feature">
+      <div class="text">
+        <span class="tag"><span class="pip"></span>Interactive tool</span>
+        <h2>12-Month Budget Planner</h2>
+        <p class="lede">Answer two questions and a full twelve-month profit &amp; loss appears, already filled in. Change what you like and every number moves with you.</p>
         <ul>
-          <li>Costs your team and deliverables, then prices the packages you actually sell</li>
-          <li>Shows live profitability as you change prices and volumes</li>
+          <li>Name your business and what it sells — that is the whole setup</li>
+          <li>Every figure: stays constant, grows by a percent, or grows by an amount</li>
+          <li>Type straight over any single month you already know</li>
+          <li>Costs grouped like an accountant groups them, team by position</li>
+          <li>A one-page P&amp;L and a dashboard you can print, save or export</li>
         </ul>
-        <span class="open">Open &rarr;</span>
-      </a>
-
-      <a class="tile" data-tool="revenue_analysis" href="/tools/revenue-analysis/">
-        <span class="tile-tag">Interactive tool</span>
-        <h2>Revenue Analysis</h2>
-        <ul>
-          <li>Breaks your revenue down by service and shows where it really comes from</li>
-          <li>Flags your growth ceiling and the gaps your figures don't account for</li>
-        </ul>
-        <span class="open">Open &rarr;</span>
-      </a>
-
-    </div>
+        <div class="go">
+          <a class="open" data-tool="budget_planner" href="/tools/budget-planner/">
+            Start the planner
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="shot" aria-hidden="true">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of the planner's profit and loss sheet">
+          <rect x="8" y="10" width="384" height="280" rx="16" fill="#fff" stroke="#E7E6E1"/>
+          <!-- header -->
+          <rect x="26" y="30" width="112" height="11" rx="5.5" fill="#101014"/>
+          <rect x="26" y="47" width="76" height="7" rx="3.5" fill="#C9C8C3"/>
+          <line x1="26" y1="66" x2="374" y2="66" stroke="#101014" stroke-width="1.6"/>
+          <!-- month header -->
+          <g fill="#C9C8C3">
+            <rect x="214" y="74" width="20" height="5" rx="2.5"/><rect x="246" y="74" width="20" height="5" rx="2.5"/>
+            <rect x="278" y="74" width="20" height="5" rx="2.5"/><rect x="310" y="74" width="20" height="5" rx="2.5"/>
+            <rect x="342" y="74" width="20" height="5" rx="2.5"/>
+          </g>
+          <!-- revenue rows -->
+          <g>
+            <rect x="26" y="92" width="58" height="6" rx="3" fill="#A9A9B2"/>
+            <rect x="214" y="92" width="20" height="6" rx="3" fill="#E7E6E1"/><rect x="246" y="92" width="20" height="6" rx="3" fill="#E7E6E1"/>
+            <rect x="278" y="92" width="20" height="6" rx="3" fill="#E7E6E1"/><rect x="310" y="92" width="20" height="6" rx="3" fill="#E7E6E1"/>
+            <rect x="342" y="92" width="20" height="6" rx="3" fill="#3533CD" opacity=".28"/>
+          </g>
+          <g>
+            <rect x="26" y="108" width="72" height="6" rx="3" fill="#A9A9B2"/>
+            <rect x="214" y="108" width="20" height="6" rx="3" fill="#E7E6E1"/><rect x="246" y="108" width="20" height="6" rx="3" fill="#E7E6E1"/>
+            <rect x="278" y="108" width="20" height="6" rx="3" fill="#E7E6E1"/><rect x="310" y="108" width="20" height="6" rx="3" fill="#E7E6E1"/>
+            <rect x="342" y="108" width="20" height="6" rx="3" fill="#3533CD" opacity=".28"/>
+          </g>
+          <g>
+            <rect x="26" y="124" width="48" height="6" rx="3" fill="#A9A9B2"/>
+            <rect x="214" y="124" width="20" height="6" rx="3" fill="#E7E6E1"/><rect x="246" y="124" width="20" height="6" rx="3" fill="#E7E6E1"/>
+            <rect x="278" y="124" width="20" height="6" rx="3" fill="#E7E6E1"/><rect x="310" y="124" width="20" height="6" rx="3" fill="#E7E6E1"/>
+            <rect x="342" y="124" width="20" height="6" rx="3" fill="#3533CD" opacity=".28"/>
+          </g>
+          <line x1="26" y1="142" x2="374" y2="142" stroke="#E7E6E1"/>
+          <!-- cost rows -->
+          <g>
+            <rect x="26" y="154" width="64" height="6" rx="3" fill="#CFCEC9"/>
+            <rect x="214" y="154" width="20" height="6" rx="3" fill="#F1F0EC"/><rect x="246" y="154" width="20" height="6" rx="3" fill="#F1F0EC"/>
+            <rect x="278" y="154" width="20" height="6" rx="3" fill="#F1F0EC"/><rect x="310" y="154" width="20" height="6" rx="3" fill="#F1F0EC"/>
+            <rect x="342" y="154" width="20" height="6" rx="3" fill="#EB6834" opacity=".3"/>
+          </g>
+          <g>
+            <rect x="26" y="170" width="40" height="6" rx="3" fill="#CFCEC9"/>
+            <rect x="214" y="170" width="20" height="6" rx="3" fill="#F1F0EC"/><rect x="246" y="170" width="20" height="6" rx="3" fill="#F1F0EC"/>
+            <rect x="278" y="170" width="20" height="6" rx="3" fill="#F1F0EC"/><rect x="310" y="170" width="20" height="6" rx="3" fill="#F1F0EC"/>
+            <rect x="342" y="170" width="20" height="6" rx="3" fill="#EB6834" opacity=".3"/>
+          </g>
+          <!-- net profit band -->
+          <rect x="22" y="188" width="352" height="22" rx="8" fill="#101014"/>
+          <rect x="32" y="196" width="52" height="6" rx="3" fill="#fff" opacity=".9"/>
+          <rect x="310" y="196" width="20" height="6" rx="3" fill="#fff" opacity=".45"/>
+          <rect x="342" y="196" width="22" height="6" rx="3" fill="#fff"/>
+          <!-- mini chart -->
+          <g>
+            <line x1="26" y1="268" x2="374" y2="268" stroke="#E7E6E1"/>
+            <g fill="#3533CD">
+              <rect x="34" y="246" width="9" height="22" rx="4"/><rect x="72" y="238" width="9" height="30" rx="4"/>
+              <rect x="110" y="242" width="9" height="26" rx="4"/><rect x="148" y="230" width="9" height="38" rx="4"/>
+              <rect x="186" y="234" width="9" height="34" rx="4"/><rect x="224" y="224" width="9" height="44" rx="4"/>
+              <rect x="262" y="228" width="9" height="40" rx="4"/><rect x="300" y="218" width="9" height="50" rx="4"/>
+              <rect x="338" y="222" width="9" height="46" rx="4"/>
+            </g>
+            <g fill="#EB6834" opacity=".85">
+              <rect x="45" y="252" width="9" height="16" rx="4"/><rect x="83" y="250" width="9" height="18" rx="4"/>
+              <rect x="121" y="252" width="9" height="16" rx="4"/><rect x="159" y="248" width="9" height="20" rx="4"/>
+              <rect x="197" y="250" width="9" height="18" rx="4"/><rect x="235" y="246" width="9" height="22" rx="4"/>
+              <rect x="273" y="248" width="9" height="20" rx="4"/><rect x="311" y="244" width="9" height="24" rx="4"/>
+              <rect x="349" y="246" width="9" height="22" rx="4"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </section>
 
     <div class="foot">
       <a href="/" aria-label="Hashir Faraz"><img src="/assets/logo-dark.png" alt="Hashir Faraz"></a>
       <p>Performance tracking for SME owners — <a href="/">hashirfaraz.com</a></p>
     </div>
+
   </div>
 </main>
 

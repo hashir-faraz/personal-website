@@ -1,0 +1,1911 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free 12-Month Budget Planner — Hashir Faraz</title>
+<meta name="description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print. Free, no sign-up, nothing leaves your browser.">
+<link rel="canonical" href="https://hashirfaraz.com/tools/budget-planner/">
+<meta name="theme-color" content="#3533CD">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hashir Faraz">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="Free 12-Month Budget Planner">
+<meta property="og:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print. No sign-up.">
+<meta property="og:url" content="https://hashirfaraz.com/tools/budget-planner/">
+<meta property="og:image" content="https://hashirfaraz.com/assets/og-planner.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="A full year of profit &amp; loss, without the spreadsheet — the free 12-Month Budget Planner">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free 12-Month Budget Planner">
+<meta name="twitter:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
+<meta name="twitter:image" content="https://hashirfaraz.com/assets/og-planner.png">
+<link rel="icon" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#3533CD; --accent-deep:#28279B; --accent-soft:#ECEBFB; --accent-line:#C9C8F2;
+  --ink:#101014; --ink-2:#4B4B55; --ink-3:#85858F; --ink-4:#A9A9B2;
+  /* small text that carries meaning uses this, not --ink-3/4: 4.97:1 on white */
+  --ink-hint:#6F6F79;
+  --paper:#FAFAF7; --card:#FFFFFF; --line:#E7E6E1; --line-2:#F1F0EC;
+  --pos:#0A8754; --pos-soft:#E6F3ED; --neg:#C8374B; --neg-soft:#FBEBED;
+  /* categorical series — validated: adjacent CVD ΔE 9.1, normal-vision ΔE 19.6 on white */
+  --s1:#3533CD; --s2:#EB6834; --s3:#1BAF7A; --s4:#EDA100; --s5:#E87BA4; --s6:#008300;
+  --font:'Manrope',system-ui,-apple-system,sans-serif;
+  /* no second typeface: figures line up through Manrope's tabular numerals */
+  --mono:'Manrope',system-ui,-apple-system,sans-serif;
+  --topH:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+/* several components below set display, which would otherwise beat the browser's own
+   [hidden] rule and leave hidden controls on screen */
+[hidden]{display:none!important}
+html,body{height:100%}
+
+/* every control shows where the keyboard is; :focus-visible keeps it off mouse clicks */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:7px}
+.mb:focus-visible,.bh:focus-visible,.seg3 button:focus-visible{outline-offset:-2px}
+
+/* honour the system setting — this page scrolls itself and animates a lot */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  main{scroll-behavior:auto}
+}
+body{font-family:var(--font);color:var(--ink);background:var(--paper);line-height:1.5;
+     -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;text-align:left}
+input,select{font-family:inherit;font-size:inherit;color:inherit}
+::selection{background:var(--accent);color:#fff}
+
+/* ───────── buttons ───────── */
+.ghost{height:34px;padding:0 13px;border-radius:10px;border:1px solid var(--line);font-size:12.5px;font-weight:700;
+  color:var(--ink-2);background:var(--card);display:inline-flex;align-items:center;gap:7px;transition:.14s;white-space:nowrap}
+.ghost:hover{border-color:var(--ink-4);color:var(--ink)}
+.ghost svg{width:14px;height:14px}
+.solid{height:34px;padding:0 15px;border-radius:10px;background:var(--accent);color:#fff;font-size:12.5px;font-weight:700;
+  display:inline-flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(53,51,205,.25);transition:.14s;white-space:nowrap}
+.solid:hover{background:var(--accent-deep);box-shadow:0 6px 18px rgba(53,51,205,.32)}
+.solid svg{width:14px;height:14px}
+.solid[disabled]{opacity:.35;pointer-events:none;box-shadow:none}
+
+/* ───────── top bar ───────── */
+.top{flex:none;height:var(--topH);display:flex;align-items:center;gap:14px;padding:0 18px;
+     background:var(--card);border-bottom:1px solid var(--line);z-index:40}
+.top .home{display:flex;align-items:center;gap:12px;flex:none}
+.top .home img{height:26px;width:auto;display:block}
+.top .home .bar{width:1px;height:22px;background:var(--line)}
+.top h1{font-size:15px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.top h1 em{font-style:normal;color:var(--accent)}
+.top .who{font-size:13px;font-weight:700;color:var(--ink-2);display:flex;align-items:center;gap:8px;
+  padding-left:14px;margin-left:2px;border-left:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+.top .who span{font-weight:600;color:var(--ink-4);font-size:12px}
+.top .sp{flex:1}
+.chip{font-size:12px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.chip b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--pos)}
+.chip .dot.neg{background:var(--neg)}
+
+main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
+.stage{display:none}
+.stage.on{display:block}
+
+/* ───────── 1. start screen ───────── */
+#stage-start{min-height:100%;display:none;place-items:center center;padding:44px 20px 60px}
+#stage-start.on{display:grid}
+.intro{width:100%;max-width:600px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.intro h2{font-size:clamp(28px,4vw,38px);font-weight:800;letter-spacing:-.035em;line-height:1.1}
+.intro .say{font-size:15.5px;color:var(--ink-2);margin-top:10px;max-width:50ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 22px 20px;margin-top:26px;
+      box-shadow:0 10px 34px rgba(16,16,20,.045)}
+.q{font-size:13.5px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+.q i{font-style:normal;width:20px;height:20px;border-radius:50%;background:var(--accent-soft);color:var(--accent);
+  font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:600;display:grid;place-items:center;flex:none}
+.qs{font-size:12.5px;color:var(--ink-hint);margin:4px 0 12px 29px}
+.card + .card{margin-top:14px}
+.bigin{width:100%;height:50px;border:1px solid var(--line);border-radius:12px;background:var(--paper);
+  padding:0 15px;font-size:16px;font-weight:700;outline:none;transition:.14s}
+.bigin::placeholder{color:var(--ink-4);font-weight:600}
+.bigin:focus{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
+.inline{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.selfld{flex:1;min-width:120px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:7px 12px 6px;transition:.14s}
+.selfld label{display:block;font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-hint)}
+.selfld select,.selfld input{width:100%;border:0;background:none;outline:none;font-size:14.5px;font-weight:700;padding:0;cursor:pointer}
+.selfld input{cursor:text;font-family:var(--mono)}
+.selfld:focus-within{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
+.svclist{display:flex;flex-direction:column;gap:9px}
+.svcline{display:flex;align-items:center;gap:9px}
+.svcline .n{flex:none;width:22px;height:22px;border-radius:7px;background:var(--line-2);color:var(--ink-4);
+  font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:600;display:grid;place-items:center}
+.svcline input{flex:1;height:42px;border:1px solid var(--line);border-radius:11px;background:var(--paper);
+  padding:0 13px;font-size:14.5px;font-weight:600;outline:none;transition:.14s;min-width:0}
+.svcline input:focus{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
+.svcline input::placeholder{color:#C4C3CC;font-weight:500}
+.svcline .x{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--ink-4);transition:.14s}
+.svcline .x:hover{background:var(--neg-soft);color:var(--neg)}
+.svcline .x svg{width:14px;height:14px}
+.addbtn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;border-radius:10px;
+  border:1px dashed var(--line);font-size:12.5px;font-weight:700;color:var(--ink-3);transition:.14s}
+.addbtn:hover{border-color:var(--accent-line);color:var(--accent);background:var(--accent-soft);border-style:solid}
+.addbtn svg{width:12px;height:12px}
+.egs{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.egs .lb{font-size:11.5px;font-weight:700;color:var(--ink-4)}
+.eg{height:27px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);
+  font-size:12px;font-weight:600;color:var(--ink-3);transition:.14s}
+.eg:hover{border-color:var(--accent-line);color:var(--accent);background:var(--accent-soft)}
+.go-wide{width:100%;height:54px;margin-top:18px;font-size:15.5px;border-radius:14px;justify-content:center}
+.addbtn.wide{width:100%;justify-content:center;height:42px;margin-top:12px;font-size:13px}
+
+/* ───────── 2. plan screen ───────── */
+.vbar{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;padding:10px 18px;flex-wrap:wrap}
+.seg3{display:inline-flex;background:var(--line-2);border-radius:11px;padding:3px;gap:2px}
+.seg3 button{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 14px;border-radius:9px;
+  font-size:13px;font-weight:700;color:var(--ink-3);transition:.15s;white-space:nowrap}
+.seg3 button svg{width:14px;height:14px;opacity:.7}
+.seg3 button:hover{color:var(--ink-2)}
+.seg3 button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(16,16,20,.12)}
+.seg3 button.on svg{opacity:1;color:var(--accent)}
+.vbar .sp{flex:1}
+.toggle{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:10px;
+  border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--ink-3);background:var(--card);transition:.14s}
+.toggle:hover{color:var(--ink);border-color:var(--ink-4)}
+.toggle.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.toggle .sw{width:26px;height:15px;border-radius:999px;background:var(--line);position:relative;transition:.16s;flex:none}
+.toggle .sw::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;
+  background:#fff;transition:.16s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.toggle.on .sw{background:var(--accent)}
+.toggle.on .sw::after{transform:translateX(11px)}
+/* all three stack down the page; the segmented control scrolls between them */
+.view{display:block}
+/* the last section needs room below it, or the page runs out of scroll before the
+   dashboard can sit under the bar */
+#v-dash{padding-bottom:90px}
+.brk{display:flex;align-items:center;gap:14px;max-width:1216px;margin:0 auto;padding:30px 18px 4px;
+  border-top:1px solid var(--line);flex-wrap:wrap}
+.brk .bn{flex:none;width:26px;height:26px;border-radius:9px;background:var(--accent-soft);color:var(--accent);
+  font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:16px}
+.brk .bl2{flex:1;min-width:200px;margin-top:14px}
+.brk h3{font-size:18px;font-weight:800;letter-spacing:-.025em}
+.brk p{font-size:12.5px;color:var(--ink-hint);font-weight:600;margin-top:1px}
+
+
+/* ── build view: editor beside the table ── */
+.split{display:grid;grid-template-columns:minmax(500px,560px) minmax(0,1fr);gap:18px;
+  align-items:start;padding:18px 18px 70px}
+/* min-width:0 on both columns, or the twelve-column table inside .mini would stretch
+   the grid wider than the window and take the editor off-screen */
+.edit{min-width:0}
+#editor{display:flex;flex-direction:column;gap:9px;min-width:0}
+/* currency and start date live here now, in the corners of the input area */
+.optbar{display:flex;align-items:stretch;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.optbar .sp{flex:1;min-width:0}
+.optbar .toggle{align-self:center}
+.selfld.sm{flex:0 0 auto;min-width:0;padding:5px 10px 4px}
+.selfld.sm label{font-size:9px}
+.selfld.sm select,.selfld.sm input{font-size:13px}
+.selfld.sm select{min-width:58px}
+.selfld.sm input{width:46px}
+.side{position:sticky;top:72px;min-width:0}
+.secnote{font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);
+  padding:12px 2px 2px}
+.secnote:first-child{padding-top:0}
+
+/* collapsible block */
+.blk{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .15s}
+.blk.open{border-color:var(--accent-line);box-shadow:0 6px 22px rgba(53,51,205,.07)}
+.bh{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;transition:background .14s}
+.bh:hover{background:var(--paper)}
+.blk.open .bh{background:var(--paper);border-bottom:1px solid var(--line-2)}
+.bh .chev{flex:none;width:18px;height:18px;display:grid;place-items:center;color:var(--ink-4)}
+.bh .chev svg{width:11px;height:11px;transition:transform .18s}
+.blk.open .bh .chev svg{transform:rotate(90deg)}
+.bh .sw3{flex:none;width:9px;height:9px;border-radius:3px}
+.bh .bt{font-size:14px;font-weight:800;letter-spacing:-.015em;flex:1;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.bh .bs{font-size:11.5px;font-weight:600;color:var(--ink-4);flex:none}
+.bh .bv{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;color:var(--ink-2);flex:none;
+  padding-left:10px;border-left:1px solid var(--line);text-align:right;min-width:88px}
+.bh .bv.sampled{color:var(--ink-4)}
+.bb{padding:4px 14px 13px}
+
+/* value row — the field block that replaced the spreadsheet */
+.vrow{padding:13px 0 11px;border-bottom:1px dashed var(--line)}
+.vrow:last-child{border-bottom:0;padding-bottom:3px}
+/* a position is a salary row and a headcount row — they read as one thing */
+.vrow.pairtop{border-bottom:0;padding-bottom:4px}
+.vrow.vsub{padding-top:4px}
+.vrow.vsub .vname{font-size:12px;font-weight:600;color:var(--ink-2)}
+/* the service name, editable inside the block it belongs to */
+.namerow{padding:12px 0 13px;border-bottom:1px dashed var(--line)}
+.tfld{width:100%;height:40px;border:1px solid var(--line);border-radius:11px;background:var(--paper);
+  padding:0 12px;font-size:14px;font-weight:700;outline:none;transition:.14s}
+.tfld:focus{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
+.vtop{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.vname{font-size:13px;font-weight:700;color:var(--ink);flex:none}
+.rin{border:0;background:none;outline:none;font-family:inherit;font-size:13px;font-weight:700;color:var(--ink);
+  padding:3px 6px;border-radius:7px;margin-left:-6px;min-width:0;flex:1}
+.rin:hover{background:var(--paper);box-shadow:inset 0 0 0 1px var(--line)}
+.rin:focus{background:#fff;box-shadow:inset 0 0 0 1.5px var(--accent-line)}
+.vhint{font-size:11.5px;color:var(--ink-hint);font-weight:600;flex:1;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.vtop .xb{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;
+  color:var(--ink-4);opacity:0;transition:.14s}
+.vrow:hover .vtop .xb,.vtop .xb:focus{opacity:1}
+.vtop .xb:hover{background:var(--neg-soft);color:var(--neg)}
+.vtop .xb svg{width:13px;height:13px}
+
+.ctrl{display:grid;grid-template-columns:1fr 148px 148px;gap:9px;align-items:stretch}
+.lblr{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-hint);
+  display:block;margin-bottom:3px}
+
+/* the three growth buttons */
+.modes{display:flex;flex-direction:column}
+.mbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--line-2);border-radius:11px;
+  padding:3px;flex:1;align-items:stretch}
+.mb{border-radius:8px;padding:7px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;transition:.15s;text-align:center;min-width:0}
+.mb .ic{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--ink-4);line-height:1;transition:.15s}
+.mb .tx{font-size:10.5px;font-weight:700;color:var(--ink-4);line-height:1.15;transition:.15s;white-space:nowrap}
+.mb:hover .tx,.mb:hover .ic{color:var(--ink-2)}
+.mb.on{background:#fff;box-shadow:0 1px 3px rgba(16,16,20,.13)}
+.mb.on .ic{color:var(--accent)}
+.mb.on .tx{color:var(--ink)}
+
+/* number field with its label inside the box */
+.nf{display:block}
+.nfb{display:flex;align-items:center;gap:6px;background:var(--paper);border:1px solid var(--line);
+  border-radius:11px;padding:6px 11px 5px;transition:.14s;height:100%}
+.nfb:focus-within{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
+.nfb .pre,.nfb .suf{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-4);flex:none;
+  font-style:normal;margin-top:1px}
+.nfb input{width:100%;border:0;background:none;outline:none;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;
+  font-weight:600;padding:0;min-width:0;font-variant-numeric:tabular-nums}
+.nfb input::placeholder{color:var(--ink-4);font-weight:500}
+.nf.sampled .nfb{border-style:dashed}
+.nostep{display:flex;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:11px;
+  font-size:11.5px;font-weight:600;color:var(--ink-4);text-align:center;padding:6px 10px;line-height:1.25}
+
+/* month-by-month drawer */
+.vfoot{display:flex;align-items:center;gap:10px;margin-top:9px}
+.mtog{display:inline-flex;align-items:center;gap:6px;height:27px;padding:0 10px;border-radius:999px;
+  font-size:11.5px;font-weight:700;color:var(--ink-3);background:var(--line-2);transition:.14s}
+.mtog:hover{color:var(--ink);background:#EDECE7}
+.mtog.has{background:var(--accent-soft);color:var(--accent)}
+.mtog svg{width:11px;height:11px}
+.mtog.open{background:var(--accent);color:#fff}
+.vtot{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.vtot em{font-style:normal;color:var(--ink-4);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  font-family:var(--font);font-weight:700;margin-right:5px}
+.mstrip{display:none;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:6px;margin-top:10px;
+  padding:10px;background:var(--paper);border:1px solid var(--line-2);border-radius:11px}
+.mstrip.on{display:grid}
+.mc{position:relative;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 7px 3px}
+.mc label{display:block;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-hint)}
+.mc input{width:100%;border:0;background:none;outline:none;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;
+  padding:0;min-width:0;font-variant-numeric:tabular-nums;color:var(--ink-3)}
+.mc.seed input,.mc.ov input{color:var(--ink);font-weight:600}
+.mc:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(53,51,205,.1)}
+.mc.ov{background:rgba(53,51,205,.055);border-color:var(--accent-line)}
+.mc.ov::after{content:"";position:absolute;top:4px;right:4px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.mc .un{position:absolute;right:3px;bottom:3px;width:16px;height:16px;border-radius:5px;display:none;
+  place-items:center;color:var(--ink-4);background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.14)}
+.mc.ov:hover .un{display:grid}
+.mc .un:hover{color:var(--accent);background:var(--accent-soft)}
+.mc .un svg{width:9px;height:9px}
+.mnote{grid-column:1/-1;font-size:11.5px;color:var(--ink-hint);font-weight:600;line-height:1.4}
+.mnote b{color:var(--ink-2)}
+
+/* add-a-line row at the foot of a block */
+.bfoot{display:flex;align-items:center;gap:9px;padding:10px 14px 12px;border-top:1px solid var(--line-2);background:var(--paper)}
+.menu{position:fixed;z-index:200;min-width:238px;max-height:320px;overflow:auto;background:#fff;
+  border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 44px rgba(16,16,20,.16);padding:6px;display:none}
+.menu.on{display:block}
+.menu .mh{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-4);padding:8px 10px 6px}
+.menu button{display:block;width:100%;padding:8px 10px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.menu button:hover{background:var(--accent-soft);color:var(--accent)}
+.menu .sep{height:1px;background:var(--line-2);margin:5px 8px}
+
+/* while the table is still showing samples, hovering it says so — in place of a banner
+   sitting above the editor the whole time */
+.side{position:relative}
+.sampveil{position:absolute;inset:0;border-radius:16px;z-index:5;display:flex;align-items:center;
+  justify-content:center;padding:28px;background:rgba(250,250,247,.86);backdrop-filter:blur(1.5px);
+  opacity:0;pointer-events:none;transition:opacity .16s}
+.side:hover .sampveil{opacity:1}
+.sampveil span{max-width:34ch;text-align:center;font-size:15px;font-weight:700;color:var(--ink);
+  line-height:1.45;background:var(--card);border:1px solid var(--accent-line);border-radius:14px;
+  padding:16px 20px;box-shadow:0 12px 34px rgba(16,16,20,.1)}
+.sampveil b{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:6px}
+
+/* ───────── sheet + dashboard ───────── */
+/* 60px is the view bar above it — the sheet and the dashboard each own exactly one screen.
+   scroll-margin lands them under the sticky bar when the control jumps to them. */
+.screen{min-height:calc(100vh - var(--topH) - 60px);display:flex;flex-direction:column;align-items:center;
+  padding:16px 18px 34px;scroll-margin-top:0}
+.fitbox{width:100%;max-width:1180px;display:flex;justify-content:center}
+/* align-self stops the flex box stretching the card to the height fit() just set on the
+   box — stretched, the card clips its own notes and footer */
+.fitbox>.sheet,.fitbox>.dash{transform-origin:top center;align-self:flex-start}
+.sheet{width:1120px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 30px 24px;
+  box-shadow:0 10px 36px rgba(16,16,20,.06)}
+.sh-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.sh-head h3{font-size:25px;font-weight:800;letter-spacing:-.025em;line-height:1.1}
+.sh-head .meta{font-size:12.5px;color:var(--ink-2);margin-top:5px;font-weight:600}
+.sh-head .rt{text-align:right;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-4);line-height:1.6}
+.sh-head .rt b{display:block;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:0;color:var(--ink-2);text-transform:none}
+table.pl{width:100%;border-collapse:collapse;margin-top:4px}
+table.pl th,table.pl td{padding:0;font-variant-numeric:tabular-nums}
+table.pl thead th{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-hint);
+  text-align:right;padding:9px 6px 7px;border-bottom:1px solid var(--line)}
+table.pl thead th:first-child{text-align:left;padding-left:2px}
+table.pl thead th.tc{color:var(--ink);border-left:1px solid var(--line)}
+table.pl td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11.5px;text-align:right;padding:4.5px 6px;color:var(--ink-2)}
+table.pl td:first-child{font-family:var(--font);text-align:left;font-size:12.5px;font-weight:600;color:var(--ink);
+  padding-left:2px;white-space:nowrap}
+table.pl td.tc{border-left:1px solid var(--line);font-weight:600;color:var(--ink)}
+table.pl tr.sec td{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4);
+  padding-top:13px;padding-bottom:3px}
+table.pl tr.sub td:first-child{font-weight:500;color:var(--ink-2);font-size:12px;padding-left:14px}
+table.pl tr.det td:first-child{font-weight:400;color:var(--ink-3);font-size:11.5px;padding-left:26px}
+table.pl tr.det td{color:var(--ink-3);font-size:11px}
+table.pl tr.rule td{border-top:1px solid var(--line);padding-top:6px}
+table.pl tr.strong td{font-weight:700;color:var(--ink)}
+table.pl tr.strong td:first-child{font-weight:800}
+table.pl tr.pct td{color:var(--ink-3);font-size:10.5px;padding-top:1px;padding-bottom:7px}
+table.pl tr.pct td:first-child{font-size:11px;font-weight:500;color:var(--ink-3)}
+table.pl tr.net td{background:var(--ink);color:#fff;padding-top:8px;padding-bottom:8px;font-weight:700;font-size:12px}
+table.pl tr.net td:first-child{color:#fff;font-weight:800;font-size:13px;border-radius:9px 0 0 9px;padding-left:10px}
+table.pl tr.net td.tc{border-left-color:rgba(255,255,255,.22);border-radius:0 9px 9px 0}
+table.pl td.neg{color:var(--neg)}
+table.pl tr.net td.neg{color:#FF9DA8}
+
+/* a line still running on sample figures sits right back; the moment one of the numbers
+   feeding it is the user's own it comes forward to full ink — that jump is the point */
+table.pl tr.samp td{color:#C4C3CC;transition:color .18s}
+table.pl tr.samp td:first-child{color:#AEADB7}
+table.pl tr.samp td.neg{color:#DDBAC0}
+table.pl tr.net.samp td{background:#C2C1C9;color:#fff}
+table.pl tr.net.samp td:first-child{color:#fff}
+table.pl tr.net.samp td.neg{color:#FFE2E6}
+table.pl td{transition:color .18s}
+
+/* the small i beside a measure */
+.ib{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;margin-left:5px;
+  vertical-align:1px;background:var(--line-2);color:var(--ink-4);font-size:9.5px;font-weight:800;
+  font-style:italic;line-height:1;transition:.14s;flex:none}
+.ib:hover{background:var(--accent);color:#fff}
+table.pl tr.net .ib{background:rgba(255,255,255,.22);color:#fff}
+table.pl tr.net .ib:hover{background:#fff;color:var(--ink)}
+.sh-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:11px;
+  border-top:1px solid var(--line);font-size:10.5px;color:var(--ink-4);font-weight:600}
+.sh-foot b{color:var(--accent);font-weight:700}
+
+/* the compact copy that sits beside the editor */
+.mini{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 14px 14px;
+  box-shadow:0 8px 28px rgba(16,16,20,.05);overflow-x:auto}
+.mini .mt{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:9px}
+.mini .mt h3{font-size:14px;font-weight:800;letter-spacing:-.02em}
+.mini .mt .mm{font-size:11.5px;color:var(--ink-3);font-weight:600;margin-top:1px}
+.mini .mt .rt{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);text-align:right}
+.mini table.pl thead th{font-size:9px;padding:7px 2px 6px}
+.mini table.pl td{font-size:10.5px;padding:3.5px 2px}
+.mini table.pl tr.net td:first-child{padding-left:7px}
+.mini table.pl td:first-child{font-size:11.5px}
+.mini table.pl tr.sub td:first-child{font-size:11px}
+.mini table.pl tr.net td{font-size:11px}
+.mini table.pl tr.net td:first-child{font-size:12px}
+.minifoot{margin-top:11px;padding-top:10px;border-top:1px solid var(--line-2);display:flex;gap:9px;flex-wrap:wrap}
+.statlet{flex:1;min-width:92px;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:8px 10px}
+.statlet .k{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-4)}
+.statlet .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;letter-spacing:-.02em;margin-top:2px}
+.statlet.good .v{color:var(--pos)}
+.statlet.bad .v{color:var(--neg)}
+
+/* dashboard */
+.dash{width:1120px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:0 26px 24px;
+  box-shadow:0 10px 36px rgba(16,16,20,.06);overflow:hidden}
+/* a brand band across the top, and the header sitting on a brand rule */
+.dash::before{content:"";display:block;height:5px;background:var(--accent);margin:0 -26px 20px}
+.dash .dh{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--accent-line)}
+.dash .dh .pip{display:inline-block;width:9px;height:9px;border-radius:3px;background:var(--accent);
+  margin-right:9px;vertical-align:2px}
+.dash .dh h3{font-size:22px;font-weight:800;letter-spacing:-.025em}
+.dash .dh .meta{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:12px 14px}
+.kpi.brand{background:var(--accent-soft);border-color:var(--accent-line)}
+.kpi.brand .k{color:var(--accent)}
+.kpi.brand .v{color:var(--accent-deep)}
+.kpi.brand .d{color:#6A69B4}
+.kpi .k{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-hint)}
+.kpi .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:22px;font-weight:600;letter-spacing:-.03em;margin-top:4px;line-height:1.1}
+.kpi .d{font-size:11.5px;color:var(--ink-hint);font-weight:600;margin-top:3px}
+.kpi.good .v{color:var(--pos)}
+.kpi.bad .v{color:var(--neg)}
+.dgrid{display:grid;grid-template-columns:1.55fr 1fr;gap:12px}
+.dcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 15px 10px}
+.dcard h4{font-size:12.5px;font-weight:800;letter-spacing:-.01em}
+.dcard{border-top:2px solid var(--accent-line)}
+.dcard .sub{font-size:11px;color:var(--ink-hint);font-weight:600;margin-top:1px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--ink-2)}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.bars{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.bl{display:grid;grid-template-columns:104px 1fr 76px;align-items:center;gap:10px}
+.bl .nm{font-size:11.5px;font-weight:600;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bl .tr{height:9px;border-radius:5px;background:var(--accent-soft);overflow:hidden}
+.bl .tr i{display:block;height:100%;border-radius:5px}
+.bl .vv{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:600;text-align:right;color:var(--ink)}
+.bl .vv em{font-style:normal;color:var(--ink-4);font-size:10.5px;margin-left:4px}
+.notes{margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.note{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;
+  color:var(--ink-2);line-height:1.4}
+.note{border-left:3px solid var(--accent-line)}
+.note b{display:block;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+.note strong{color:var(--ink);font-weight:700}
+svg.chart{display:block;width:100%;height:auto;margin-top:6px}
+svg.chart text{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:9.5px;fill:var(--ink-4)}
+svg.chart text.ax{font-family:var(--font);font-size:9px;font-weight:600;fill:var(--ink-4)}
+svg.chart .gl{stroke:var(--line-2);stroke-width:1}
+svg.chart .zl{stroke:var(--ink-4);stroke-width:1}
+svg.chart .hit{fill:transparent;cursor:default}
+
+/* tooltip + toast */
+.tt{position:fixed;z-index:400;pointer-events:none;background:var(--ink);color:#fff;font-size:11.5px;font-weight:600;
+  padding:7px 10px;border-radius:9px;max-width:272px;line-height:1.45;opacity:0;transform:translateY(3px);
+  transition:opacity .12s,transform .12s;box-shadow:0 8px 22px rgba(16,16,20,.24)}
+.tt.on{opacity:1;transform:translateY(0)}
+.tt b{color:#fff;font-weight:800}
+.tt .eq{font-family:var(--mono);font-variant-numeric:tabular-nums;color:#C9C8F2;font-weight:500;display:block;margin-top:2px;font-size:11px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:500;background:var(--ink);color:#fff;
+  font-size:13px;font-weight:600;padding:11px 18px;border-radius:999px;opacity:0;transition:.2s;pointer-events:none;
+  box-shadow:0 10px 30px rgba(16,16,20,.28)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ───────── responsive ───────── */
+@media(max-width:1100px){
+  .split{grid-template-columns:minmax(0,1fr);gap:16px}
+  .side{position:static}
+}
+@media(max-width:860px){
+  :root{--topH:auto}
+  .top{height:auto;flex-wrap:wrap;gap:9px;padding:10px 14px}
+  .top .chip{display:none}
+  .top .who{max-width:none}
+  /* one swipeable row instead of three wrapped ones — a 145px sticky bar eats a phone screen */
+  .vbar{padding:9px 14px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .vbar::-webkit-scrollbar{display:none}
+  .vbar>*{flex:none}
+  .vbar .sp{flex:0 0 10px}
+  .seg3 button{padding:0 11px;font-size:12.5px}
+  .seg3 button svg{display:none}
+  .brk{padding:24px 14px 2px}
+  .brk h3{font-size:16px}
+  .split{padding:14px 14px 60px}
+  .ctrl{grid-template-columns:1fr}
+  .mbtns{grid-template-columns:repeat(3,1fr)}
+  .screen{min-height:auto;padding:14px 0 30px}
+  .fitbox{display:block;overflow-x:auto;padding:0 14px 6px}
+  .fitbox>.sheet,.fitbox>.dash{transform:none!important}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .dgrid{grid-template-columns:1fr}
+  .notes{grid-template-columns:1fr}
+  #stage-start{padding:26px 16px 70px}
+}
+
+/* ───────── print ───────── */
+@media print{
+  @page{size:A4 landscape;margin:9mm}
+  html,body{height:auto;overflow:visible;background:#fff}
+  .top,.vbar,.tt,.toast,.menu,.sampveil,.edit,.minifoot,.brk,.ib{display:none!important}
+  main{overflow:visible;scroll-behavior:auto}
+  .view{display:none!important}
+  .view.printing{display:block!important}
+  /* a sheet still on sample figures should print as ink, not as the on-screen grey */
+  table.pl tr.samp td,table.pl tr.samp td:first-child{color:var(--ink-2)!important}
+  table.pl tr.net.samp td{background:var(--ink)!important;color:#fff!important}
+  .screen{min-height:0;padding:0;display:block}
+  /* the scroll padding under the last section would spill a blank second page */
+  #v-dash{padding-bottom:0}
+  .split{display:block;padding:0}
+  .fitbox{display:block;max-width:none}
+  /* the sheet reflows happily to the page width */
+  .fitbox>.sheet{transform:none!important;width:100%!important}
+  .sheet,.mini{border:0;box-shadow:none;border-radius:0;padding:0;width:100%!important}
+  /* the dashboard does not: widening it makes the charts taller, so it keeps its design
+     width and printOne() scales it to fit exactly one page */
+  .fitbox>.dash{transform-origin:top left}
+  .dash{border:0;box-shadow:none;border-radius:0}
+  table.pl tr.net td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .kpi,.dcard,.note,.bl .tr i,.dash::before,.dash .dh{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="home" href="/free-resources/" aria-label="Back to free resources">
+    <img src="/assets/logo-dark.png" alt="Hashir Faraz">
+    <span class="bar"></span>
+  </a>
+  <h1>Budget Planner <em>·</em> 12 months</h1>
+  <span class="who" id="who" hidden></span>
+  <span class="sp"></span>
+  <span class="chip" id="chip"></span>
+  <button class="ghost" id="btn-setup" type="button" hidden data-tt="Change the business name or your list of products and services">Setup</button>
+  <button class="ghost" id="btn-reset" type="button" hidden data-act="reset" data-tt="Clear this plan and start from the beginning">Start over</button>
+</header>
+
+<main id="main">
+
+  <!-- ═══ stage 1 — the two questions ═══ -->
+  <section class="stage on" id="stage-start">
+    <div class="intro">
+      <div class="card">
+        <div class="q"><i>1</i>What is the business called?</div>
+        <div class="qs">This is the name that goes on the printed sheet.</div>
+        <input class="bigin" id="q-biz" placeholder="e.g. Northline Studio" autocomplete="organization">
+      </div>
+
+      <div class="card">
+        <div class="q"><i>2</i>What do you sell?</div>
+        <div class="qs">One line per product or service you charge for. You can add more later.</div>
+        <div class="svclist" id="q-svc"></div>
+        <button class="addbtn wide" id="q-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add product / service</button>
+        <div class="egs">
+          <span class="lb">Not sure? Try</span>
+          <button class="eg" data-pre="agency">Agency</button>
+          <button class="eg" data-pre="cafe">Café</button>
+          <button class="eg" data-pre="clinic">Clinic</button>
+          <button class="eg" data-pre="shop">Online shop</button>
+        </div>
+      </div>
+
+      <button class="solid go-wide" id="q-go">Build my plan
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+    </div>
+  </section>
+
+  <!-- ═══ stage 2 — the plan ═══ -->
+  <section class="stage" id="stage-plan">
+    <div class="vbar">
+      <div class="seg3" id="seg" role="tablist" aria-label="Jump to a section">
+        <button class="on" type="button" aria-current="true" data-view="build">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h7v14H4zM14 5h6v6h-6zM14 15h6v4h-6z"/></svg>Build</button>
+        <button type="button" aria-current="false" data-view="sheet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 9h16M4 14h16M10 4v16"/></svg>Sheet</button>
+        <button type="button" aria-current="false" data-view="dash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></svg>Dashboard</button>
+      </div>
+      <span class="sp"></span>
+      <button class="toggle" type="button" aria-pressed="false" data-act="detail"><span class="sw"></span>Cost detail</button>
+      <button class="toggle" type="button" aria-pressed="false" data-act="thou"><span class="sw"></span>Thousands</button>
+      <button class="ghost" data-act="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>CSV</button>
+      <button class="solid" data-act="print-here"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg><span id="pl">Print the sheet</span></button>
+    </div>
+
+    <!-- the three live below one another; the control above jumps between them -->
+    <section class="view" id="v-build">
+      <div class="split">
+        <div class="edit">
+          <div class="optbar">
+            <span class="selfld sm"><label for="q-cur">Currency</label><select id="q-cur"></select></span>
+            <span class="selfld sm"><label for="q-sm">Year starts</label><select id="q-sm"></select></span>
+            <span class="selfld sm"><label for="q-sy">Year</label><input id="q-sy" inputmode="numeric" maxlength="4"></span>
+            <span class="sp"></span>
+            <button class="toggle on" type="button" aria-pressed="true" data-act="mlab" data-tt="Turn this off to label the columns M1 to M12 instead of real months"><span class="sw"></span>Real months</button>
+          </div>
+          <div id="editor"></div>
+        </div>
+        <div class="side">
+          <div class="mini" id="mini"></div>
+          <div class="sampveil" id="veil" hidden>
+            <span><b>Sample figures</b>Add your own revenue, costs and customer numbers to see your real plan.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="v-sheet">
+      <div class="brk">
+        <span class="bn">2</span>
+        <div class="bl2"><h3>The sheet</h3><p>The same year, cleaned up for printing and sharing. Use the bar above to print it.</p></div>
+      </div>
+      <div class="screen"><div class="fitbox" id="fit-sheet"><div class="sheet" id="sheet"></div></div></div>
+    </section>
+
+    <section class="view" id="v-dash">
+      <div class="brk">
+        <span class="bn">3</span>
+        <div class="bl2"><h3>The dashboard</h3><p>The year read as pictures instead of rows.</p></div>
+      </div>
+      <div class="screen"><div class="fitbox" id="fit-dash"><div class="dash" id="dash"></div></div></div>
+    </section>
+  </section>
+
+</main>
+
+<div class="menu" id="menu"></div>
+<div class="tt" id="tt"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══════════ constants ═══════════ */
+var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MFULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var CURS = ['QAR','AED','SAR','KWD','BHD','OMR','USD','EUR','GBP','PKR','INR','EGP'];
+var KEY = 'hf_budget_v2';
+var CATCOL = ['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s6)'];
+
+var SUGGEST = {
+  direct:['Freelancers & contractors','Media / ad spend for clients','Printing & production','Licences resold','Stock & materials','Shipping & delivery','Payment processing'],
+  workspace:['Rent','Electricity & water','Internet & phone','Cleaning','Maintenance & repairs','Office supplies','Service charges','Parking','Furniture & fit-out','Security'],
+  marketing:['Advertising','Software & tools','Agency / freelancer fees','Content & design','Events & sponsorship','Printing & merchandise','Sales commission','Website & hosting'],
+  travel:['Flights','Hotels','Local transport & fuel','Meals & per diem','Client entertainment','Visas & travel insurance','Vehicle lease','Delivery & courier'],
+  admin:['Accounting & bookkeeping','Trade licence & government fees','Legal fees','Bank charges','Payment gateway fees','Business insurance','IT & software','Consultants'],
+  other:['Loan repayment','Interest','Depreciation','Bad debt','Donations & zakat','Contingency','Miscellaneous']
+};
+var ROLES = ['Founder / owner','Manager','Senior specialist','Specialist','Junior','Designer','Developer','Accountant','Sales executive','Admin assistant','Barista','Nurse','Driver','Part-time help'];
+
+var PRESETS = {
+  agency:['Monthly retainer','Website build','Content package'],
+  cafe:['Coffee & drinks','Food & pastries','Catering orders'],
+  clinic:['Consultations','Treatments','Packages'],
+  shop:['Bestseller product','Second product','Shipping & extras']
+};
+
+/* ═══════════ state ═══════════ */
+var st, view='build', detail=false, thou=false, openRows={};
+
+function uid(){ return Math.random().toString(36).slice(2,9); }
+/* sm = this number is one of the samples we seeded, shown greyed until it is typed over */
+function S(base,mode,rate,sample){ return {b:base||0, m:mode||'flat', r:rate||0, ov:{}, sm:!!sample}; }
+function it(n,v,mode,rate,sample){ return {id:uid(), name:n, s:S(v,mode,rate,sample)}; }
+function role(n,pay,cnt,sample){ return {id:uid(), name:n, pay:S(pay,'flat',0,sample), n:S(cnt||1,'flat',0,sample)}; }
+
+function fresh(){
+  return {
+    biz:'', cur:'QAR', sm:0, sy:(new Date()).getFullYear()+1, mlabels:true, built:false,
+    names:[''], nameIds:[null],
+    svc:[], cat:[]
+  };
+}
+
+/* the plan we hand someone the moment they press Build — real structure, sample figures */
+function build(biz, cur, smo, syr, names){
+  var s = { biz:biz, cur:cur, sm:smo, sy:syr, mlabels:st.mlabels!==false, built:true, names:names.slice(), svc:[], cat:[] };
+  var rev=0;
+  names.forEach(function(n,i){
+    var price = Math.max(2500, 12000 - i*2500), qty = 3;
+    rev += price*qty;
+    s.svc.push({ id:uid(), name:n||('Service '+(i+1)),
+                 price:S(price,'flat',0,true), qty:S(qty,'flat',0,true) });
+  });
+  /* the sample costs are sized against the sample revenue, so the first sheet someone
+     sees lands on a believable margin instead of a fantasy one */
+  function sh(f){ return Math.max(100, Math.round(rev*f/100)*100); }
+  s.cat = [
+    /* seeded for an agency: people you buy in, and media you buy on a client's behalf.
+       Stock and materials belong to a retail model, which the questionnaire will ask for later. */
+    {id:'direct', name:'Direct costs', cogs:true, open:false, items:[
+      it('Freelancers & contractors', sh(.24), 'flat', 0, true),
+      it('Media / ad spend for clients', sh(.09), 'flat', 0, true)
+    ]},
+    {id:'people', name:'Team', team:true, open:false, roles:[
+      role('Founder / owner', sh(.20), 1, true),
+      role('Specialist', sh(.12), 1, true)
+    ]},
+    {id:'workspace', name:'Workspace', open:false, items:[
+      it('Rent', sh(.085), 'flat', 0, true),
+      it('Electricity & water', sh(.012), 'flat', 0, true),
+      it('Internet & phone', sh(.007), 'flat', 0, true)
+    ]},
+    {id:'marketing', name:'Sales & marketing', open:false, items:[
+      it('Advertising', sh(.048), 'flat', 0, true),
+      it('Software & tools', sh(.013), 'flat', 0, true)
+    ]},
+    {id:'travel', name:'Travel', open:false, items:[]},
+    {id:'admin', name:'Admin & professional', open:false, items:[
+      it('Accounting & bookkeeping', sh(.016), 'flat', 0, true),
+      it('Trade licence & government fees', sh(.006), 'flat', 0, true)
+    ]},
+    {id:'other', name:'Other', open:false, items:[]}
+  ];
+  return s;
+}
+
+/* ═══════════ maths ═══════════ */
+function run(s){
+  var out=[], prev=null, v;
+  for(var m=0;m<12;m++){
+    if(m===0) v = (s.ov && s.ov[0]!==undefined) ? s.ov[0] : s.b;
+    else if(s.ov && s.ov[m]!==undefined) v = s.ov[m];
+    else if(s.m==='pct') v = prev*(1+s.r/100);
+    else if(s.m==='amt') v = prev + s.r;
+    else v = prev;
+    if(!isFinite(v)) v=0;
+    out.push(v); prev=v;
+  }
+  return out;
+}
+function zeros(){ return [0,0,0,0,0,0,0,0,0,0,0,0]; }
+function addTo(a,b){ for(var i=0;i<12;i++) a[i]+=b[i]; return a; }
+function sum(a){ var t=0; for(var i=0;i<12;i++) t+=a[i]; return t; }
+
+/* every figure carries `sm`: true while nothing the user typed has reached it yet.
+   A line goes dark the moment ANY of the inputs feeding it is their own. */
+function calc(){
+  var r={svc:[],rev:zeros(),cogs:zeros(),gp:zeros(),cat:[],opex:zeros(),net:zeros(),cum:zeros(),
+         revSm:true, cogsSm:true, opexSm:true, anyCogs:false};
+  st.svc.forEach(function(s){
+    var p=run(s.price), q=run(s.qty), rv=zeros();
+    for(var m=0;m<12;m++) rv[m]=p[m]*q[m];
+    var sm = !!(s.price.sm && s.qty.sm);
+    r.svc.push({ref:s,p:p,q:q,rev:rv,sm:sm});
+    if(!sm) r.revSm=false;
+    addTo(r.rev,rv);
+  });
+  if(!st.svc.length) r.revSm=false;
+  st.cat.forEach(function(cat){
+    var tot=zeros(), items=[], sm=true, any=false;
+    if(cat.team){
+      cat.roles.forEach(function(ro){
+        var pay=run(ro.pay), n=run(ro.n), v=zeros();
+        for(var m=0;m<12;m++) v[m]=pay[m]*n[m];
+        var rsm=!!(ro.pay.sm && ro.n.sm);
+        items.push({ref:ro,v:v,pay:pay,n:n,sm:rsm}); addTo(tot,v);
+        any=true; if(!rsm) sm=false;
+      });
+    } else {
+      cat.items.forEach(function(i){
+        var v=run(i.s);
+        items.push({ref:i,v:v,sm:!!i.s.sm}); addTo(tot,v);
+        any=true; if(!i.s.sm) sm=false;
+      });
+    }
+    if(!any) sm=false;
+    r.cat.push({ref:cat,items:items,v:tot,sm:sm});
+    if(cat.cogs){ addTo(r.cogs,tot); if(any){ r.anyCogs=true; if(!sm) r.cogsSm=false; } }
+    else { addTo(r.opex,tot); if(any && !sm) r.opexSm=false; }
+  });
+  if(!r.anyCogs) r.cogsSm=false;
+  r.gpSm  = r.revSm && (r.cogsSm || !r.anyCogs);
+  r.netSm = r.revSm && r.opexSm && (r.cogsSm || !r.anyCogs);
+  var cu=0;
+  for(var m=0;m<12;m++){
+    r.gp[m]=r.rev[m]-r.cogs[m];
+    r.net[m]=r.gp[m]-r.opex[m];
+    cu+=r.net[m]; r.cum[m]=cu;
+  }
+  return r;
+}
+
+/* ═══════════ formatting ═══════════ */
+function round(n){ return Math.round(n); }
+function fmt(n){
+  if(!isFinite(n)) n=0;
+  var v=round(n), neg=v<0; v=Math.abs(v);
+  return (neg?'-':'')+String(v).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+}
+/* fields show whole numbers but growth compounds on the precise value,
+   so explanations quote the precise figure or the arithmetic would not add up */
+function fmtP(n){
+  if(!isFinite(n)) n=0;
+  if(Math.abs(n-Math.round(n))<0.005) return fmt(n);
+  var neg=n<0, v=Math.abs(n), whole=Math.floor(v);
+  var dec=(v-whole).toFixed(2).slice(1).replace(/0$/,'');
+  return (neg?'-':'')+String(whole).replace(/\B(?=(\d{3})+(?!\d))/g,',')+dec;
+}
+function fmtK(n){
+  if(!thou) return fmt(n);
+  if(Math.abs(n)<1000 && n!==0) return fmt(n);
+  var v=n/1000, s=(Math.abs(v)>=100?v.toFixed(0):v.toFixed(1)).replace(/\.0$/,'');
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g,',')+'k';
+}
+function axK(n){
+  var a=Math.abs(n);
+  if(a>=1000000) return (n/1000000).toFixed(a>=10000000?0:1).replace(/\.0$/,'')+'m';
+  if(a>=1000) return (n/1000).toFixed(a>=10000?0:1).replace(/\.0$/,'')+'k';
+  return String(round(n));
+}
+function pct(a,b){ if(!b) return '—'; var v=a/b*100; return v.toFixed(v>=10||v<=-10?0:1).replace(/\.0$/,'')+'%'; }
+/* months can read as real dates or simply M1-M12, for a plan that is not tied to a calendar */
+function mlab(m){
+  if(st.mlabels===false) return 'M'+(m+1);
+  var i=(st.sm+m)%12, y=st.sy+Math.floor((st.sm+m)/12);
+  return M[i]+' '+String(y).slice(2);
+}
+function mfull(m){
+  if(st.mlabels===false) return 'Month '+(m+1);
+  var i=(st.sm+m)%12, y=st.sy+Math.floor((st.sm+m)/12);
+  return MFULL[i]+' '+y;
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+/* tooltips carry small HTML. safe() cleans user text for embedding;
+   attr() encodes the finished HTML so it survives as an attribute value */
+function safe(s){ return String(s).replace(/&/g,'&amp;').replace(/[<>"]/g,''); }
+function attr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+/* ═══════════ tooltip / toast ═══════════ */
+var tt=document.getElementById('tt'), ttT=null;
+function showTT(el,html){
+  tt.innerHTML=html;
+  var r=el.getBoundingClientRect();
+  tt.style.visibility='hidden'; tt.classList.add('on');
+  var w=tt.offsetWidth, h=tt.offsetHeight;
+  var x=Math.min(Math.max(8, r.left+r.width/2-w/2), innerWidth-w-8);
+  var y=r.top-h-9; if(y<8) y=r.bottom+9;
+  tt.style.left=x+'px'; tt.style.top=y+'px'; tt.style.visibility='visible';
+}
+function hideTT(){ tt.classList.remove('on'); ttPinned=null; }
+var ttPinned=null;
+document.addEventListener('mouseover',function(e){
+  var el=e.target.closest('[data-tt]'); if(!el || ttPinned) return;
+  clearTimeout(ttT); ttT=setTimeout(function(){ showTT(el, el.getAttribute('data-tt')); },90);
+});
+document.addEventListener('mouseout',function(e){
+  if(ttPinned) return;
+  if(e.target.closest('[data-tt]')){ clearTimeout(ttT); hideTT(); }
+});
+/* hover is not available on a phone and not available to a keyboard, so the small i
+   also opens on tap and on focus — otherwise those explanations reach nobody on mobile */
+document.addEventListener('click',function(e){
+  var el=e.target.closest('.ib');
+  if(!el){ if(ttPinned) hideTT(); return; }
+  e.preventDefault(); e.stopPropagation();
+  clearTimeout(ttT);
+  if(ttPinned===el){ hideTT(); return; }
+  ttPinned=el; showTT(el, el.getAttribute('data-tt'));
+}, true);
+document.addEventListener('focusin',function(e){
+  var el=e.target.closest('[data-tt]');
+  if(!el) { if(!ttPinned) hideTT(); return; }
+  /* focusing scrolls the control into view, and that scroll dismisses tooltips —
+     so wait for it to settle before placing this one */
+  clearTimeout(ttT);
+  ttT=setTimeout(function(){ showTT(el, el.getAttribute('data-tt')); }, 70);
+});
+document.addEventListener('focusout',function(e){ if(e.target.closest('[data-tt]') && !ttPinned) hideTT(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') hideTT(); });
+/* a tooltip the user opened on purpose follows the page instead of vanishing — on a phone
+   the tap itself often nudges the scroll, which used to dismiss it instantly */
+document.addEventListener('scroll',function(){
+  if(!ttPinned) return hideTT();
+  if(!document.contains(ttPinned)) return hideTT();
+  showTT(ttPinned, ttPinned.getAttribute('data-tt'));
+}, true);
+
+var toastEl=document.getElementById('toast'), toastT;
+function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('on'); clearTimeout(toastT);
+  toastT=setTimeout(function(){toastEl.classList.remove('on');},2200); }
+
+/* ═══════════ persistence ═══════════ */
+var saveT;
+function save(){ clearTimeout(saveT); saveT=setTimeout(function(){
+  try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} },260); }
+function load(){
+  try{
+    var o=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(o && o.svc && o.cat && o.built) return o;
+  }catch(e){}
+  return null;
+}
+
+/* ═══════════ paths ═══════════ */
+/* s|i|price · s|i|qty · c|i|j · t|i|j|pay · t|i|j|n */
+function getSeries(p){
+  var a=p.split('|');
+  if(a[0]==='s') return st.svc[+a[1]][a[2]];
+  if(a[0]==='c') return st.cat[+a[1]].items[+a[2]].s;
+  return st.cat[+a[1]].roles[+a[2]][a[3]];
+}
+
+/* ═══════════ the value row — three buttons, then the numbers ═══════════ */
+function modeBtns(path, s){
+  function b(mode, ic, tx, tip){
+    return '<button class="mb'+(s.m===mode?' on':'')+'" type="button" role="radio" aria-checked="'+
+           (s.m===mode?'true':'false')+'" data-mode="'+mode+'" data-p="'+path+'" data-tt="'+attr(tip)+'">'+
+           '<span class="ic">'+ic+'</span><span class="tx">'+tx+'</span></button>';
+  }
+  return '<div class="modes"><span class="lblr" id="lb-'+path.replace(/\|/g,'-')+'">How it changes each month</span>'+
+    '<div class="mbtns" role="radiogroup" aria-labelledby="lb-'+path.replace(/\|/g,'-')+'">'+
+    b('flat','=','Constant','Stays the same in all twelve months')+
+    b('pct','%','Percent','Each month is the one before it, up or down by a percentage')+
+    b('amt','+/−','Amount','Each month is the one before it, up or down by a fixed amount')+
+  '</div></div>';
+}
+function numField(path, which, s, cfg){
+  var sampled = s.sm && which==='b';
+  var v = which==='b' ? s.b : s.r;
+  var shown = which==='b' ? (sampled ? '' : (v?fmt(v):'')) : (v?String(+v.toFixed(2)):'');
+  var ph = which==='b' ? (sampled ? fmt(v) : '0') : (s.m==='pct'?'5':'1,000');
+  return '<label class="nf'+(sampled?' sampled':'')+'"><span class="lblr">'+cfg.label+'</span>'+
+    '<span class="nfb">'+(cfg.pre?'<em class="pre">'+esc(cfg.pre)+'</em>':'')+
+    '<input inputmode="decimal" data-num="'+which+'" data-p="'+path+'" value="'+shown+'" placeholder="'+esc(ph)+'"'+
+    (cfg.tip?' data-tt="'+attr(cfg.tip)+'"':'')+'>'+
+    (cfg.suf?'<em class="suf">'+esc(cfg.suf)+'</em>':'')+'</span></label>';
+}
+var PENCIL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+function overrideCount(s){ var n=0; for(var k in s.ov){ if(+k>0) n++; } return n; }
+/* typing "12k" beats typing "12000" twenty times over; "1.2m" works too */
+function num(raw){
+  var t=String(raw).trim().toLowerCase().replace(/[, ]/g,'');
+  var mult=1;
+  if(/[km]$/.test(t)){ mult = t.slice(-1)==='k' ? 1000 : 1000000; t=t.slice(0,-1); }
+  t=t.replace(/[^0-9.\-]/g,'');
+  if(t==='' || t==='-' || t==='.') return null;
+  var v=parseFloat(t);
+  return isFinite(v) ? v*mult : null;
+}
+/* customers and headcount are counts, not money — no currency prefix, no year total */
+function isCount(path){ return /\|qty$|\|n$/.test(path); }
+/* adding up twelve months of headcount or customer counts means nothing —
+   a count row reports its average instead of a total */
+function totText(s, vals, money){
+  if(money) return '<em>Year</em>'+fmt(sum(vals));
+  var a=sum(vals)/12;
+  return '<em>Average</em>'+(Math.abs(a-Math.round(a))<0.05 ? fmt(a) : a.toFixed(1));
+}
+
+function vrowHTML(path, label, s, cfg){
+  cfg=cfg||{};
+  var vals=run(s), money=cfg.unit!=='count';
+  var nOv=overrideCount(s), open=!!openRows[path];
+  var h='<div class="vrow'+(s.sm?' sampled':'')+(cfg.pair?' pairtop':'')+(cfg.sub?' vsub':'')+'" data-row="'+path+'">';
+
+  h+='<div class="vtop">'+
+     (cfg.rename ? '<input class="rin" data-rename="'+path+'" value="'+esc(label)+'" placeholder="Name this line">'
+                 : '<span class="vname">'+esc(label)+'</span>')+
+     (cfg.hint ? '<span class="vhint">'+esc(cfg.hint)+'</span>' : '<span class="vhint"></span>')+
+     (cfg.del ? '<button class="xb" data-del="'+cfg.del+'" aria-label="Remove" data-tt="Remove this line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>':'')+
+     '</div>';
+
+  h+='<div class="ctrl">'+modeBtns(path,s);
+  h+=numField(path,'b',s,{ label: (cfg.startLabel || 'Starts at')+' · '+mlab(0),
+                           pre: money?st.cur:'', tip: cfg.tip||'' });
+  if(s.m==='flat'){
+    h+='<div class="nostep">No change —<br>same every month</div>';
+  } else if(s.m==='pct'){
+    h+=numField(path,'r',s,{ label:'Then each month', suf:'%',
+          tip:'Put a minus in front to go down, for example −3' });
+  } else {
+    h+=numField(path,'r',s,{ label:'Then each month', pre:money?st.cur:'', suf:'',
+          tip:'Put a minus in front to go down, for example −500' });
+  }
+  h+='</div>';
+
+  h+='<div class="vfoot">'+
+     '<button class="mtog'+(nOv?' has':'')+(open?' open':'')+'" type="button" aria-expanded="'+(open?'true':'false')+'" data-months="'+path+'" '+
+       'data-tt="'+attr('Set any single month by hand. The months after it pick the trend back up.')+'">'+
+       PENCIL+(nOv ? 'Custom · '+nOv+' month'+(nOv===1?'':'s') : 'Custom')+'</button>'+
+     '<span class="vtot" data-tot="'+path+'">'+totText(s,vals,money)+'</span>'+
+     '</div>';
+
+  h+=mstripHTML(path, s, vals, open, money);
+  h+='</div>';
+  return h;
+}
+function mstripHTML(path, s, vals, open, money){
+  var h='<div class="mstrip'+(open?' on':'')+'" data-strip="'+path+'">';
+  for(var m=0;m<12;m++){
+    var isOv = m>0 && s.ov[m]!==undefined;
+    h+='<div class="mc'+(m===0?' seed':'')+(isOv?' ov':'')+'" data-k="'+path+'" data-m="'+m+'">'+
+       '<label>'+mlab(m)+'</label>'+
+       '<input inputmode="decimal" aria-label="'+esc(mfull(m))+'" value="'+(vals[m]?fmt(vals[m]):'')+'" data-tt="'+attr(explain(s,vals,m,money))+'">'+
+       /* the reset button sits in every month after the first and CSS reveals it only on an
+          overridden one, so a month just typed over gets it without rebuilding the strip */
+       (m>0?'<button class="un" type="button" data-undo="1" tabindex="-1" aria-label="Clear this month" data-tt="Clear this and follow the trend again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h11a5 5 0 1 1 0 10H9"/><path d="M3 10l5-5M3 10l5 5"/></svg></button>':'')+
+       '</div>';
+  }
+  h+='<div class="mnote">'+mlab(0)+' is your starting figure. Type over any other month and '+
+     '<b>the months after it pick the trend back up</b> from whatever you put in.</div>';
+  return h+'</div>';
+}
+function explain(s, vals, m, money){
+  if(m===0) return '<b>'+fmtP(vals[0])+'</b> — your starting figure<span class="eq">Every month after this follows the trend</span>';
+  if(s.ov[m]!==undefined){
+    var tail = m<11 ? '<span class="eq">'+mlab(m+1)+' onward picks the trend back up ('+trendWord(s)+')</span>' : '';
+    return '<b>'+fmtP(vals[m])+'</b> — you typed this in'+tail;
+  }
+  var p=vals[m-1];
+  if(s.m==='pct' && s.r) return '<b>'+fmtP(vals[m])+'</b><span class="eq">'+fmtP(p)+' '+(s.r>=0?'+':'−')+' '+Math.abs(+s.r.toFixed(2))+'% = '+fmtP(vals[m])+'</span>';
+  if(s.m==='amt' && s.r) return '<b>'+fmtP(vals[m])+'</b><span class="eq">'+fmtP(p)+' '+(s.r>=0?'+':'−')+' '+fmt(Math.abs(s.r))+' = '+fmtP(vals[m])+'</span>';
+  return '<b>'+fmtP(vals[m])+'</b><span class="eq">Same as '+mlab(m-1)+' — set to stay constant</span>';
+}
+function trendWord(s){
+  if(s.m==='pct' && s.r) return (s.r>0?'up ':'down ')+Math.abs(+s.r.toFixed(2))+'% a month';
+  if(s.m==='amt' && s.r) return (s.r>0?'up ':'down ')+fmt(Math.abs(s.r))+' a month';
+  return 'the same every month';
+}
+
+/* ═══════════ the editor ═══════════ */
+function blkHTML(key, title, sub, colour, bodyHTML, footHTML, total, sampled){
+  var open = !!st.openBlk && st.openBlk[key];
+  return '<section class="blk'+(open?' open':'')+'" data-blk="'+key+'">'+
+    '<button class="bh" type="button" aria-expanded="'+(open?'true':'false')+'" data-togg="'+key+'">'+
+      '<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>'+
+      (colour?'<span class="sw3" style="background:'+colour+'"></span>':'')+
+      '<span class="bt">'+esc(title)+'</span>'+
+      '<span class="bs">'+esc(sub)+'</span>'+
+      '<span class="bv'+(sampled?' sampled':'')+'" data-blkv="'+key+'">'+fmt(total)+'</span>'+
+    '</button>'+
+    (open ? '<div class="bb">'+bodyHTML+'</div>'+(footHTML||'') : '')+
+  '</section>';
+}
+
+function renderEditor(){
+  var c=calc(), h='';
+  h+='<div class="secnote">What you sell</div>';
+  st.svc.forEach(function(s,i){
+    var d=c.svc[i], body='';
+    body+='<div class="namerow"><span class="lblr">What this is called</span>'+
+          '<input class="tfld" data-svcname="'+i+'" value="'+esc(s.name)+'" placeholder="Name this service"></div>';
+    body+=vrowHTML('s|'+i+'|price','Price per customer',s.price,
+      {hint:'what one customer pays', tip:'What one customer pays you in a month. For a retainer, the monthly fee.'});
+    body+=vrowHTML('s|'+i+'|qty','Customers',s.qty,
+      {unit:'count', hint:'how many pay you', startLabel:'How many',
+       tip:'How many customers pay you in that month. For a retainer, your live client count.'});
+    var foot='<div class="bfoot"><span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">Revenue = price × customers, worked out for all twelve months.</span></div>';
+    h+=blkHTML('s'+i, s.name, 'Revenue', CATCOL[i%6], body, foot, sum(d.rev), s.price.sm||s.qty.sm);
+  });
+  h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add another thing you sell</button></div>';
+
+  h+='<div class="secnote">What it costs</div>';
+  st.cat.forEach(function(cat,ci){
+    var d=c.cat[ci], body='', foot='', sampled=false, n;
+    if(cat.team){
+      cat.roles.forEach(function(ro,ri){
+        if(ro.pay.sm||ro.n.sm) sampled=true;
+        body+='<div style="padding-top:4px"></div>';
+        body+=vrowHTML('t|'+ci+'|'+ri+'|pay', ro.name, ro.pay,
+          {rename:true, hint:'monthly salary each', startLabel:'Salary', pair:true,
+           del:'t|'+ci+'|'+ri, tip:'What one person in this position is paid per month, all in.'});
+        body+=vrowHTML('t|'+ci+'|'+ri+'|n','How many people',ro.n,
+          {unit:'count', sub:true, hint:'in this position', startLabel:'How many',
+           tip:'How many people you have in this position. Type over a later month to add a hire.'});
+      });
+      if(!cat.roles.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">No one on the payroll yet.</div>';
+      foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a position</button>'+
+           '<span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">Cost = salary × how many</span></div>';
+      n=cat.roles.length+' position'+(cat.roles.length===1?'':'s');
+    } else {
+      cat.items.forEach(function(item,ii){
+        if(item.s.sm) sampled=true;
+        body+=vrowHTML('c|'+ci+'|'+ii, item.name, item.s, {rename:true, del:'c|'+ci+'|'+ii});
+      });
+      if(!cat.items.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">Nothing here yet.</div>';
+      foot='<div class="bfoot"><button class="addbtn" data-addcost="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a cost to '+esc(cat.name.toLowerCase())+'</button></div>';
+      n=cat.items.length+' line'+(cat.items.length===1?'':'s');
+    }
+    h+=blkHTML('c'+ci, cat.name, cat.cogs?'Cost of sales · '+n:n, CATCOL[ci%6], body, foot, sum(d.v), sampled);
+  });
+
+  document.getElementById('editor').innerHTML=h;
+}
+function anySample(){
+  var any=false;
+  st.svc.forEach(function(s){ if(s.price.sm||s.qty.sm) any=true; });
+  st.cat.forEach(function(c){
+    (c.items||[]).forEach(function(i){ if(i.s.sm) any=true; });
+    (c.roles||[]).forEach(function(r){ if(r.pay.sm||r.n.sm) any=true; });
+  });
+  return any;
+}
+
+/* ═══════════ P&L table (shared by the mini copy and the full sheet) ═══════════ */
+/* plain-language notes behind the small i on each line that is a measure, not a cost */
+var INFO = {
+  'Direct costs':'The costs that only happen because you made the sale — freelancers, production, media you buy on a client’s behalf. No sale, no cost.',
+  'Gross profit':'Revenue minus direct costs. What the work itself leaves you, before any of the bills you pay whether or not you sell anything.',
+  'Gross margin':'Gross profit as a share of revenue. It tells you how much of every riyal you invoice survives delivering the work.',
+  'Total running costs':'Everything you pay to keep the doors open — team, rent, software, admin — whether or not you sell a thing. Often called overheads.',
+  'Net profit':'What is actually left: revenue, minus direct costs, minus running costs. This is the line that pays you.',
+  'Net margin':'Net profit as a share of revenue. Ten percent means ten fils of every riyal you invoice ends up as profit.',
+  'Profit to date':'Every month’s profit added up from the start of the year. It shows when a slow start has been paid back — the month it turns positive is when you are ahead for the year.'
+};
+function infoBtn(label){
+  if(!INFO[label]) return '';
+  return '<button class="ib" type="button" aria-label="What is '+esc(label)+'?" data-tt="'+
+         attr('<b>'+safe(label)+'</b><span class="eq">'+safe(INFO[label])+'</span>')+'">i</button>';
+}
+
+function plTable(c, f){
+  var h='<table class="pl"><thead><tr><th>&nbsp;</th>';
+  for(var m=0;m<12;m++) h+='<th>'+mlab(m)+'</th>';
+  h+='<th class="tc">Year</th></tr></thead><tbody>';
+
+  /* sm greys a line right down until one of the numbers feeding it is the user’s own */
+  function tr(label, vals, cls, sm, totOverride){
+    var r='<tr class="'+(cls||'')+(sm?' samp':'')+'"><td>'+esc(label)+infoBtn(label)+'</td>';
+    for(var m=0;m<12;m++){ var v=vals[m]; r+='<td'+(v<0?' class="neg"':'')+'>'+f(v)+'</td>'; }
+    var t = totOverride!==undefined ? totOverride : sum(vals);
+    r+='<td class="tc'+(t<0?' neg':'')+'">'+f(t)+'</td></tr>';
+    return r;
+  }
+  function trPct(label, nums, dens, sm){
+    var r='<tr class="pct'+(sm?' samp':'')+'"><td>'+esc(label)+infoBtn(label)+'</td>';
+    for(var m=0;m<12;m++) r+='<td>'+pct(nums[m],dens[m])+'</td>';
+    return r+'<td class="tc">'+pct(sum(nums),sum(dens))+'</td></tr>';
+  }
+  var neg=function(v){ return -v; };
+
+  h+='<tr class="sec"><td colspan="14">Revenue</td></tr>';
+  c.svc.forEach(function(d){ h+=tr(d.ref.name, d.rev, 'sub', d.sm); });
+  h+=tr('Total revenue', c.rev, 'rule strong', c.revSm);
+  if(sum(c.cogs)){
+    h+=tr('Direct costs', c.cogs.map(neg), 'sub', c.cogsSm);
+    h+=tr('Gross profit', c.gp, 'rule strong', c.gpSm);
+    h+=trPct('Gross margin', c.gp, c.rev, c.gpSm);
+  }
+  h+='<tr class="sec"><td colspan="14">Running costs</td></tr>';
+  c.cat.forEach(function(d){
+    if(d.ref.cogs) return;
+    if(!sum(d.v) && !d.items.length) return;
+    h+=tr(d.ref.name, d.v.map(neg), 'sub', d.sm);
+    if(detail) d.items.forEach(function(i){ if(sum(i.v)) h+=tr(i.ref.name, i.v.map(neg), 'det', i.sm); });
+  });
+  h+=tr('Total running costs', c.opex.map(neg), 'rule strong', c.opexSm);
+  h+=tr('Net profit', c.net, 'net', c.netSm);
+  h+=trPct('Net margin', c.net, c.rev, c.netSm);
+  h+=tr('Profit to date', c.cum, 'rule', c.netSm, c.cum[11]);
+  return h+'</tbody></table>';
+}
+
+function renderSheet(c){
+  c=c||calc();
+  var h='<div class="sh-head"><div><h3>'+esc(st.biz||'Your business')+'</h3>'+
+    '<div class="meta">Budget · '+mfull(0)+' to '+mfull(11)+'</div></div>'+
+    '<div class="rt">Figures in<b>'+esc(st.cur)+(thou?' thousands':'')+'</b></div></div>';
+  h+=plTable(c, fmtK);
+  h+='<div class="sh-foot"><span>'+esc(st.biz||'Your business')+' · 12-month budget · prepared '+
+     new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+
+     '</span><span>Built with the free Budget Planner at <b>hashirfaraz.com</b></span></div>';
+  document.getElementById('sheet').innerHTML=h;
+}
+
+function renderMini(c){
+  c=c||calc();
+  var rev=sum(c.rev), net=sum(c.net), gp=sum(c.gp);
+  var h='<div class="mt"><div><h3>'+esc(st.biz||'Your business')+'</h3>'+
+    '<div class="mm">'+mfull(0)+' to '+mfull(11)+'</div></div>'+
+    '<div class="rt">Live<br>'+esc(st.cur)+'</div></div>';
+  h+=plTable(c, fmt);
+  h+='<div class="minifoot">'+
+     statlet('Revenue', fmt(rev),'')+
+     statlet('Gross margin', pct(gp,rev),'')+
+     statlet('Running costs', fmt(sum(c.opex)),'')+
+     statlet('Net profit', fmt(net), net>=0?'good':'bad')+
+     '</div>';
+  document.getElementById('mini').innerHTML=h;
+}
+function statlet(k,v,cls){ return '<div class="statlet '+cls+'"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>'; }
+
+/* ═══════════ charts ═══════════ */
+function barPath(x,y,w,h,r,down){
+  if(h<=0.6) h=0.6;
+  if(r>w/2) r=w/2; if(r>h) r=h;
+  if(!down) return 'M'+x+','+(y+h)+'V'+(y+r)+'a'+r+','+r+' 0 0 1 '+r+',-'+r+'h'+(w-2*r)+'a'+r+','+r+' 0 0 1 '+r+','+r+'V'+(y+h)+'Z';
+  return 'M'+x+','+y+'V'+(y+h-r)+'a'+r+','+r+' 0 0 0 '+r+','+r+'h'+(w-2*r)+'a'+r+','+r+' 0 0 0 '+r+',-'+r+'V'+y+'Z';
+}
+function niceMax(v){
+  if(v<=0) return 1;
+  var e=Math.pow(10,Math.floor(Math.log10(v))), n=v/e;
+  var s = n<=1?1 : n<=1.5?1.5 : n<=2?2 : n<=2.5?2.5 : n<=3?3 : n<=4?4 : n<=5?5 : n<=7.5?7.5 : 10;
+  return s*e;
+}
+function chartRevCost(c){
+  var W=690,H=228,L=46,R=6,T=12,B=24;
+  var pw=W-L-R, ph=H-T-B, gw=pw/12, bw=Math.min(15,(gw-7)/2), gap=2;
+  var tot=c.opex.map(function(v,m){ return v+c.cogs[m]; });
+  var mx=niceMax(Math.max.apply(null, c.rev.concat(tot).concat([1])));
+  var y=function(v){ return T+ph-(v/mx)*ph; };
+  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Revenue against total costs, month by month">';
+  for(var i=0;i<=4;i++){ var gv=mx*i/4;
+    s+='<line class="gl" x1="'+L+'" y1="'+y(gv)+'" x2="'+(W-R)+'" y2="'+y(gv)+'"/>'+
+       '<text class="ax" x="'+(L-7)+'" y="'+(y(gv)+3.2)+'" text-anchor="end">'+axK(gv)+'</text>'; }
+  for(var m=0;m<12;m++){
+    var cx=L+gw*m+gw/2, x1=cx-bw-gap/2, x2=cx+gap/2;
+    s+='<path d="'+barPath(x1,y(c.rev[m]),bw,T+ph-y(c.rev[m]),4)+'" fill="var(--s1)"/>';
+    s+='<path d="'+barPath(x2,y(tot[m]),bw,T+ph-y(tot[m]),4)+'" fill="var(--s2)"/>';
+    s+='<rect class="hit" x="'+(L+gw*m)+'" y="'+T+'" width="'+gw+'" height="'+ph+'" data-tt="'+
+       attr('<b>'+mfull(m)+'</b><span class="eq">Revenue '+fmt(c.rev[m])+' · Costs '+fmt(tot[m])+'<br>Profit '+fmt(c.net[m])+'</span>')+'"/>';
+    s+='<text class="ax" x="'+cx+'" y="'+(H-7)+'" text-anchor="middle">'+mlab(m).split(' ')[0]+'</text>';
+  }
+  return s+'</svg>';
+}
+function chartProfit(c){
+  var W=690,H=168,L=46,R=6,T=12,B=22;
+  var pw=W-L-R, ph=H-T-B, gw=pw/12, bw=Math.min(20,gw-10);
+  var hi=Math.max.apply(null,c.net.concat([0])), lo=Math.min.apply(null,c.net.concat([0]));
+  var mx=niceMax(Math.max(hi,0.0001)), mn=lo<0?-niceMax(-lo):0, span=(mx-mn)||1;
+  var y=function(v){ return T+ph-((v-mn)/span)*ph; }, y0=y(0);
+  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Profit or loss each month">';
+  s+='<text class="ax" x="'+(L-7)+'" y="'+(y(mx)+3.2)+'" text-anchor="end">'+axK(mx)+'</text>';
+  if(mn<0) s+='<text class="ax" x="'+(L-7)+'" y="'+(y(mn)+3.2)+'" text-anchor="end">'+axK(mn)+'</text>';
+  s+='<line class="zl" x1="'+L+'" y1="'+y0+'" x2="'+(W-R)+'" y2="'+y0+'"/>';
+  for(var m=0;m<12;m++){
+    var cx=L+gw*m+gw/2, v=c.net[m], up=v>=0;
+    var yy=up?y(v):y0, hh=Math.abs(y(v)-y0);
+    s+='<path d="'+barPath(cx-bw/2,yy,bw,hh,4,!up)+'" fill="'+(up?'var(--pos)':'var(--neg)')+'"/>';
+    s+='<rect class="hit" x="'+(L+gw*m)+'" y="'+T+'" width="'+gw+'" height="'+ph+'" data-tt="'+
+       attr('<b>'+mfull(m)+'</b><span class="eq">'+(up?'Profit ':'Loss ')+fmt(Math.abs(v))+' · running total '+fmt(c.cum[m])+'</span>')+'"/>';
+    s+='<text class="ax" x="'+cx+'" y="'+(H-6)+'" text-anchor="middle">'+mlab(m).split(' ')[0]+'</text>';
+  }
+  return s+'</svg>';
+}
+function barList(rows, total, colorFn){
+  var mx=0; rows.forEach(function(r){ if(r.v>mx) mx=r.v; });
+  var h='<div class="bars">';
+  rows.forEach(function(r,i){
+    h+='<div class="bl"><span class="nm" data-tt="'+esc(r.name)+'">'+esc(r.name)+'</span>'+
+       '<span class="tr"><i style="width:'+(mx?Math.max(2,r.v/mx*100):0)+'%;background:'+colorFn(i,r)+'"></i></span>'+
+       '<span class="vv">'+fmtK(r.v)+'<em>'+(total?pct(r.v,total):'')+'</em></span></div>';
+  });
+  return h+'</div>';
+}
+
+/* ═══════════ dashboard ═══════════ */
+function renderDash(c){
+  c=c||calc();
+  var el=document.getElementById('dash');
+  var rev=sum(c.rev), cogs=sum(c.cogs), opex=sum(c.opex), net=sum(c.net), gp=sum(c.gp);
+
+  var best=0, worst=0, firstPos=-1, breakEven=-1, m;
+  for(m=0;m<12;m++){
+    if(c.net[m]>c.net[best]) best=m;
+    if(c.net[m]<c.net[worst]) worst=m;
+    if(firstPos<0 && c.net[m]>0) firstPos=m;
+  }
+  /* the month it goes ahead and stays ahead, not the first blip above zero */
+  for(m=11;m>=0;m--){ if(c.cum[m]>0) breakEven=m; else break; }
+
+  var cats=c.cat.map(function(d,i){ return {name:d.ref.name, v:sum(d.v), i:i}; })
+                .filter(function(r){ return r.v>0; }).sort(function(a,b){ return b.v-a.v; });
+  var svcs=c.svc.map(function(d,i){ return {name:d.ref.name, v:sum(d.rev), i:i}; })
+                .filter(function(r){ return r.v>0; }).sort(function(a,b){ return b.v-a.v; });
+  var spend=cogs+opex;
+
+  var h='<div class="dh"><div><h3><span class="pip"></span>'+esc(st.biz||'Your business')+' — the year at a glance</h3>'+
+    '<div class="meta">'+mfull(0)+' to '+mfull(11)+' · all figures in '+esc(st.cur)+'</div></div></div>';
+
+  h+='<div class="kpis">'+
+     kpi('Revenue for the year', fmt(rev), svcs.length+' revenue line'+(svcs.length===1?'':'s'),'brand')+
+     kpi('Gross margin', pct(gp,rev), fmt(gp)+' after direct costs','')+
+     kpi('Running costs', fmt(opex), fmt(opex/12)+' a month on average','')+
+     kpi('Net profit', fmt(net), pct(net,rev)+' of revenue', net>=0?'good':'bad')+
+     '</div>';
+
+  h+='<div class="dgrid">'+
+     '<div class="dcard"><h4>Money in, money out</h4><div class="sub">Every cost you pay that month, against what you invoice</div>'+
+     '<div class="legend"><span><i style="background:var(--s1)"></i>Revenue</span><span><i style="background:var(--s2)"></i>All costs</span></div>'+
+     chartRevCost(c)+'</div>'+
+     '<div class="dcard"><h4>Where the money goes</h4><div class="sub">Share of everything you spend in the year</div>'+
+     barList(cats, spend, function(i,r){ return CATCOL[r.i%6]; })+'</div>'+
+     '</div>';
+
+  h+='<div class="dgrid" style="margin-top:12px">'+
+     '<div class="dcard"><h4>Profit each month</h4><div class="sub">Above the line is a profit, below it is a loss</div>'+chartProfit(c)+'</div>'+
+     '<div class="dcard"><h4>Where revenue comes from</h4><div class="sub">Share of the year&rsquo;s revenue by what you sell</div>'+
+     barList(svcs, rev, function(i,r){ return CATCOL[r.i%6]; })+'</div>'+
+     '</div>';
+
+  var biggest=cats[0];
+  h+='<div class="notes">'+
+     note('Best month', '<strong>'+mfull(best)+'</strong> — '+fmt(c.net[best])+' of profit on '+fmt(c.rev[best])+' of revenue.')+
+     note('In the black', breakEven>=0
+        ? 'You are ahead for the year from <strong>'+mfull(breakEven)+'</strong> onwards.'
+        : (firstPos>=0
+            ? 'First profitable month is <strong>'+mfull(firstPos)+'</strong>, but the year still ends behind by '+fmt(-c.cum[11])+'.'
+            : 'No profitable month yet — the year ends behind by <strong>'+fmt(-c.cum[11])+'</strong>.'))+
+     note('Biggest cost', biggest
+        ? '<strong>'+esc(biggest.name)+'</strong> takes '+pct(biggest.v,spend)+' of everything you spend ('+fmt(biggest.v)+').'
+        : 'No costs entered yet.')+
+     '</div>';
+
+  h+='<div class="sh-foot"><span>'+esc(st.biz||'Your business')+' · 12-month budget</span>'+
+     '<span>Built with the free Budget Planner at <b>hashirfaraz.com</b></span></div>';
+  el.innerHTML=h;
+}
+function kpi(k,v,d,cls){ return '<div class="kpi '+(cls||'')+'"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="d">'+d+'</div></div>'; }
+function note(t,b){ return '<div class="note"><b>'+t+'</b>'+b+'</div>'; }
+
+/* ═══════════ fit one sheet to one screen ═══════════ */
+function fitPass(box, el){
+  el.style.transform='none';
+  box.style.height='auto';
+  /* below laptop width, shrinking a 1120px sheet makes it unreadable — let it scroll sideways */
+  if(innerWidth<860) return;
+  var bar=document.querySelector('.vbar');
+  var availW=box.clientWidth;
+  var availH=main.clientHeight - (bar?bar.offsetHeight:56) - 52;   /* bar + the screen's padding */
+  var w=el.offsetWidth, hgt=el.offsetHeight;
+  if(!w || !hgt || availH<160) return;
+  var k=Math.min(availW/w, availH/hgt, 1);
+  if(k>0.999) return;
+  el.style.transform='scale('+k+')';
+  /* measure AFTER the transform — the rect is the real on-screen height, so the box
+     reserves exactly what the scaled sheet occupies and the page stops overflowing */
+  box.style.height=Math.ceil(el.getBoundingClientRect().height)+'px';
+}
+function fit(boxId){
+  var box=document.getElementById(boxId), el=box&&box.firstElementChild;
+  /* offsetParent is null while the view is still hidden, and measuring then is what
+     used to leave the printable sheet stretched past the bottom of the screen */
+  if(!box || !el || !box.offsetParent) return;
+  fitPass(box, el);
+  requestAnimationFrame(function(){ if(box.offsetParent) fitPass(box, el); });
+}
+function fitAll(){ fit('fit-sheet'); fit('fit-dash'); }
+addEventListener('resize', function(){ clearTimeout(window.__fr); window.__fr=setTimeout(fitAll,120); });
+
+/* ═══════════ paint (no DOM rebuild — keeps focus) ═══════════ */
+function paintRow(path, skipEl){
+  var row=document.querySelector('.vrow[data-row="'+path+'"]'); if(!row) return;
+  var s=getSeries(path), vals=run(s), money=!isCount(path);
+  row.classList.toggle('sampled', !!s.sm);
+  var strip=row.querySelector('.mstrip');
+  if(strip){
+    strip.querySelectorAll('.mc').forEach(function(mc){
+      var m=+mc.getAttribute('data-m'), inp=mc.querySelector('input');
+      var isOv = m>0 && s.ov[m]!==undefined;
+      mc.classList.toggle('ov', isOv);
+      if(inp!==skipEl) inp.value = vals[m]?fmt(vals[m]):'';
+      inp.setAttribute('data-tt', explain(s,vals,m,money));
+    });
+  }
+  var tot=row.querySelector('[data-tot]');
+  if(tot) tot.innerHTML=totText(s, vals, money);
+  var mt=row.querySelector('.mtog');
+  if(mt){
+    var n=overrideCount(s);
+    mt.classList.toggle('has', n>0);
+    mt.lastChild.nodeValue = n ? 'Custom · '+n+' month'+(n===1?'':'s') : 'Custom';
+  }
+}
+/* every keystroke redraws all three, coalesced to one pass per animation frame so
+   the sheet and the dashboard move with the field being typed in */
+var repaintQ=null;
+function repaint(){
+  if(repaintQ) return;
+  repaintQ=requestAnimationFrame(function(){ repaintQ=null; repaintNow(); });
+}
+function repaintNow(){
+  var c=calc();
+  st.svc.forEach(function(s,i){
+    var el=document.querySelector('[data-blkv="s'+i+'"]');
+    if(el){ el.textContent=fmt(sum(c.svc[i].rev)); el.classList.toggle('sampled', c.svc[i].sm); }
+  });
+  st.cat.forEach(function(cat,ci){
+    var el=document.querySelector('[data-blkv="c'+ci+'"]');
+    if(el){ el.textContent=fmt(sum(c.cat[ci].v)); el.classList.toggle('sampled', c.cat[ci].sm); }
+  });
+  renderMini(c); renderSheet(c); renderDash(c); renderChip(c); syncVeil();
+  requestAnimationFrame(fitAll);
+}
+function renderChip(c){
+  c=c||calc();
+  var net=sum(c.net), rev=sum(c.rev), el=document.getElementById('chip');
+  if(!st.built){ el.innerHTML=''; return; }
+  el.innerHTML='<span class="dot'+(net<0?' neg':'')+'"></span>Revenue <b>'+st.cur+' '+fmt(rev)+'</b> &nbsp;·&nbsp; '+
+    (net<0?'Loss':'Net profit')+' <b>'+st.cur+' '+fmt(Math.abs(net))+'</b>';
+}
+
+/* ═══════════ full render ═══════════ */
+function renderPlan(){
+  var c=calc();
+  renderEditor(); renderMini(c); renderSheet(c); renderDash(c); renderChip(c); syncVeil();
+  requestAnimationFrame(fitAll);
+}
+function syncVeil(){
+  var v=document.getElementById('veil');
+  if(v) v.hidden = !anySample();
+}
+
+/* ═══════════ stages + views ═══════════ */
+var main=document.getElementById('main');
+function setStage(name){
+  document.getElementById('stage-start').classList.toggle('on', name==='start');
+  document.getElementById('stage-plan').classList.toggle('on', name==='plan');
+  document.getElementById('btn-setup').hidden = name!=='plan';
+  /* on a first visit there is nothing to start over from */
+  document.getElementById('btn-reset').hidden = !st.built;
+  var who=document.getElementById('who');
+  who.hidden = name!=='plan';
+  if(name==='plan'){
+    if(!st.openBlk) st.openBlk={};
+    syncSettings();
+    renderPlan();
+  }
+  main.scrollTop=0;
+}
+/* the control is a jump nav now — all three sections are always on the page */
+function setView(v){
+  view=v;
+  markNav(v);
+  if(v==='build'){ main.scrollTop=0; return; }
+  var sc=document.querySelector('#v-'+v+' .screen');
+  var bar=document.querySelector('.vbar');
+  /* the bar is sticky, so land the section just below it rather than behind it */
+  if(sc) main.scrollTop = sc.offsetTop - (bar?bar.offsetHeight:0);
+}
+function press(btn,on){ btn.classList.toggle('on',on); btn.setAttribute('aria-pressed', on?'true':'false'); }
+function markNav(v){
+  document.querySelectorAll('#seg button').forEach(function(b){
+    var on = b.getAttribute('data-view')===v;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-current', on?'true':'false');
+  });
+  /* the bar's print button follows whichever section you are looking at */
+  var lbl=document.getElementById('pl');
+  if(lbl) lbl.textContent = v==='dash' ? 'Print the dashboard' : 'Print the sheet';
+}
+/* keep the control in step with wherever the page actually is */
+(function watchScroll(){
+  var ids=['build','sheet','dash'], tick=null;
+  main.addEventListener('scroll',function(){
+    if(tick) return;
+    tick=requestAnimationFrame(function(){
+      tick=null;
+      var best='build', line=main.scrollTop+90;
+      ids.forEach(function(id){
+        var el=document.getElementById('v-'+id);
+        if(el && el.offsetTop<=line) best=id;
+      });
+      if(best!==view){ view=best; markNav(best); }
+    });
+  });
+})();
+
+/* ═══════════ start screen ═══════════ */
+function svcLines(){
+  var h='';
+  st.names.forEach(function(n,i){
+    h+='<div class="svcline"><span class="n">'+(i+1)+'</span>'+
+       '<input data-sn="'+i+'" value="'+esc(n)+'" placeholder="'+(i===0?'e.g. Monthly retainer':'e.g. One-off project')+'">'+
+       (st.names.length>1?'<button class="x" data-rmsn="'+i+'" aria-label="Remove"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>':'')+
+       '</div>';
+  });
+  document.getElementById('q-svc').innerHTML=h;
+  document.getElementById('q-go').disabled = !st.names.some(function(n){ return n.trim(); });
+}
+function initStart(){
+  document.getElementById('q-biz').value=st.biz;
+  if(!st.nameIds || st.nameIds.length!==st.names.length)
+    st.nameIds = st.names.map(function(_,i){ return st.svc[i] ? st.svc[i].id : null; });
+  var go=document.getElementById('q-go');
+  go.firstChild.nodeValue = st.built ? 'Update my plan ' : 'Build my plan ';
+  svcLines();
+}
+
+/* currency, start date and the month-label switch live on the plan, above the inputs */
+function initSettings(){
+  var cur=document.getElementById('q-cur'), sm=document.getElementById('q-sm'), sy=document.getElementById('q-sy');
+  cur.innerHTML=CURS.map(function(c){ return '<option value="'+c+'">'+c+'</option>'; }).join('')+'<option value="__o">Other…</option>';
+  sm.innerHTML=MFULL.map(function(m,i){ return '<option value="'+i+'">'+m+'</option>'; }).join('');
+  cur.addEventListener('change',function(){
+    if(this.value==='__o'){
+      var v=(prompt('Currency code (up to 4 letters)','')||'').toUpperCase().slice(0,4);
+      if(!v){ this.value=st.cur; return; }
+      if(CURS.indexOf(v)<0){ CURS.push(v); var o=document.createElement('option'); o.value=v; o.textContent=v; this.insertBefore(o,this.lastChild); }
+      this.value=v;
+    }
+    st.cur=this.value; save(); renderPlan();
+  });
+  sm.addEventListener('change',function(){ st.sm=+this.value; save(); renderPlan(); syncSettings(); });
+  sy.addEventListener('change',function(){
+    var y=parseInt(this.value,10);
+    if(!y||y<2000||y>2100){ this.value=st.sy; return; }
+    st.sy=y; save(); renderPlan(); syncSettings();
+  });
+}
+function syncSettings(){
+  document.getElementById('q-cur').value=st.cur;
+  document.getElementById('q-sm').value=st.sm;
+  document.getElementById('q-sy').value=st.sy;
+  var ml=document.querySelector('[data-act="mlab"]');
+  if(ml) press(ml, st.mlabels!==false);
+  document.title = st.built && st.biz
+    ? st.biz+' — 12-month budget'
+    : 'Free 12-Month Budget Planner — Hashir Faraz';
+  /* with real months off the start date means nothing, so it steps out of the way */
+  document.getElementById('q-sm').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';
+  document.getElementById('q-sy').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';
+  var who=document.getElementById('who');
+  if(who && st.built) who.innerHTML=esc(st.biz||'Your business')+' <span>'+mlab(0)+' – '+mlab(11)+'</span>';
+}
+document.getElementById('stage-start').addEventListener('input',function(e){
+  var t=e.target;
+  if(t.id==='q-biz'){ st.biz=t.value; return; }
+  if(t.hasAttribute('data-sn')){ st.names[+t.getAttribute('data-sn')]=t.value;
+    document.getElementById('q-go').disabled = !st.names.some(function(n){ return n.trim(); }); }
+});
+document.getElementById('stage-start').addEventListener('click',function(e){
+  var t;
+  if((t=e.target.closest('[data-rmsn]'))){
+    var ri=+t.getAttribute('data-rmsn');
+    st.names.splice(ri,1); st.nameIds.splice(ri,1); svcLines(); return;
+  }
+  if(e.target.closest('#q-add')){
+    st.names.push(''); st.nameIds.push(null); svcLines();
+    var ins=document.querySelectorAll('#q-svc input'); if(ins.length) ins[ins.length-1].focus(); return;
+  }
+  if((t=e.target.closest('[data-pre]'))){
+    st.names=PRESETS[t.getAttribute('data-pre')].slice();
+    st.nameIds=st.names.map(function(){ return null; });
+    svcLines(); return;
+  }
+  if(e.target.closest('#q-go')){
+    /* keep the id alongside the name so coming back through Setup renames and reorders
+       the services someone already has, instead of throwing their numbers away */
+    var picked=[];
+    st.names.forEach(function(n,i){ if(n.trim()) picked.push({n:n.trim(), id:st.nameIds[i]}); });
+    if(!picked.length) return;
+    var biz=document.getElementById('q-biz').value.trim();
+    if(st.built){
+      var by={}; st.svc.forEach(function(s){ by[s.id]=s; });
+      st.biz=biz;
+      st.svc=picked.map(function(p){
+        var old = p.id && by[p.id];
+        if(old){ old.name=p.n; return old; }
+        return {id:uid(), name:p.n, price:S(0), qty:S(0)};
+      });
+      st.names=picked.map(function(p){ return p.n; });
+      st.nameIds=st.svc.map(function(s){ return s.id; });
+      st.openBlk={};
+      save(); setStage('plan'); setView('build');
+      toast('Updated — your numbers are still here');
+    } else {
+      st=build(biz, st.cur, st.sm, st.sy, picked.map(function(p){ return p.n; }));
+      st.nameIds=st.svc.map(function(s){ return s.id; });
+      st.openBlk={};
+      save(); setStage('plan'); setView('build');
+      toast('Your plan is ready — open a section to change the numbers');
+    }
+  }
+});
+
+/* ═══════════ editing on the plan ═══════════ */
+main.addEventListener('focusin',function(e){
+  var i=e.target.closest('.nfb input,.mc input'); if(!i) return;
+  i.value=i.value.replace(/,/g,'');
+  setTimeout(function(){ try{ i.select(); }catch(err){} },0);
+});
+main.addEventListener('focusout',function(e){
+  var i=e.target.closest('.nfb input,.mc input'); if(!i) return;
+  var nf=i.closest('.nf');
+  if(nf && i.getAttribute('data-num')==='b'){
+    var s=getSeries(i.getAttribute('data-p'));
+    if(!s.sm) i.value = s.b ? fmt(s.b) : '';
+  } else if(i.closest('.mc')){
+    var mc=i.closest('.mc'), s2=getSeries(mc.getAttribute('data-k')), v2=run(s2)[+mc.getAttribute('data-m')];
+    i.value = v2 ? fmt(v2) : '';
+  }
+});
+main.addEventListener('input',function(e){
+  var t=e.target, s, v;
+
+  /* starting amount / monthly change */
+  if(t.matches('.nfb input')){
+    var path=t.getAttribute('data-p'), which=t.getAttribute('data-num');
+    s=getSeries(path);
+    v=num(t.value);
+    if(which==='b'){
+      s.sm=false;
+      t.closest('.nf').classList.remove('sampled');
+      t.placeholder='0';
+      s.b = v===null ? 0 : v;
+      delete s.ov[0];
+    } else {
+      s.r = v===null ? 0 : v;
+    }
+    paintRow(path); repaint(); save(); return;
+  }
+
+  /* a single month typed by hand */
+  if(t.matches('.mc input')){
+    var mc=t.closest('.mc'), p2=mc.getAttribute('data-k'), m=+mc.getAttribute('data-m');
+    s=getSeries(p2);
+    v=num(t.value);
+    if(m===0){
+      s.sm=false;
+      s.b = v===null ? 0 : v; delete s.ov[0];
+      var sf=document.querySelector('.vrow[data-row="'+p2+'"] input[data-num="b"]');
+      if(sf){ sf.value = s.b?fmt(s.b):''; var nf2=sf.closest('.nf'); nf2.classList.remove('sampled'); sf.placeholder='0'; }
+    } else {
+      if(v===null) delete s.ov[m]; else s.ov[m]=v;
+    }
+    paintRow(p2, t); repaint(); save(); return;
+  }
+
+  /* renaming a service, from inside its own block */
+  if(t.matches('[data-svcname]')){
+    var si=+t.getAttribute('data-svcname');
+    st.svc[si].name=t.value;
+    var bt=document.querySelector('.blk[data-blk="s'+si+'"] .bt');
+    if(bt) bt.textContent=t.value || 'Untitled';
+    renderMini(); save(); return;
+  }
+
+  /* renaming a cost line or a position */
+  if(t.matches('[data-rename]')){
+    var a=t.getAttribute('data-rename').split('|');
+    if(a[0]==='c') st.cat[+a[1]].items[+a[2]].name=t.value;
+    else st.cat[+a[1]].roles[+a[2]].name=t.value;
+    save(); return;
+  }
+});
+main.addEventListener('keydown',function(e){
+  var nf=e.target.closest('.nfb input');
+  if(nf && e.key==='Enter'){
+    e.preventDefault();
+    var all=[].slice.call(document.querySelectorAll('#editor .nfb input'));
+    var nx=all[all.indexOf(nf)+1];
+    if(nx){ nx.focus(); try{ nx.select(); }catch(err){} } else nf.blur();
+    return;
+  }
+  var i=e.target.closest('.mc input'); if(!i) return;
+  if(e.key==='Escape'){ i.blur(); return; }
+  var mc=i.closest('.mc'), strip=mc.parentNode, m=+mc.getAttribute('data-m'), go=null;
+  if(e.key==='Enter' || (e.key==='Tab' && !e.shiftKey)) go=m+1;
+  else if(e.key==='Tab' && e.shiftKey) go=m-1;
+  if(go!==null && go>=0 && go<12){
+    e.preventDefault();
+    var n=strip.querySelector('.mc[data-m="'+go+'"] input'); if(n) n.focus();
+  }
+});
+
+/* ═══════════ clicks on the plan ═══════════ */
+document.addEventListener('click',function(e){
+  var t;
+
+  if((t=e.target.closest('[data-undo]'))){
+    var mc=t.closest('.mc'), p=mc.getAttribute('data-k'), m=+mc.getAttribute('data-m');
+    delete getSeries(p).ov[m];
+    hideTT();
+    rerenderRow(p); repaint(); save(); return;
+  }
+  if((t=e.target.closest('.mb'))){
+    var pp=t.getAttribute('data-p'), s=getSeries(pp), mode=t.getAttribute('data-mode');
+    if(s.m===mode) return;
+    s.m=mode;
+    /* a sensible first step: 5% either way, or +1 a month on a headcount, +1,000 on money */
+    if(mode!=='flat' && !s.r) s.r = mode==='pct' ? 5 : (isCount(pp) ? 1 : 1000);
+    rerenderRow(pp); repaint(); save();
+    var f=document.querySelector('.vrow[data-row="'+pp+'"] input[data-num="r"]');
+    if(f){ f.focus(); try{ f.select(); }catch(err){} }
+    return;
+  }
+  if((t=e.target.closest('[data-months]'))){
+    var mp=t.getAttribute('data-months');
+    openRows[mp]=!openRows[mp];
+    t.classList.toggle('open', openRows[mp]);
+    t.setAttribute('aria-expanded', openRows[mp]?'true':'false');
+    var strip=document.querySelector('.mstrip[data-strip="'+mp+'"]');
+    if(strip) strip.classList.toggle('on', openRows[mp]);
+    return;
+  }
+  if((t=e.target.closest('[data-togg]'))){
+    var k=t.getAttribute('data-togg');
+    st.openBlk[k]=!st.openBlk[k];
+    save(); renderEditor(); return;
+  }
+  if((t=e.target.closest('[data-del]'))){
+    var a=t.getAttribute('data-del').split('|');
+    if(a[0]==='c') st.cat[+a[1]].items.splice(+a[2],1);
+    else st.cat[+a[1]].roles.splice(+a[2],1);
+    hideTT(); save(); renderEditor(); repaint(); return;
+  }
+  if(e.target.closest('[data-addsvc]')){
+    st.svc.push({id:uid(), name:'New service', price:S(0), qty:S(0)});
+    var si=st.svc.length-1;
+    st.openBlk['s'+si]=true;
+    save(); renderEditor(); repaint();
+    var nf=document.querySelector('[data-svcname="'+si+'"]');
+    if(nf){ nf.focus(); nf.select(); nf.scrollIntoView({block:'center',behavior:'smooth'}); }
+    return;
+  }
+  if((t=e.target.closest('[data-addcost]'))){ openAdd(t, +t.getAttribute('data-addcost'), 'cost'); return; }
+  if((t=e.target.closest('[data-addrole]'))){ openAdd(t, +t.getAttribute('data-addrole'), 'role'); return; }
+  if((t=e.target.closest('#seg button'))){ setView(t.getAttribute('data-view')); return; }
+
+  if((t=e.target.closest('[data-act]'))){
+    var act=t.getAttribute('data-act');
+    if(act==='reset'){
+      if(confirm('Clear everything and start from scratch?')){
+        try{ localStorage.removeItem(KEY); }catch(err){}
+        st=fresh(); openRows={}; initStart(); setStage('start'); toast('Cleared');
+      }
+    }
+    else if(act==='mlab'){ st.mlabels = st.mlabels===false; press(t, st.mlabels!==false);
+      save(); syncSettings(); renderPlan(); }
+    else if(act==='detail'){ detail=!detail; press(t,detail); repaint(); }
+    else if(act==='thou'){ thou=!thou; press(t,thou); repaint(); }
+    else if(act==='csv'){ exportCSV(); }
+    else if(act==='print-here'){ if(view==='dash') printOne('v-dash','fit-dash'); else printOne('v-sheet','fit-sheet'); }
+    else if(act==='print-sheet'){ printOne('v-sheet','fit-sheet'); }
+    else if(act==='print-dash'){ printOne('v-dash','fit-dash'); }
+    return;
+  }
+  if(e.target.closest('#btn-setup')){
+    st.names = st.svc.map(function(s){ return s.name; });
+    st.nameIds = st.svc.map(function(s){ return s.id; });
+    initStart(); setStage('start');
+    toast('Change what you need, then build again');
+    return;
+  }
+  if(!e.target.closest('#menu') && !e.target.closest('[data-addcost]') && !e.target.closest('[data-addrole]')) closeMenu();
+});
+
+/* re-render exactly one value row (mode change, undo) without rebuilding the editor */
+function rerenderRow(path){
+  var row=document.querySelector('.vrow[data-row="'+path+'"]'); if(!row) return;
+  var a=path.split('|'), s=getSeries(path), label, cfg;
+  if(a[0]==='s'){
+    if(a[2]==='price'){ label='Price per customer'; cfg={hint:'what one customer pays', tip:'What one customer pays you in a month. For a retainer, the monthly fee.'}; }
+    else { label='Customers'; cfg={unit:'count', hint:'how many pay you', startLabel:'How many', tip:'How many customers pay you in that month.'}; }
+  } else if(a[0]==='c'){
+    label=st.cat[+a[1]].items[+a[2]].name; cfg={rename:true, del:'c|'+a[1]+'|'+a[2]};
+  } else {
+    var ro=st.cat[+a[1]].roles[+a[2]];
+    if(a[3]==='pay'){ label=ro.name; cfg={rename:true, hint:'monthly salary each', startLabel:'Salary', pair:true, del:'t|'+a[1]+'|'+a[2], tip:'What one person in this position is paid per month, all in.'}; }
+    else { label='How many people'; cfg={unit:'count', sub:true, hint:'in this position', startLabel:'How many', tip:'Type over a later month to add a hire.'}; }
+  }
+  row.outerHTML = vrowHTML(path, label, s, cfg);
+}
+
+/* ═══════════ add menu ═══════════ */
+var menu=document.getElementById('menu');
+function openAdd(btn, ci, kind){
+  var cat=st.cat[ci], used={}, list, title;
+  if(kind==='role'){ list=ROLES; title='Common positions'; cat.roles.forEach(function(r){ used[r.name.toLowerCase()]=1; }); }
+  else { list=SUGGEST[cat.id]||SUGGEST.other; title='Common in '+cat.name; cat.items.forEach(function(i){ used[i.name.toLowerCase()]=1; }); }
+  var h='<div class="mh">'+esc(title)+'</div>', any=false;
+  list.forEach(function(n){ if(used[n.toLowerCase()]) return; any=true; h+='<button data-pick="'+esc(n)+'">'+esc(n)+'</button>'; });
+  if(!any) h+='<button disabled style="color:var(--ink-4);cursor:default">All added</button>';
+  h+='<div class="sep"></div><button data-pick="__custom">Something else…</button>';
+  menu.innerHTML=h; menu.classList.add('on');
+  menu.setAttribute('data-ci',ci); menu.setAttribute('data-kind',kind);
+  var r=btn.getBoundingClientRect();
+  var y=r.bottom+6; if(y+menu.offsetHeight>innerHeight-10) y=Math.max(10, r.top-menu.offsetHeight-6);
+  menu.style.left=Math.max(10, Math.min(r.left, innerWidth-menu.offsetWidth-10))+'px';
+  menu.style.top=y+'px';
+}
+function closeMenu(){ menu.classList.remove('on'); }
+menu.addEventListener('click',function(e){
+  var b=e.target.closest('[data-pick]'); if(!b) return;
+  var ci=+menu.getAttribute('data-ci'), kind=menu.getAttribute('data-kind'), n=b.getAttribute('data-pick');
+  var custom = n==='__custom';
+  if(custom) n = kind==='role' ? 'New position' : 'New cost';
+  if(kind==='role') st.cat[ci].roles.push(role(n,0,1,false));
+  else st.cat[ci].items.push(it(n,0));
+  closeMenu(); save(); renderEditor(); repaint();
+  var rows=document.querySelectorAll('.blk[data-blk="c'+ci+'"] .vrow');
+  if(!rows.length) return;
+  var target = kind==='role' ? rows[rows.length-2] : rows[rows.length-1];
+  if(!target) target = rows[rows.length-1];
+  /* a line the user named themselves opens with the name selected, a suggested one
+     with the cursor already in the amount */
+  var f = custom ? target.querySelector('[data-rename]') : target.querySelector('input[data-num="b"]');
+  if(f){ f.focus(); try{ f.select(); }catch(err){} f.scrollIntoView({block:'center',behavior:'smooth'}); }
+});
+
+/* ═══════════ export / print ═══════════ */
+function exportCSV(){
+  var c=calc(), rows=[], head=[''].concat(M.map(function(_,m){ return mlab(m); })).concat(['Year']);
+  function line(name, vals, tot){ rows.push([name].concat(vals.map(round)).concat([round(tot===undefined?sum(vals):tot)])); }
+  var neg=function(v){ return -v; };
+  rows.push([ (st.biz||'Your business')+' — budget '+mfull(0)+' to '+mfull(11)+' ('+st.cur+')' ]);
+  rows.push([]); rows.push(head);
+  rows.push(['REVENUE']);
+  c.svc.forEach(function(d){ line(d.ref.name, d.rev); });
+  line('Total revenue', c.rev);
+  if(sum(c.cogs)){ line('Direct costs', c.cogs.map(neg)); line('Gross profit', c.gp); }
+  rows.push(['RUNNING COSTS']);
+  c.cat.forEach(function(d){
+    if(d.ref.cogs || !sum(d.v)) return;
+    line(d.ref.name, d.v.map(neg));
+    d.items.forEach(function(i){ if(sum(i.v)) line('   '+i.ref.name, i.v.map(neg)); });
+  });
+  line('Total running costs', c.opex.map(neg));
+  line('NET PROFIT', c.net);
+  line('Profit to date', c.cum, c.cum[11]);
+  var csv=rows.map(function(r){ return r.map(function(cell){
+    var s=String(cell===undefined?'':cell);
+    return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+  }).join(','); }).join('\n');
+  var blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=((st.biz||'budget').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'budget')+'-12-month-budget.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+  toast('CSV downloaded');
+}
+function printOne(viewId, boxId){
+  /* only the section being printed is shown; the fit scaling is lifted for the printer
+     and put back afterwards, so the page on screen does not end up stretched */
+  var el=document.getElementById(viewId), box=document.getElementById(boxId);
+  var inner=box.firstElementChild, keepT=inner.style.transform, keepH=box.style.height;
+  var keepO=inner.style.transformOrigin, keepM=inner.style.marginLeft;
+  el.classList.add('printing');
+  inner.style.transform='none'; box.style.height='auto';
+  if(viewId==='v-dash'){
+    /* A4 landscape at 96dpi less the 9mm @page margin, in CSS pixels */
+    var PW=1054, PH=725;
+    var w=inner.offsetWidth, h=inner.offsetHeight;
+    var k=Math.min(PW/w, PH/h, 1);
+    if(k<0.999){
+      inner.style.transformOrigin='top left';
+      inner.style.transform='scale('+k+')';
+      box.style.height=Math.ceil(h*k)+'px';
+      /* scaling from the left corner leaves the page lopsided, so centre what is left */
+      inner.style.marginLeft=Math.max(0,(PW-w*k)/2)+'px';
+    }
+  }
+  var restored=false;
+  var done=function(){
+    if(restored) return; restored=true;
+    el.classList.remove('printing');
+    inner.style.transform=keepT; box.style.height=keepH;
+    inner.style.transformOrigin=keepO; inner.style.marginLeft=keepM;
+    fitAll();
+  };
+  if(window.matchMedia){
+    var mq=window.matchMedia('print');
+    var fn=function(m){ if(!m.matches){ done(); if(mq.removeEventListener) mq.removeEventListener('change',fn); } };
+    if(mq.addEventListener) mq.addEventListener('change',fn);
+  }
+  setTimeout(function(){ window.print(); setTimeout(done,700); },60);
+}
+
+/* ═══════════ boot ═══════════ */
+initSettings();
+st = load();
+if(st){
+  if(!st.openBlk) st.openBlk={};
+  if(!st.names) st.names = st.svc.map(function(s){ return s.name; });
+  st.nameIds = st.svc.map(function(s){ return s.id; });
+  initStart();
+  setStage('plan'); setView('build');
+} else {
+  st = fresh();
+  initStart();
+  setStage('start');
+}
+
+/* analytics (same setup as the rest of the site) */
+(function(){
+  var GA_ID='G-LQL6JN983Z', META_PIXEL_ID='868248209477462';
+  var live=function(id){ return !/X{4,}/.test(id); };
+  if(live(GA_ID)){
+    var s=document.createElement('script'); s.async=true;
+    s.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=function(){ dataLayer.push(arguments); };
+    gtag('js',new Date()); gtag('config',GA_ID);
+    gtag('event','tool_open',{tool:'budget_planner'});
+  }
+  if(live(META_PIXEL_ID)){
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init',META_PIXEL_ID); fbq('track','PageView');
+  }
+})();
+
+})();
+</script>
+</body>
+</html>
