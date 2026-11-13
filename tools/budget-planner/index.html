@@ -1211,6 +1211,18 @@ var LOCAL=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 var PID=null, cloudT, cloudDirty=false, creating=null;
 try{ PID=localStorage.getItem(PKEY)||null; }catch(e){}
 
+/* what goes to the database: the plan, plus its year totals (the link-preview picture is drawn
+   from these). Totals are left out while the first price is still a sample. */
+function cloudData(){
+  var d=packState();
+  try{
+    if(st.svc.length && !st.svc[0].price.sm){
+      var c=calc(), r=function(a){ return a.map(function(v){ return Math.round(v); }); };
+      d.sum={ c:st.cur, r:r(c.rev), x:r(c.opex), n:r(c.net) };
+    }
+  }catch(e){}
+  return d;
+}
 function rpc(fn, body, keep){
   return fetch(SB_URL+'/rest/v1/rpc/'+fn, { method:'POST', keepalive:!!keep,
     headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json' },
@@ -1250,7 +1262,7 @@ function ensurePlan(){
   if(PID) return Promise.resolve(PID);
   if(!st || !st.built || !(st.biz||'').trim()) return Promise.resolve(null);
   if(creating) return creating;
-  creating=rpc('create_plan',{ p_company:st.biz.trim(), p_lang:LANG, p_data:packState() })
+  creating=rpc('create_plan',{ p_company:st.biz.trim(), p_lang:LANG, p_data:cloudData() })
     .then(function(id){ creating=null; setPID(id); syncURL(); if(cloudDirty) cloudSave(); return id; })
     .catch(function(){ creating=null; return null; });
   return creating;
@@ -1261,7 +1273,7 @@ function cloudSave(keep){
   if(!PID){ ensurePlan().then(function(id){ setSaved(id?'saved':'err'); }); cloudDirty=false; return; }
   cloudDirty=false;
   setSaved('saving');
-  rpc('save_plan',{ p_id:PID, p_company:st.biz||'', p_data:packState() }, keep)
+  rpc('save_plan',{ p_id:PID, p_company:st.biz||'', p_data:cloudData() }, keep)
     .then(function(ok){ if(ok) setSaved('saved'); else { setSaved('err'); } })
     .catch(function(){ cloudDirty=true; setSaved('err'); });
 }

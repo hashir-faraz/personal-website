@@ -137,11 +137,17 @@ language sql security definer set search_path = public as $$
   select 'ok'::text;
 $$;
 
--- Used only by the link-preview function: company name and language, no open count.
+-- Link-preview function: company, language, the saved year totals and a version stamp that
+-- changes on every edit (so a chat app fetches a fresh picture). No open count.
 create or replace function plan_preview(p_id text)
 returns jsonb
 language sql security definer set search_path = public as $$
-  select jsonb_build_object('company', company, 'lang', lang) from plans where id = p_id;
+  select jsonb_build_object(
+    'company', company,
+    'lang', lang,
+    'sum', data->'sum',
+    'v', floor(extract(epoch from updated_at))::bigint)
+  from plans where id = p_id;
 $$;
 revoke all on function plan_preview(text) from public;
 grant execute on function plan_preview(text) to anon;
