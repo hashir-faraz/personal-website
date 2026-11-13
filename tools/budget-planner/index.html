@@ -70,6 +70,14 @@ input,select{font-family:inherit;font-size:inherit;color:inherit}
   color:var(--ink-2);background:var(--card);display:inline-flex;align-items:center;gap:7px;transition:.14s;white-space:nowrap}
 .ghost:hover{border-color:var(--ink-4);color:var(--ink)}
 .ghost svg{width:14px;height:14px}
+/* the quiet "Changes saved" note beside the header buttons */
+.svs{font-size:12px;font-weight:600;color:var(--ink-hint);white-space:nowrap}
+.svs:empty{display:none}
+.svs.err{color:#B4232F}
+/* while a plan link is being fetched, show a holding line instead of flashing the questionnaire */
+.opening{display:none;padding:90px 20px;text-align:center;color:var(--ink-hint);font-weight:600;font-size:14px}
+body.booting .opening{display:block}
+body.booting .stage{display:none!important}
 .solid{height:34px;padding:0 15px;border-radius:10px;background:var(--accent);color:#fff;font-size:12.5px;font-weight:700;
   display:inline-flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(53,51,205,.25);transition:.14s;white-space:nowrap}
 .solid:hover{background:var(--accent-deep);box-shadow:0 6px 18px rgba(53,51,205,.32)}
@@ -643,6 +651,7 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
   </a>
   <h1><span data-th="Financial Plan">Financial Plan</span> <em>·</em> <span data-th="12 months">12 months</span></h1>
   <span class="sp"></span>
+  <span class="svs" id="saved" role="status" aria-live="polite"></span>
   <a class="lng" id="btn-lang" href="#" hreflang="ar" lang="ar">العربية</a>
   <button class="ghost" id="btn-setup" type="button" hidden data-tt="Change the business name or your list of products and services">Setup</button>
   <button class="ghost" id="btn-reset" type="button" hidden data-act="reset" data-tt="Clear this plan and start from the beginning">Start over</button>
@@ -650,18 +659,20 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
 
 <main id="main">
 
+  <div class="opening" id="opening">Opening your plan…</div>
+
   <!-- ═══ stage 1 — the two questions ═══ -->
   <section class="stage on" id="stage-start">
     <div class="intro">
       <div class="fq">
         <div class="q">What is the business called?</div>
-        <div class="qs">This is the name that goes on the plan.</div>
-        <input class="bigin" id="q-biz" placeholder="e.g. Northline Studio" autocomplete="organization">
+        <div class="qs">Required. This is the name that goes on the plan.</div>
+        <input class="bigin" id="q-biz" placeholder="e.g. Northline Studio" autocomplete="organization" aria-required="true">
       </div>
 
       <div class="fq">
         <div class="q">What do you sell?</div>
-        <div class="qs">One line per thing you charge for. Tap a common one or type your own.</div>
+        <div class="qs">Add at least one. One line per thing you charge for. Tap a common one or type your own.</div>
         <div class="svclist" id="q-svc"></div>
         <button class="addbtn wide" id="q-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add product / service</button>
         <div class="egs" id="q-egs"><span class="lb">Common for agencies</span></div>
@@ -686,7 +697,7 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
       <span class="sp"></span>
       <button class="toggle" type="button" aria-pressed="false" data-act="detail"><span class="sw"></span>Cost detail</button>
       <button class="toggle" type="button" aria-pressed="false" data-act="thou"><span class="sw"></span>Thousands</button>
-      <button class="ghost" data-act="share" data-tt="Copy a link that opens this exact plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>Share</button>
+      <button class="ghost" data-act="share" data-tt="Copy a link your team can open and edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>Share</button>
     </div>
 
     <!-- the three live below one another; the control above jumps between them -->
@@ -778,10 +789,10 @@ var DICT = {
   'Revenue':'الإيراد','Net profit':'صافي الربح','Loss':'خسارة',
   /* the two questions */
   'What is the business called?':'شنو اسم الشغل؟',
-  'This is the name that goes on the plan.':'هذا الاسم اللي بيطلع على الخطة.',
+  'Required. This is the name that goes on the plan.':'مطلوب. هذا الاسم اللي بيطلع على الخطة.',
   'e.g. Northline Studio':'مثال: استوديو نورلاين',
   'What do you sell?':'وش تبيع؟',
-  'One line per thing you charge for. Tap a common one or type your own.':'سطر لكل شي تاخذ عليه فلوس. اضغط على وحد من الجاهزين أو اكتب حقك.',
+  'Add at least one. One line per thing you charge for. Tap a common one or type your own.':'ضف وحدة على الأقل. سطر لكل شي تاخذ عليه فلوس. اضغط على وحد من الجاهزين أو اكتب حقك.',
   'Add product / service':'ضف منتج أو خدمة',
   'Common for agencies':'شائعة عند وكالات التسويق',
   'Build my plan':'ابنِ خطتي','Update my plan':'حدّث خطتي',
@@ -865,12 +876,16 @@ var DICT = {
     'Something else…':'شي ثاني…','Add a cost to':'ضف تكلفة إلى',
     'Change the business name or your list of products and services':'غيّر اسم الشغل أو قائمة منتجاتك وخدماتك',
     'Clear this plan and start from the beginning':'امسح هالخطة وابدأ من الأول',
-    'Copy a link that opens this exact plan':'انسخ رابط يفتح هالخطة بالضبط',
+    'Copy a link your team can open and edit':'انسخ رابط يقدر فريقك يفتحه ويعدّل عليه',
+    'Changes saved':'تم حفظ التغييرات','Saving…':'جاري الحفظ…',
+    'Not saved — check your connection':'ما انحفظت — تأكد من الاتصال',
+    'Opening your plan…':'جاري فتح خطتك…',
+    'That plan link was not found':'ما لقينا رابط الخطة هذا',
     'Turn this off to label the columns M1 to M12 instead of real months':'طفّيها عشان تصير الأعمدة شر1 إلى شر12 بدال الأشهر الحقيقية',
     'is your starting figure. Type over any other month and':'هو رقمك الأول. اكتب فوق أي شهر ثاني وـ',
     'the months after it pick the trend back up':'الأشهر اللي بعده تكمّل على نفس النمط',
     'from whatever you put in.':'من الرقم اللي حطيته.',
-    'Link copied — it opens this exact plan':'تم نسخ الرابط — يفتح هالخطة بالضبط',
+    'Link copied — anyone with it can open and edit this plan':'تم نسخ الرابط — أي واحد معه يقدر يفتح الخطة ويعدّل عليها',
     'Copy this link':'انسخ هالرابط',
     'Could not build the link':'ما قدرنا نسوي الرابط',
     'CSV downloaded':'تم تنزيل ملف CSV',
@@ -1168,8 +1183,84 @@ function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('on'); clear
 
 /* ═══════════ persistence ═══════════ */
 var saveT;
-function save(){ clearTimeout(saveT); saveT=setTimeout(function(){
-  try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} },260); }
+/* save(true) keeps the local copy only — used when a plan has only just been opened and nothing
+   has been changed yet */
+function save(localOnly){ clearTimeout(saveT); saveT=setTimeout(function(){
+  try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} },260);
+  if(localOnly===true) return;
+  cloudDirty=true; clearTimeout(cloudT);
+  cloudT=setTimeout(function(){ cloudSave(); },1200);
+  if(PID) setSaved('saving'); }
+
+/* ═══════════ cloud: every plan gets its own link ═══════════ */
+/* The key below is Supabase's public (anon) key. It is meant to sit in the page: the database
+   only lets it create a plan, open one by its exact link, save changes and count a share —
+   it cannot list or search plans. */
+var SB_URL='https://zybfmjymfnlgnxkzxqka.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YmZtanltZm5sZ254a3p4cWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1NjY1NzEsImV4cCI6MjExMDE0MjU3MX0.pSdR7SXq6rcE84S7n8LGWXdqB52ITFcf1nDRb8baTh8';
+var PKEY='hf_budget_pid';
+var LOCAL=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+var PID=null, cloudT, cloudDirty=false, creating=null;
+try{ PID=localStorage.getItem(PKEY)||null; }catch(e){}
+
+function rpc(fn, body, keep){
+  return fetch(SB_URL+'/rest/v1/rpc/'+fn, { method:'POST', keepalive:!!keep,
+    headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json' },
+    body:JSON.stringify(body) })
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+}
+function setSaved(k){
+  var el=document.getElementById('saved'); if(!el) return;
+  el.className='svs'+(k==='err'?' err':'');
+  el.textContent = k==='saving' ? tl('Saving…') : k==='saved' ? tl('Changes saved')
+                 : k==='err' ? tl('Not saved — check your connection') : '';
+}
+/* the clean link: hashirfaraz.com/plan/acme-trading-k7x2m9qa. On a local test server there is
+   no such route, so it falls back to a query string there */
+function planPath(id){
+  return LOCAL ? location.pathname+'?plan='+id+(AR?'&lang=ar':'') : '/plan/'+id+(AR?'?lang=ar':'');
+}
+function planURL(id){ return location.origin+planPath(id); }
+function urlPID(){
+  var m=location.pathname.match(/\/plan\/([A-Za-z0-9-]{3,80})\/?$/) || location.search.match(/[?&]plan=([A-Za-z0-9-]{3,80})/);
+  return m ? m[1] : null;
+}
+function fixLangLink(){
+  var l=document.getElementById('btn-lang'); if(!l) return;
+  l.setAttribute('href', location.pathname+'?'+(LOCAL&&PID?'plan='+PID+'&':'')+'lang='+(AR?'en':'ar'));
+}
+function syncURL(){
+  if(!PID) return;
+  try{ history.replaceState(null,'',planPath(PID)); }catch(e){}
+  fixLangLink();
+}
+function setPID(id){
+  PID=id;
+  try{ if(id) localStorage.setItem(PKEY,id); else localStorage.removeItem(PKEY); }catch(e){}
+}
+function ensurePlan(){
+  if(PID) return Promise.resolve(PID);
+  if(!st || !st.built || !(st.biz||'').trim()) return Promise.resolve(null);
+  if(creating) return creating;
+  creating=rpc('create_plan',{ p_company:st.biz.trim(), p_lang:LANG, p_data:packState() })
+    .then(function(id){ creating=null; setPID(id); syncURL(); if(cloudDirty) cloudSave(); return id; })
+    .catch(function(){ creating=null; return null; });
+  return creating;
+}
+function cloudSave(keep){
+  clearTimeout(cloudT);
+  if(!st || !st.built) return;
+  if(!PID){ ensurePlan().then(function(id){ setSaved(id?'saved':'err'); }); cloudDirty=false; return; }
+  cloudDirty=false;
+  setSaved('saving');
+  rpc('save_plan',{ p_id:PID, p_company:st.biz||'', p_data:packState() }, keep)
+    .then(function(ok){ if(ok) setSaved('saved'); else { setSaved('err'); } })
+    .catch(function(){ cloudDirty=true; setSaved('err'); });
+}
+/* leaving the page with an edit still waiting: send it now */
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='hidden' && cloudDirty) cloudSave(true);
+});
 function load(){
   try{
     var o=JSON.parse(localStorage.getItem(KEY)||'null');
@@ -1893,7 +1984,12 @@ function svcLines(){
   });
   document.getElementById('q-svc').innerHTML=h;
   egChips();
-  document.getElementById('q-go').disabled = !st.names.some(function(n){ return n.trim(); });
+  goState();
+}
+/* the business name and at least one thing it sells are both required */
+function goState(){
+  document.getElementById('q-go').disabled =
+    !document.getElementById('q-biz').value.trim() || !st.names.some(function(n){ return n.trim(); });
 }
 function initStart(){
   document.getElementById('q-biz').value=st.biz;
@@ -1941,10 +2037,9 @@ function syncSettings(){
 }
 document.getElementById('stage-start').addEventListener('input',function(e){
   var t=e.target;
-  if(t.id==='q-biz'){ st.biz=t.value; return; }
+  if(t.id==='q-biz'){ st.biz=t.value; goState(); return; }
   if(t.hasAttribute('data-sn')){ st.names[+t.getAttribute('data-sn')]=t.value;
-    egChips();
-    document.getElementById('q-go').disabled = !st.names.some(function(n){ return n.trim(); }); }
+    egChips(); goState(); }
 });
 document.getElementById('stage-start').addEventListener('click',function(e){
   var t;
@@ -1973,8 +2068,8 @@ document.getElementById('stage-start').addEventListener('click',function(e){
        the services someone already has, instead of throwing their numbers away */
     var picked=[];
     st.names.forEach(function(n,i){ if(n.trim()) picked.push({n:n.trim(), id:st.nameIds[i]}); });
-    if(!picked.length) return;
     var biz=document.getElementById('q-biz').value.trim();
+    if(!picked.length || !biz) return;
     if(st.built){
       var by={}; st.svc.forEach(function(s){ by[s.id]=s; });
       st.biz=biz;
@@ -1989,10 +2084,13 @@ document.getElementById('stage-start').addEventListener('click',function(e){
       save(); setStage('plan'); setView('build');
       toast(tl('Updated — your numbers are still here'));
     } else {
+      setPID(null);   /* a brand-new plan never inherits an old link */
       st=build(biz, st.cur, st.sm, st.sy, picked.map(function(p){ return p.n; }));
       st.nameIds=st.svc.map(function(s){ return s.id; });
       st.openBlk={s0:true};
       save(); setStage('plan'); setView('build');
+      /* the plan gets its own link the moment it exists */
+      cloudSave();
     }
   }
 });
@@ -2178,6 +2276,10 @@ document.addEventListener('click',function(e){
     if(act==='reset'){
       if(confirm(tl('Clear everything and start from scratch?'))){
         try{ localStorage.removeItem(KEY); }catch(err){}
+        /* the old plan stays on its link for anyone who has it; this starts a new one */
+        clearTimeout(cloudT); cloudDirty=false; setPID(null); setSaved('');
+        try{ history.replaceState(null,'',location.pathname+(AR?'?lang=ar':'')); }catch(err){}
+        fixLangLink();
         st=fresh(); openRows={}; initStart(); setStage('start'); toast(tl('Cleared'));
       }
     }
@@ -2310,8 +2412,16 @@ function shareURL(){
 }
 function doShare(){
   var u;
-  try{ u=shareURL(); }catch(e){ toast(tl('Could not build the link')); return; }
-  var ok=function(){ toast(tl('Link copied — it opens this exact plan')); };
+  if(PID){
+    u=planURL(PID);
+    /* push any edit still waiting, and count the click with the language of the button used */
+    if(cloudDirty) cloudSave();
+    rpc('track_share',{ p_id:PID, p_lang:LANG }).catch(function(){});
+  } else {
+    /* the plan never reached the server (offline, say): fall back to the self-contained link */
+    try{ u=shareURL(); }catch(e){ toast(tl('Could not build the link')); return; }
+  }
+  var ok=function(){ toast(tl(PID ? 'Link copied — anyone with it can open and edit this plan' : 'Link copied — it opens this exact plan')); };
   if(navigator.clipboard && navigator.clipboard.writeText)
     navigator.clipboard.writeText(u).then(ok, function(){ prompt(tl('Copy this link'), u); });
   else prompt(tl('Copy this link'), u);
@@ -2432,14 +2542,15 @@ function localiseChrome(){
   q('label[for="q-sy"]').textContent = tl('Year');
   var qs=document.querySelectorAll('#stage-start .q'), qss=document.querySelectorAll('#stage-start .qs');
   qs[0].textContent = tl('What is the business called?');
-  qss[0].textContent = tl('This is the name that goes on the plan.');
+  qss[0].textContent = tl('Required. This is the name that goes on the plan.');
   qs[1].textContent = tl('What do you sell?');
-  qss[1].textContent = tl('One line per thing you charge for. Tap a common one or type your own.');
+  qss[1].textContent = tl('Add at least one. One line per thing you charge for. Tap a common one or type your own.');
+  q('#opening').textContent = tl('Opening your plan…');
   q('#q-biz').placeholder = tl('e.g. Northline Studio');
   tailText(q('#q-add'), tl('Add product / service'));
   q('#btn-setup').setAttribute('data-tt', tl('Change the business name or your list of products and services'));
   q('#btn-reset').setAttribute('data-tt', tl('Clear this plan and start from the beginning'));
-  q('[data-act="share"]').setAttribute('data-tt', tl('Copy a link that opens this exact plan'));
+  q('[data-act="share"]').setAttribute('data-tt', tl('Copy a link your team can open and edit'));
   q('[data-act="mlab"]').setAttribute('data-tt', tl('Turn this off to label the columns M1 to M12 instead of real months'));
 }
 
@@ -2452,16 +2563,47 @@ var shared=null;
 if(location.hash.indexOf('#p=')===0){
   try{ shared=unpackState(JSON.parse(b64d(location.hash.slice(3)))); }catch(e){ shared=null; }
 }
+var linkId=urlPID();
 st = shared || load();
-if(shared){
+fixLangLink();
+if(linkId && !shared){
+  /* a plan link: fetch that plan and carry on from where it was left */
+  document.body.classList.add('booting');
+  st=fresh();
+  rpc('get_plan',{ p_id:linkId }).then(function(r){
+    var s = r && r.data ? unpackState(r.data) : null;
+    if(!s) throw new Error('missing');
+    /* an Arabic plan opened with no language chosen yet opens in Arabic */
+    var chose=true; try{ chose = localStorage.getItem(LKEY)!==null; }catch(e){}
+    if(r.lang==='ar' && !AR && !chose && !/[?&]lang=/.test(location.search)){
+      location.replace(location.pathname+'?'+(LOCAL?'plan='+linkId+'&':'')+'lang=ar'); return;
+    }
+    setPID(r.id);
+    st=s; st.openBlk={};
+    if(st.lang!==LANG){ remapNames(LANG); st.lang=LANG; }
+    document.body.classList.remove('booting');
+    initStart(); setStage('plan'); setView('build'); syncURL();
+    save(true);
+  }).catch(function(){
+    document.body.classList.remove('booting');
+    st = load() || fresh();
+    if(st.built){ initStart(); setStage('plan'); setView('build'); }
+    else { initStart(); setStage('start'); }
+    toast(tl('That plan link was not found'));
+  });
+} else if(shared){
+  /* an old self-contained link: it opens as shared and gets its own page link on the first edit */
+  setPID(null);
   st.openBlk={};
   if(st.lang!==LANG){ remapNames(LANG); st.lang=LANG; }
   initStart();
   setStage('plan'); setView('build');
   try{ history.replaceState(null,'',location.pathname); }catch(e){}
-  save();
+  save(true);
   toast(tl('Opened a shared plan — change anything and it becomes yours'));
 } else if(st){
+  /* a returning visitor on the tool's own address carries on with their own plan link */
+  if(PID) syncURL();
   if(!st.openBlk) st.openBlk={};
   /* built in the other language, opened in this one. A plan saved before the tool spoke
      two languages has no stamp at all, so it is remapped too - harmlessly, since a name
