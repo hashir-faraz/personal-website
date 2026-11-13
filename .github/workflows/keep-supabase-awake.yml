@@ -1,0 +1,21 @@
+# Supabase's free plan pauses a project after a week with no activity.
+# This asks the database to say "ok" every Monday, so the budget planner never goes to sleep.
+# It uses the public (anon) key, the same one that is already in the planner page.
+name: Keep Supabase awake
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # every Monday, 06:00 UTC
+  workflow_dispatch:       # lets you run it by hand from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping the database
+        run: |
+          curl --fail --silent --show-error \
+            -X POST "https://zybfmjymfnlgnxkzxqka.supabase.co/rest/v1/rpc/ping" \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YmZtanltZm5sZ254a3p4cWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1NjY1NzEsImV4cCI6MjExMDE0MjU3MX0.pSdR7SXq6rcE84S7n8LGWXdqB52ITFcf1nDRb8baTh8" \
+            -H "Content-Type: application/json" \
+            -d '{}'
