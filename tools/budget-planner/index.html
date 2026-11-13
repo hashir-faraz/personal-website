@@ -207,8 +207,14 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .selfld.sm select{min-width:58px}
 .selfld.sm input{width:46px}
 .side{position:sticky;top:72px;min-width:0}
-.secnote{font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);
-  padding:12px 2px 2px}
+/* the two halves of the page, services then costs: a colour bar and a heavy title so the break is
+   seen from across the screen (green and red match the P&L shading) */
+.secnote{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;letter-spacing:-.015em;
+  color:var(--ink);padding:30px 2px 8px}
+.secnote::before{content:"";width:5px;height:22px;border-radius:3px;background:var(--accent);flex:none}
+.secnote::after{content:"";flex:1;height:1px;background:var(--line)}
+.secnote.rev::before{background:var(--pos)}
+.secnote.cost::before{background:var(--neg)}
 .secnote:first-child{padding-top:0}
 
 /* collapsible block */
@@ -340,9 +346,18 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .menu button:hover{background:var(--accent-soft);color:var(--accent)}
 .menu .sep{height:1px;background:var(--line-2);margin:5px 8px}
 
+/* until the first service has a price of its own, hovering the table says so: the sample
+   figures are there to be typed over, not read */
 .side{position:relative}
-/* while the table still shows sample figures, its corner label says so — nothing covers it */
-.mini .rt.samp{color:var(--accent)}
+.sampveil{position:absolute;inset:0;border-radius:16px;z-index:5;display:flex;align-items:center;
+  justify-content:center;padding:28px;background:rgba(250,250,247,.86);backdrop-filter:blur(1.5px);
+  opacity:0;pointer-events:none;transition:opacity .16s}
+.side:hover .sampveil{opacity:1}
+.sampveil span{max-width:34ch;text-align:center;font-size:15px;font-weight:700;color:var(--ink);
+  line-height:1.45;background:var(--card);border:1px solid var(--accent-line);border-radius:14px;
+  padding:16px 20px;box-shadow:0 12px 34px rgba(16,16,20,.1)}
+.sampveil b{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:6px}
 
 /* ───────── sheet + dashboard ───────── */
 /* 60px is the view bar above it — the sheet and the dashboard each own exactly one screen.
@@ -656,17 +671,17 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
   <section class="stage on" id="stage-start">
     <div class="intro">
       <div class="fq">
-        <div class="q">What is the business called?</div>
+        <div class="q">Business name</div>
         <div class="qs">Required</div>
         <input class="bigin" id="q-biz" placeholder="e.g. Northline Studio" autocomplete="organization" aria-required="true">
       </div>
 
       <div class="fq">
-        <div class="q">What do you sell?</div>
+        <div class="q">Products/Services</div>
         <div class="qs">Add at least one</div>
         <div class="svclist" id="q-svc"></div>
         <button class="addbtn wide" id="q-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add product / service</button>
-        <div class="egs" id="q-egs"><span class="lb">Common for agencies</span></div>
+        <div class="egs" id="q-egs"><span class="lb">Suggestions</span></div>
       </div>
 
       <button class="solid go-wide" id="q-go">Build my plan
@@ -710,6 +725,9 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
         </div>
         <div class="side">
           <div class="mini" id="mini"></div>
+          <div class="sampveil" id="veil" hidden>
+            <span><b>Sample figures</b>Enter your price to see your plan</span>
+          </div>
         </div>
       </div>
     </section>
@@ -776,17 +794,17 @@ var DICT = {
   'Real months':'أشهر حقيقية',
   'Revenue':'الإيراد','Net profit':'صافي الربح','Loss':'خسارة',
   /* the two questions */
-  'What is the business called?':'شنو اسم الشغل؟',
+  'Business name':'اسم الشغل',
   'Required':'مطلوب',
   'e.g. Northline Studio':'مثال: استوديو نورلاين',
-  'What do you sell?':'وش تبيع؟',
+  'Products/Services':'المنتجات / الخدمات',
   'Add at least one':'ضف وحدة على الأقل',
   'Add product / service':'ضف منتج أو خدمة',
-  'Common for agencies':'شائعة عند وكالات التسويق',
+  'Suggestions':'اقتراحات',
   'Build my plan':'ابنِ خطتي','Update my plan':'حدّث خطتي',
   'e.g. Monthly retainer':'مثال: عقد شهري','e.g. One-off project':'مثال: مشروع لمرة وحدة',
   /* the editor */
-  'What you sell':'وش تبيع','What it costs':'وش يكلّف',
+  'Enter your price to see your plan':'اكتب سعرك عشان تشوف خطتك',
   'Name':'الاسم','Sample figures':'أرقام تجريبية','Name this service':'سمِّ هالخدمة',
   'Name this line':'سمِّ هالسطر',
   'Price per customer':'السعر لكل عميل','Customers':'العملاء',
@@ -801,8 +819,6 @@ var DICT = {
   'Add a position':'ضف منصب',
   'Revenue = price × customers, worked out for all twelve months.':'الإيراد = السعر × العملاء، محسوب لكل الاثناشر شهر.',
   'Cost = salary × how many':'التكلفة = الراتب × عدد الأشخاص',
-  'No one on the payroll yet.':'ما في أحد على الرواتب لحقّه.',
-  'Nothing here yet.':'ما في شي هنا لحقّه.',
   'line':'سطر','lines':'سطور','position':'منصب','positions':'مناصب',
   /* the sheet */
   'Financial Plan':'الخطة المالية','Your business':'شغلك',
@@ -873,14 +889,13 @@ var DICT = {
     'is your starting figure. Type over any other month and':'هو رقمك الأول. اكتب فوق أي شهر ثاني وـ',
     'the months after it pick the trend back up':'الأشهر اللي بعده تكمّل على نفس النمط',
     'from whatever you put in.':'من الرقم اللي حطيته.',
-    'Link copied — anyone with it can open and edit this plan':'تم نسخ الرابط — أي واحد معه يقدر يفتح الخطة ويعدّل عليها',
+    'Link copied':'تم نسخ الرابط',
     'Copy this link':'انسخ هالرابط',
     'Could not build the link':'ما قدرنا نسوي الرابط',
     'CSV downloaded':'تم تنزيل ملف CSV',
     'Cleared':'تم المسح',
-    'Updated — your numbers are still here':'تم التحديث — أرقامك لا زالت موجودة',
-    'Change what you need, then build again':'غيّر اللي تبي، وبعدين ابنِ من جديد',
-    'Opened a shared plan — change anything and it becomes yours':'فتحنا خطة مشارَكة — غيّر أي شي وتصير حقك',
+    'Updated':'تم التحديث',
+    'Plan opened':'تم فتح الخطة',
     'Clear everything and start from scratch?':'نمسح كل شي ونبدأ من الأول؟',
     'Step 1 of 3':'الخطوة 1 من 3','Step 2 of 3':'الخطوة 2 من 3','Step 3 of 3':'الخطوة 3 من 3',
     'Type what one customer pays you in a month. Every figure on the page moves as you type.':'اكتب كم يدفع لك العميل الواحد بالشهر. كل رقم بالصفحة يتحرك وأنت تكتب.',
@@ -1421,7 +1436,7 @@ function blkHTML(key, title, sub, colour, bodyHTML, footHTML, total, sampled){
 
 function renderEditor(){
   var c=calc(), h='';
-  h+='<div class="secnote">'+esc(tl('What you sell'))+'</div>';
+  h+='<div class="secnote rev">'+esc(tl('Products/Services'))+'</div>';
   st.svc.forEach(function(s,i){
     var d=c.svc[i], body='';
     body+='<div class="namerow"><span class="lblr">'+esc(tl('Name'))+'</span>'+
@@ -1435,7 +1450,7 @@ function renderEditor(){
   });
   h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add service / product'))+'</button></div>';
 
-  h+='<div class="secnote">'+esc(tl('What it costs'))+'</div>';
+  h+='<div class="secnote cost">'+esc(tl('Costs'))+'</div>';
   st.cat.forEach(function(cat,ci){
     var d=c.cat[ci], body='', foot='', sampled=false, n;
     if(cat.team){
@@ -1449,7 +1464,6 @@ function renderEditor(){
           {unit:'count', sub:true, startLabel:'How many',
            tip:tl('How many people you have in this position. Type over a later month to add a hire.')});
       });
-      if(!cat.roles.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">'+esc(tl('No one on the payroll yet.'))+'</div>';
       foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a position'))+'</button></div>';
       n=tcount('position', cat.roles.length);
     } else {
@@ -1457,7 +1471,6 @@ function renderEditor(){
         if(item.s.sm) sampled=true;
         body+=vrowHTML('c|'+ci+'|'+ii, item.name, item.s, {rename:true, del:'c|'+ci+'|'+ii});
       });
-      if(!cat.items.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">'+esc(tl('Nothing here yet.'))+'</div>';
       foot='<div class="bfoot"><button class="addbtn" data-addcost="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a cost to'))+' '+esc(AR?cat.name:cat.name.toLowerCase())+'</button></div>';
       n=tcount('line', cat.items.length);
     }
@@ -1586,7 +1599,7 @@ function renderMini(c){
   var rev=sum(c.rev), net=sum(c.net), gp=sum(c.gp);
   var h='<div class="mt"><div><h3>'+esc(bizName())+'</h3>'+
     '<div class="mm">'+mlab(0)+' – '+mlab(11)+'</div></div>'+
-    '<div class="rt'+(anySample()?' samp':'')+'">'+esc(anySample()?tl('Sample figures'):tl('Live'))+'<br>'+esc(st.cur)+'</div></div>';
+    '<div class="rt">'+esc(tl('Live'))+'<br>'+esc(st.cur)+'</div></div>';
   h+=plTable(c, fmt);
   h+='<div class="minifoot">'+
      statlet(tl('Revenue'), fmt(rev),'')+
@@ -1827,8 +1840,17 @@ function renderChip(){}
 /* ═══════════ full render ═══════════ */
 function renderPlan(){
   var c=calc();
-  renderEditor(); renderMini(c); renderSheet(c); renderDash(c); renderChip(c);
+  renderEditor(); renderMini(c); renderSheet(c); renderDash(c); renderChip(c); syncVeil();
   requestAnimationFrame(fitAll);
+}
+function syncVeil(){
+  var v=document.getElementById('veil');
+  if(v) v.hidden = !(st && st.svc && st.svc.length && st.svc[0].price.sm);
+}
+/* the moment the first service has a price, the other services stop pretending: their
+   revenue drops to zero, which is what prompts the next entry */
+function firstPriceTyped(){
+  st.svc.forEach(function(sv,i){ if(i>0){ sv.price=S(0); sv.qty=S(0); } });
 }
 
 /* ═══════════ the coach ═══════════ */
@@ -1952,7 +1974,7 @@ function markNav(v){
 function egChips(){
   var have={};
   st.names.forEach(function(x){ if(x.trim()) have[x.trim().toLowerCase()]=1; });
-  var h='<span class="lb">'+esc(tl('Common for agencies'))+'</span>';
+  var h='<span class="lb">'+esc(tl('Suggestions'))+'</span>';
   AGENCY.map(tl).forEach(function(x){
     h+='<button class="eg'+(have[x.toLowerCase()]?' on':'')+'" type="button" data-eg="'+esc(x)+'">'+esc(x)+'</button>';
   });
@@ -2066,7 +2088,7 @@ document.getElementById('stage-start').addEventListener('click',function(e){
       st.nameIds=st.svc.map(function(s){ return s.id; });
       st.openBlk={s0:true};
       save(); setStage('plan'); setView('build');
-      toast(tl('Updated — your numbers are still here'));
+      toast(tl('Updated'));
     } else {
       setPID(null);   /* a brand-new plan never inherits an old link */
       st=build(biz, st.cur, st.sm, st.sy, picked.map(function(p){ return p.n; }));
@@ -2105,6 +2127,7 @@ main.addEventListener('input',function(e){
     s=getSeries(path);
     v=num(t.value);
     if(which==='b'){
+      if(s.sm && path==='s|0|price') firstPriceTyped();
       s.sm=false;
       t.closest('.nf').classList.remove('sampled');
       t.placeholder='0';
@@ -2127,6 +2150,7 @@ main.addEventListener('input',function(e){
     s=getSeries(p2);
     v=num(t.value);
     if(m===0){
+      if(s.sm && p2==='s|0|price') firstPriceTyped();
       s.sm=false;
       s.b = v===null ? 0 : v; delete s.ov[0];
       var sf=document.querySelector('.vrow[data-row="'+p2+'"] input[data-num="b"]');
@@ -2285,7 +2309,6 @@ document.addEventListener('click',function(e){
     st.names = st.svc.map(function(s){ return s.name; });
     st.nameIds = st.svc.map(function(s){ return s.id; });
     initStart(); setStage('start');
-    toast(tl('Change what you need, then build again'));
     return;
   }
   if(!e.target.closest('#menu') && !e.target.closest('[data-addcost]') && !e.target.closest('[data-addrole]')) closeMenu();
@@ -2405,7 +2428,7 @@ function doShare(){
     /* the plan never reached the server (offline, say): fall back to the self-contained link */
     try{ u=shareURL(); }catch(e){ toast(tl('Could not build the link')); return; }
   }
-  var ok=function(){ toast(tl(PID ? 'Link copied — anyone with it can open and edit this plan' : 'Link copied — it opens this exact plan')); };
+  var ok=function(){ toast(tl('Link copied')); };
   if(navigator.clipboard && navigator.clipboard.writeText)
     navigator.clipboard.writeText(u).then(ok, function(){ prompt(tl('Copy this link'), u); });
   else prompt(tl('Copy this link'), u);
@@ -2525,11 +2548,12 @@ function localiseChrome(){
   q('label[for="q-sm"]').textContent = tl('Year starts');
   q('label[for="q-sy"]').textContent = tl('Year');
   var qs=document.querySelectorAll('#stage-start .q'), qss=document.querySelectorAll('#stage-start .qs');
-  qs[0].textContent = tl('What is the business called?');
+  qs[0].textContent = tl('Business name');
   qss[0].textContent = tl('Required');
-  qs[1].textContent = tl('What do you sell?');
+  qs[1].textContent = tl('Products/Services');
   qss[1].textContent = tl('Add at least one');
   q('#opening').textContent = tl('Opening your plan…');
+  q('#veil span').innerHTML = '<b>'+tl('Sample figures')+'</b>'+tl('Enter your price to see your plan');
   q('#q-biz').placeholder = tl('e.g. Northline Studio');
   tailText(q('#q-add'), tl('Add product / service'));
   q('#btn-setup').setAttribute('data-tt', tl('Change the business name or your list of products and services'));
@@ -2584,7 +2608,7 @@ if(linkId && !shared){
   setStage('plan'); setView('build');
   try{ history.replaceState(null,'',location.pathname); }catch(e){}
   save(true);
-  toast(tl('Opened a shared plan — change anything and it becomes yours'));
+  toast(tl('Plan opened'));
 } else if(st){
   /* a returning visitor on the tool's own address carries on with their own plan link */
   if(PID) syncURL();
