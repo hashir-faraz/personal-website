@@ -39,13 +39,17 @@ alter table plan_versions enable row level security;
 -- Functions the website is allowed to call
 -- ---------------------------------------------------------------
 
--- Create a plan, return its link id.
+-- Create a plan, return its link id: company name plus a short code, e.g. incon-media-k7x2mq.
 create or replace function create_plan(p_company text, p_lang text, p_data jsonb)
 returns text
 language plpgsql security definer set search_path = public as $$
 declare
   slug text;
   new_id text;
+  code text;
+  alphabet constant text := 'abcdefghjkmnpqrstuvwxyz23456789';  -- no look-alike characters
+  raw bytea;
+  i int;
 begin
   if p_company is null or length(trim(p_company)) = 0 or length(p_company) > 120 then
     raise exception 'company name required';
@@ -56,12 +60,17 @@ begin
 
   slug := lower(regexp_replace(trim(p_company), '[^a-zA-Z0-9]+', '-', 'g'));
   slug := trim(both '-' from slug);
-  slug := left(slug, 40);
+  slug := left(slug, 30);
   slug := trim(both '-' from slug);
   if slug = '' then slug := 'plan'; end if;   -- e.g. Arabic-only names
 
   loop
-    new_id := slug || '-' || substr(replace(gen_random_uuid()::text, '-', ''), 1, 10);
+    raw := decode(replace(gen_random_uuid()::text, '-', ''), 'hex');
+    code := '';
+    for i in 0..5 loop
+      code := code || substr(alphabet, 1 + (get_byte(raw, i) % 31), 1);
+    end loop;
+    new_id := slug || '-' || code;
     exit when not exists (select 1 from plans where id = new_id);
   end loop;
 

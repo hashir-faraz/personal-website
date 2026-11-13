@@ -340,18 +340,9 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .menu button:hover{background:var(--accent-soft);color:var(--accent)}
 .menu .sep{height:1px;background:var(--line-2);margin:5px 8px}
 
-/* while the table is still showing samples, hovering it says so — in place of a banner
-   sitting above the editor the whole time */
 .side{position:relative}
-.sampveil{position:absolute;inset:0;border-radius:16px;z-index:5;display:flex;align-items:center;
-  justify-content:center;padding:28px;background:rgba(250,250,247,.86);backdrop-filter:blur(1.5px);
-  opacity:0;pointer-events:none;transition:opacity .16s}
-.side:hover .sampveil{opacity:1}
-.sampveil span{max-width:34ch;text-align:center;font-size:15px;font-weight:700;color:var(--ink);
-  line-height:1.45;background:var(--card);border:1px solid var(--accent-line);border-radius:14px;
-  padding:16px 20px;box-shadow:0 12px 34px rgba(16,16,20,.1)}
-.sampveil b{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:6px}
+/* while the table still shows sample figures, its corner label says so — nothing covers it */
+.mini .rt.samp{color:var(--accent)}
 
 /* ───────── sheet + dashboard ───────── */
 /* 60px is the view bar above it — the sheet and the dashboard each own exactly one screen.
@@ -666,13 +657,13 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
     <div class="intro">
       <div class="fq">
         <div class="q">What is the business called?</div>
-        <div class="qs">Required. This is the name that goes on the plan.</div>
+        <div class="qs">Required</div>
         <input class="bigin" id="q-biz" placeholder="e.g. Northline Studio" autocomplete="organization" aria-required="true">
       </div>
 
       <div class="fq">
         <div class="q">What do you sell?</div>
-        <div class="qs">Add at least one. One line per thing you charge for. Tap a common one or type your own.</div>
+        <div class="qs">Add at least one</div>
         <div class="svclist" id="q-svc"></div>
         <button class="addbtn wide" id="q-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add product / service</button>
         <div class="egs" id="q-egs"><span class="lb">Common for agencies</span></div>
@@ -719,9 +710,6 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
         </div>
         <div class="side">
           <div class="mini" id="mini"></div>
-          <div class="sampveil" id="veil" hidden>
-            <span><b>Sample figures</b>Add your own revenue, costs and customer numbers to see your real plan.</span>
-          </div>
         </div>
       </div>
     </section>
@@ -789,17 +777,17 @@ var DICT = {
   'Revenue':'الإيراد','Net profit':'صافي الربح','Loss':'خسارة',
   /* the two questions */
   'What is the business called?':'شنو اسم الشغل؟',
-  'Required. This is the name that goes on the plan.':'مطلوب. هذا الاسم اللي بيطلع على الخطة.',
+  'Required':'مطلوب',
   'e.g. Northline Studio':'مثال: استوديو نورلاين',
   'What do you sell?':'وش تبيع؟',
-  'Add at least one. One line per thing you charge for. Tap a common one or type your own.':'ضف وحدة على الأقل. سطر لكل شي تاخذ عليه فلوس. اضغط على وحد من الجاهزين أو اكتب حقك.',
+  'Add at least one':'ضف وحدة على الأقل',
   'Add product / service':'ضف منتج أو خدمة',
   'Common for agencies':'شائعة عند وكالات التسويق',
   'Build my plan':'ابنِ خطتي','Update my plan':'حدّث خطتي',
   'e.g. Monthly retainer':'مثال: عقد شهري','e.g. One-off project':'مثال: مشروع لمرة وحدة',
   /* the editor */
   'What you sell':'وش تبيع','What it costs':'وش يكلّف',
-  'What this is called':'اسم هالشي','Name this service':'سمِّ هالخدمة',
+  'Name':'الاسم','Sample figures':'أرقام تجريبية','Name this service':'سمِّ هالخدمة',
   'Name this line':'سمِّ هالسطر',
   'Price per customer':'السعر لكل عميل','Customers':'العملاء',
   'what one customer pays':'كم يدفع العميل الواحد','how many pay you':'كم واحد يدفع لك',
@@ -809,7 +797,7 @@ var DICT = {
   'No change':'بدون تغيير',
   'Constant':'ثابت','Percent':'نسبة','Amount':'مبلغ','Custom':'مخصص',
   'Average':'المتوسط',
-  'Add another thing you sell':'ضف شي ثاني تبيعه',
+  'Add service / product':'ضف خدمة / منتج',
   'Add a position':'ضف منصب',
   'Revenue = price × customers, worked out for all twelve months.':'الإيراد = السعر × العملاء، محسوب لكل الاثناشر شهر.',
   'Cost = salary × how many':'التكلفة = الراتب × عدد الأشخاص',
@@ -1141,8 +1129,13 @@ function showTT(el,html){
 }
 function hideTT(){ tt.classList.remove('on'); ttPinned=null; }
 var ttPinned=null;
+/* the three-step guide already says what the control it points at does, so while it is up the
+   hover and focus tips for that same control stay quiet (the tap-to-open i still works) */
+function underCoach(el){
+  return !!(coachStep && coachEl.classList.contains('on') && coachAnchor && coachAnchor.contains(el));
+}
 document.addEventListener('mouseover',function(e){
-  var el=e.target.closest('[data-tt]'); if(!el || ttPinned) return;
+  var el=e.target.closest('[data-tt]'); if(!el || ttPinned || underCoach(el)) return;
   clearTimeout(ttT); ttT=setTimeout(function(){ showTT(el, el.getAttribute('data-tt')); },90);
 });
 document.addEventListener('mouseout',function(e){
@@ -1161,7 +1154,7 @@ document.addEventListener('click',function(e){
 }, true);
 document.addEventListener('focusin',function(e){
   var el=e.target.closest('[data-tt]');
-  if(!el) { if(!ttPinned) hideTT(); return; }
+  if(!el || underCoach(el)) { if(!ttPinned) hideTT(); return; }
   /* focusing scrolls the control into view, and that scroll dismisses tooltips —
      so wait for it to settle before placing this one */
   clearTimeout(ttT);
@@ -1392,8 +1385,6 @@ function mstripHTML(path, s, vals, open, money){
        (m>0?'<button class="un" type="button" data-undo="1" tabindex="-1" aria-label="'+attr(tl('Clear this month'))+'" data-tt="'+attr(tl('Clear this and follow the trend again'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h11a5 5 0 1 1 0 10H9"/><path d="M3 10l5-5M3 10l5 5"/></svg></button>':'')+
        '</div>';
   }
-  h+='<div class="mnote">'+mlab(0)+' '+tl('is your starting figure. Type over any other month and')+' '+
-     '<b>'+tl('the months after it pick the trend back up')+'</b> '+tl('from whatever you put in.')+'</div>';
   return h+'</div>';
 }
 function explain(s, vals, m, money){
@@ -1433,18 +1424,16 @@ function renderEditor(){
   h+='<div class="secnote">'+esc(tl('What you sell'))+'</div>';
   st.svc.forEach(function(s,i){
     var d=c.svc[i], body='';
-    body+='<div class="namerow"><span class="lblr">'+esc(tl('What this is called'))+'</span>'+
+    body+='<div class="namerow"><span class="lblr">'+esc(tl('Name'))+'</span>'+
           '<input class="tfld" data-svcname="'+i+'" value="'+esc(s.name)+'" placeholder="'+esc(tl('Name this service'))+'"></div>';
     body+=vrowHTML('s|'+i+'|price','Price per customer',s.price,
-      {hint:'what one customer pays', tip:tl('What one customer pays you in a month. For a retainer, the monthly fee.')});
+      {tip:tl('What one customer pays you in a month. For a retainer, the monthly fee.')});
     body+=vrowHTML('s|'+i+'|qty','Customers',s.qty,
-      {unit:'count', hint:'how many pay you', startLabel:'How many',
+      {unit:'count', startLabel:'How many',
        tip:tl('How many customers pay you in that month. For a retainer, your live client count.')});
-    var foot='<div class="bfoot"><span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">'+
-      esc(tl('Revenue = price × customers, worked out for all twelve months.'))+'</span></div>';
-    h+=blkHTML('s'+i, s.name, tl('Revenue'), CATCOL[i%6], body, foot, sum(d.rev), s.price.sm||s.qty.sm);
+    h+=blkHTML('s'+i, s.name, tl('Revenue'), CATCOL[i%6], body, '', sum(d.rev), s.price.sm||s.qty.sm);
   });
-  h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add another thing you sell'))+'</button></div>';
+  h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add service / product'))+'</button></div>';
 
   h+='<div class="secnote">'+esc(tl('What it costs'))+'</div>';
   st.cat.forEach(function(cat,ci){
@@ -1454,15 +1443,14 @@ function renderEditor(){
         if(ro.pay.sm||ro.n.sm) sampled=true;
         body+='<div style="padding-top:4px"></div>';
         body+=vrowHTML('t|'+ci+'|'+ri+'|pay', ro.name, ro.pay,
-          {rename:true, hint:'monthly salary each', startLabel:'Salary', pair:true,
+          {rename:true, startLabel:'Salary', pair:true,
            del:'t|'+ci+'|'+ri, tip:tl('What one person in this position is paid per month, all in.')});
         body+=vrowHTML('t|'+ci+'|'+ri+'|n','How many people',ro.n,
-          {unit:'count', sub:true, hint:'in this position', startLabel:'How many',
+          {unit:'count', sub:true, startLabel:'How many',
            tip:tl('How many people you have in this position. Type over a later month to add a hire.')});
       });
       if(!cat.roles.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">'+esc(tl('No one on the payroll yet.'))+'</div>';
-      foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a position'))+'</button>'+
-           '<span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">'+esc(tl('Cost = salary × how many'))+'</span></div>';
+      foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a position'))+'</button></div>';
       n=tcount('position', cat.roles.length);
     } else {
       cat.items.forEach(function(item,ii){
@@ -1598,7 +1586,7 @@ function renderMini(c){
   var rev=sum(c.rev), net=sum(c.net), gp=sum(c.gp);
   var h='<div class="mt"><div><h3>'+esc(bizName())+'</h3>'+
     '<div class="mm">'+mlab(0)+' – '+mlab(11)+'</div></div>'+
-    '<div class="rt">'+esc(tl('Live'))+'<br>'+esc(st.cur)+'</div></div>';
+    '<div class="rt'+(anySample()?' samp':'')+'">'+esc(anySample()?tl('Sample figures'):tl('Live'))+'<br>'+esc(st.cur)+'</div></div>';
   h+=plTable(c, fmt);
   h+='<div class="minifoot">'+
      statlet(tl('Revenue'), fmt(rev),'')+
@@ -1839,12 +1827,8 @@ function renderChip(){}
 /* ═══════════ full render ═══════════ */
 function renderPlan(){
   var c=calc();
-  renderEditor(); renderMini(c); renderSheet(c); renderDash(c); renderChip(c); syncVeil();
+  renderEditor(); renderMini(c); renderSheet(c); renderDash(c); renderChip(c);
   requestAnimationFrame(fitAll);
-}
-function syncVeil(){
-  var v=document.getElementById('veil');
-  if(v) v.hidden = !anySample();
 }
 
 /* ═══════════ the coach ═══════════ */
@@ -2312,14 +2296,14 @@ function rerenderRow(path){
   var row=document.querySelector('.vrow[data-row="'+path+'"]'); if(!row) return;
   var a=path.split('|'), s=getSeries(path), label, cfg;
   if(a[0]==='s'){
-    if(a[2]==='price'){ label='Price per customer'; cfg={hint:'what one customer pays', tip:'What one customer pays you in a month. For a retainer, the monthly fee.'}; }
-    else { label='Customers'; cfg={unit:'count', hint:'how many pay you', startLabel:'How many', tip:'How many customers pay you in that month.'}; }
+    if(a[2]==='price'){ label='Price per customer'; cfg={tip:'What one customer pays you in a month. For a retainer, the monthly fee.'}; }
+    else { label='Customers'; cfg={unit:'count', startLabel:'How many', tip:'How many customers pay you in that month.'}; }
   } else if(a[0]==='c'){
     label=st.cat[+a[1]].items[+a[2]].name; cfg={rename:true, del:'c|'+a[1]+'|'+a[2]};
   } else {
     var ro=st.cat[+a[1]].roles[+a[2]];
-    if(a[3]==='pay'){ label=ro.name; cfg={rename:true, hint:'monthly salary each', startLabel:'Salary', pair:true, del:'t|'+a[1]+'|'+a[2], tip:'What one person in this position is paid per month, all in.'}; }
-    else { label='How many people'; cfg={unit:'count', sub:true, hint:'in this position', startLabel:'How many', tip:'Type over a later month to add a hire.'}; }
+    if(a[3]==='pay'){ label=ro.name; cfg={rename:true, startLabel:'Salary', pair:true, del:'t|'+a[1]+'|'+a[2], tip:'What one person in this position is paid per month, all in.'}; }
+    else { label='How many people'; cfg={unit:'count', sub:true, startLabel:'How many', tip:'Type over a later month to add a hire.'}; }
   }
   row.outerHTML = vrowHTML(path, label, s, cfg);
 }
@@ -2542,9 +2526,9 @@ function localiseChrome(){
   q('label[for="q-sy"]').textContent = tl('Year');
   var qs=document.querySelectorAll('#stage-start .q'), qss=document.querySelectorAll('#stage-start .qs');
   qs[0].textContent = tl('What is the business called?');
-  qss[0].textContent = tl('Required. This is the name that goes on the plan.');
+  qss[0].textContent = tl('Required');
   qs[1].textContent = tl('What do you sell?');
-  qss[1].textContent = tl('Add at least one. One line per thing you charge for. Tap a common one or type your own.');
+  qss[1].textContent = tl('Add at least one');
   q('#opening').textContent = tl('Opening your plan…');
   q('#q-biz').placeholder = tl('e.g. Northline Studio');
   tailText(q('#q-add'), tl('Add product / service'));
