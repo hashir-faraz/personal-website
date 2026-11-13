@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/plan/:id", "destination": "/tools/budget-planner/index.html" }
+  ]
+}
