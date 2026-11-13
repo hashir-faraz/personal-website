@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/plan/:id", "destination": "/tools/budget-planner/index.html" }
-  ]
+    { "source": "/plan/:id", "destination": "/api/plan?id=:id" }
+  ],
+  "functions": {
+    "api/plan.js": { "includeFiles": "tools/budget-planner/index.html" }
+  }
 }
