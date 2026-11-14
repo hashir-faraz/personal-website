@@ -65,14 +65,14 @@ module.exports = async function handler(req, res) {
     const ar = langParam === 'ar';
     html = apply(html, ar ? {
       ar: true,
-      title: 'مخطّط ميزانية 12 شهر — هاشر فراز',
+      title: 'مخطّط ميزانية 12 شهر',
       desc: 'أجب عن سؤالين واحصل على سنة كاملة من الإيرادات والتكاليف والأرباح — جدول أرباح وخسائر تقدر تطبعه.',
       url: 'https://hashirfaraz.com/tools/budget-planner/?lang=ar',
       image: img('tool', 'ar'),
       alt: 'مخطّط ميزانية 12 شهر: جدول أرباح وخسائر لسنة كاملة'
     } : {
       ar: false,
-      title: '12-Month Budget Planner — Hashir Faraz',
+      title: '12-Month Budget Planner',
       desc: 'Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.',
       url: 'https://hashirfaraz.com/tools/budget-planner/',
       image: img('tool', 'en'),
