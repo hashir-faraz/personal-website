@@ -56,6 +56,8 @@ module.exports = async function handler(req, res) {
       ? 'سنة كاملة من الإيرادات والتكاليف والأرباح لـ ' + name + '. افتح الخطة وكمّل عليها.'
       : 'A full year of revenue, costs and profit for ' + name + '. Open the plan and keep working on it.');
     const url = 'https://hashirfaraz.com/plan/' + id;
+    const img = 'https://hashirfaraz.com/api/plan-image?id=' + id + '&v=' + (info.v || 0);
+    const alt = esc(ar ? 'الخطة المالية لـ ' + name : 'The 12-month financial plan for ' + name);
 
     html = html.replace(/<title>[^<]*<\/title>/, () => '<title>' + title + '</title>');
     html = setMeta(html, 'name', 'description', desc);
@@ -64,6 +66,9 @@ module.exports = async function handler(req, res) {
     html = setMeta(html, 'property', 'og:url', url);
     html = setMeta(html, 'name', 'twitter:title', title);
     html = setMeta(html, 'name', 'twitter:description', desc);
+    html = setMeta(html, 'property', 'og:image', img);
+    html = setMeta(html, 'property', 'og:image:alt', alt);
+    html = setMeta(html, 'name', 'twitter:image', img);
     if (ar) html = setMeta(html, 'property', 'og:locale', 'ar_AR');
   }
 

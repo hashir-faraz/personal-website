@@ -207,8 +207,14 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .selfld.sm select{min-width:58px}
 .selfld.sm input{width:46px}
 .side{position:sticky;top:72px;min-width:0}
-.secnote{font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-4);
-  padding:12px 2px 2px}
+/* the two halves of the page, services then costs: a colour bar and a heavy title so the break is
+   seen from across the screen (green and red match the P&L shading) */
+.secnote{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;letter-spacing:-.015em;
+  color:var(--ink);padding:30px 2px 8px}
+.secnote::before{content:"";width:5px;height:22px;border-radius:3px;background:var(--accent);flex:none}
+.secnote::after{content:"";flex:1;height:1px;background:var(--line)}
+.secnote.rev::before{background:var(--pos)}
+.secnote.cost::before{background:var(--neg)}
 .secnote:first-child{padding-top:0}
 
 /* collapsible block */
@@ -340,8 +346,8 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .menu button:hover{background:var(--accent-soft);color:var(--accent)}
 .menu .sep{height:1px;background:var(--line-2);margin:5px 8px}
 
-/* while the table is still showing samples, hovering it says so — in place of a banner
-   sitting above the editor the whole time */
+/* until the first service has a price of its own, hovering the table says so: the sample
+   figures are there to be typed over, not read */
 .side{position:relative}
 .sampveil{position:absolute;inset:0;border-radius:16px;z-index:5;display:flex;align-items:center;
   justify-content:center;padding:28px;background:rgba(250,250,247,.86);backdrop-filter:blur(1.5px);
@@ -665,17 +671,17 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
   <section class="stage on" id="stage-start">
     <div class="intro">
       <div class="fq">
-        <div class="q">What is the business called?</div>
-        <div class="qs">Required. This is the name that goes on the plan.</div>
+        <div class="q">Business name</div>
+        <div class="qs">Required</div>
         <input class="bigin" id="q-biz" placeholder="e.g. Northline Studio" autocomplete="organization" aria-required="true">
       </div>
 
       <div class="fq">
-        <div class="q">What do you sell?</div>
-        <div class="qs">Add at least one. One line per thing you charge for. Tap a common one or type your own.</div>
+        <div class="q">Products/Services</div>
+        <div class="qs">Add at least one</div>
         <div class="svclist" id="q-svc"></div>
         <button class="addbtn wide" id="q-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add product / service</button>
-        <div class="egs" id="q-egs"><span class="lb">Common for agencies</span></div>
+        <div class="egs" id="q-egs"><span class="lb">Suggestions</span></div>
       </div>
 
       <button class="solid go-wide" id="q-go">Build my plan
@@ -720,7 +726,7 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
         <div class="side">
           <div class="mini" id="mini"></div>
           <div class="sampveil" id="veil" hidden>
-            <span><b>Sample figures</b>Add your own revenue, costs and customer numbers to see your real plan.</span>
+            <span><b>Sample figures</b>Enter your price to see your plan</span>
           </div>
         </div>
       </div>
@@ -788,18 +794,18 @@ var DICT = {
   'Real months':'أشهر حقيقية',
   'Revenue':'الإيراد','Net profit':'صافي الربح','Loss':'خسارة',
   /* the two questions */
-  'What is the business called?':'شنو اسم الشغل؟',
-  'Required. This is the name that goes on the plan.':'مطلوب. هذا الاسم اللي بيطلع على الخطة.',
+  'Business name':'اسم الشغل',
+  'Required':'مطلوب',
   'e.g. Northline Studio':'مثال: استوديو نورلاين',
-  'What do you sell?':'وش تبيع؟',
-  'Add at least one. One line per thing you charge for. Tap a common one or type your own.':'ضف وحدة على الأقل. سطر لكل شي تاخذ عليه فلوس. اضغط على وحد من الجاهزين أو اكتب حقك.',
+  'Products/Services':'المنتجات / الخدمات',
+  'Add at least one':'ضف وحدة على الأقل',
   'Add product / service':'ضف منتج أو خدمة',
-  'Common for agencies':'شائعة عند وكالات التسويق',
+  'Suggestions':'اقتراحات',
   'Build my plan':'ابنِ خطتي','Update my plan':'حدّث خطتي',
   'e.g. Monthly retainer':'مثال: عقد شهري','e.g. One-off project':'مثال: مشروع لمرة وحدة',
   /* the editor */
-  'What you sell':'وش تبيع','What it costs':'وش يكلّف',
-  'What this is called':'اسم هالشي','Name this service':'سمِّ هالخدمة',
+  'Enter your price to see your plan':'اكتب سعرك عشان تشوف خطتك',
+  'Name':'الاسم','Sample figures':'أرقام تجريبية','Name this service':'سمِّ هالخدمة',
   'Name this line':'سمِّ هالسطر',
   'Price per customer':'السعر لكل عميل','Customers':'العملاء',
   'what one customer pays':'كم يدفع العميل الواحد','how many pay you':'كم واحد يدفع لك',
@@ -809,12 +815,10 @@ var DICT = {
   'No change':'بدون تغيير',
   'Constant':'ثابت','Percent':'نسبة','Amount':'مبلغ','Custom':'مخصص',
   'Average':'المتوسط',
-  'Add another thing you sell':'ضف شي ثاني تبيعه',
+  'Add service / product':'ضف خدمة / منتج',
   'Add a position':'ضف منصب',
   'Revenue = price × customers, worked out for all twelve months.':'الإيراد = السعر × العملاء، محسوب لكل الاثناشر شهر.',
   'Cost = salary × how many':'التكلفة = الراتب × عدد الأشخاص',
-  'No one on the payroll yet.':'ما في أحد على الرواتب لحقّه.',
-  'Nothing here yet.':'ما في شي هنا لحقّه.',
   'line':'سطر','lines':'سطور','position':'منصب','positions':'مناصب',
   /* the sheet */
   'Financial Plan':'الخطة المالية','Your business':'شغلك',
@@ -885,14 +889,13 @@ var DICT = {
     'is your starting figure. Type over any other month and':'هو رقمك الأول. اكتب فوق أي شهر ثاني وـ',
     'the months after it pick the trend back up':'الأشهر اللي بعده تكمّل على نفس النمط',
     'from whatever you put in.':'من الرقم اللي حطيته.',
-    'Link copied — anyone with it can open and edit this plan':'تم نسخ الرابط — أي واحد معه يقدر يفتح الخطة ويعدّل عليها',
+    'Link copied':'تم نسخ الرابط',
     'Copy this link':'انسخ هالرابط',
     'Could not build the link':'ما قدرنا نسوي الرابط',
     'CSV downloaded':'تم تنزيل ملف CSV',
     'Cleared':'تم المسح',
-    'Updated — your numbers are still here':'تم التحديث — أرقامك لا زالت موجودة',
-    'Change what you need, then build again':'غيّر اللي تبي، وبعدين ابنِ من جديد',
-    'Opened a shared plan — change anything and it becomes yours':'فتحنا خطة مشارَكة — غيّر أي شي وتصير حقك',
+    'Updated':'تم التحديث',
+    'Plan opened':'تم فتح الخطة',
     'Clear everything and start from scratch?':'نمسح كل شي ونبدأ من الأول؟',
     'Step 1 of 3':'الخطوة 1 من 3','Step 2 of 3':'الخطوة 2 من 3','Step 3 of 3':'الخطوة 3 من 3',
     'Type what one customer pays you in a month. Every figure on the page moves as you type.':'اكتب كم يدفع لك العميل الواحد بالشهر. كل رقم بالصفحة يتحرك وأنت تكتب.',
@@ -1141,8 +1144,13 @@ function showTT(el,html){
 }
 function hideTT(){ tt.classList.remove('on'); ttPinned=null; }
 var ttPinned=null;
+/* the three-step guide already says what the control it points at does, so while it is up the
+   hover and focus tips for that same control stay quiet (the tap-to-open i still works) */
+function underCoach(el){
+  return !!(coachStep && coachEl.classList.contains('on') && coachAnchor && coachAnchor.contains(el));
+}
 document.addEventListener('mouseover',function(e){
-  var el=e.target.closest('[data-tt]'); if(!el || ttPinned) return;
+  var el=e.target.closest('[data-tt]'); if(!el || ttPinned || underCoach(el)) return;
   clearTimeout(ttT); ttT=setTimeout(function(){ showTT(el, el.getAttribute('data-tt')); },90);
 });
 document.addEventListener('mouseout',function(e){
@@ -1161,7 +1169,7 @@ document.addEventListener('click',function(e){
 }, true);
 document.addEventListener('focusin',function(e){
   var el=e.target.closest('[data-tt]');
-  if(!el) { if(!ttPinned) hideTT(); return; }
+  if(!el || underCoach(el)) { if(!ttPinned) hideTT(); return; }
   /* focusing scrolls the control into view, and that scroll dismisses tooltips —
      so wait for it to settle before placing this one */
   clearTimeout(ttT);
@@ -1203,6 +1211,18 @@ var LOCAL=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 var PID=null, cloudT, cloudDirty=false, creating=null;
 try{ PID=localStorage.getItem(PKEY)||null; }catch(e){}
 
+/* what goes to the database: the plan, plus its year totals (the link-preview picture is drawn
+   from these). Totals are left out while the first price is still a sample. */
+function cloudData(){
+  var d=packState();
+  try{
+    if(st.svc.length && !st.svc[0].price.sm){
+      var c=calc(), r=function(a){ return a.map(function(v){ return Math.round(v); }); };
+      d.sum={ c:st.cur, r:r(c.rev), x:r(c.opex), n:r(c.net) };
+    }
+  }catch(e){}
+  return d;
+}
 function rpc(fn, body, keep){
   return fetch(SB_URL+'/rest/v1/rpc/'+fn, { method:'POST', keepalive:!!keep,
     headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json' },
@@ -1242,7 +1262,7 @@ function ensurePlan(){
   if(PID) return Promise.resolve(PID);
   if(!st || !st.built || !(st.biz||'').trim()) return Promise.resolve(null);
   if(creating) return creating;
-  creating=rpc('create_plan',{ p_company:st.biz.trim(), p_lang:LANG, p_data:packState() })
+  creating=rpc('create_plan',{ p_company:st.biz.trim(), p_lang:LANG, p_data:cloudData() })
     .then(function(id){ creating=null; setPID(id); syncURL(); if(cloudDirty) cloudSave(); return id; })
     .catch(function(){ creating=null; return null; });
   return creating;
@@ -1253,7 +1273,7 @@ function cloudSave(keep){
   if(!PID){ ensurePlan().then(function(id){ setSaved(id?'saved':'err'); }); cloudDirty=false; return; }
   cloudDirty=false;
   setSaved('saving');
-  rpc('save_plan',{ p_id:PID, p_company:st.biz||'', p_data:packState() }, keep)
+  rpc('save_plan',{ p_id:PID, p_company:st.biz||'', p_data:cloudData() }, keep)
     .then(function(ok){ if(ok) setSaved('saved'); else { setSaved('err'); } })
     .catch(function(){ cloudDirty=true; setSaved('err'); });
 }
@@ -1392,8 +1412,6 @@ function mstripHTML(path, s, vals, open, money){
        (m>0?'<button class="un" type="button" data-undo="1" tabindex="-1" aria-label="'+attr(tl('Clear this month'))+'" data-tt="'+attr(tl('Clear this and follow the trend again'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h11a5 5 0 1 1 0 10H9"/><path d="M3 10l5-5M3 10l5 5"/></svg></button>':'')+
        '</div>';
   }
-  h+='<div class="mnote">'+mlab(0)+' '+tl('is your starting figure. Type over any other month and')+' '+
-     '<b>'+tl('the months after it pick the trend back up')+'</b> '+tl('from whatever you put in.')+'</div>';
   return h+'</div>';
 }
 function explain(s, vals, m, money){
@@ -1430,23 +1448,21 @@ function blkHTML(key, title, sub, colour, bodyHTML, footHTML, total, sampled){
 
 function renderEditor(){
   var c=calc(), h='';
-  h+='<div class="secnote">'+esc(tl('What you sell'))+'</div>';
+  h+='<div class="secnote rev">'+esc(tl('Products/Services'))+'</div>';
   st.svc.forEach(function(s,i){
     var d=c.svc[i], body='';
-    body+='<div class="namerow"><span class="lblr">'+esc(tl('What this is called'))+'</span>'+
+    body+='<div class="namerow"><span class="lblr">'+esc(tl('Name'))+'</span>'+
           '<input class="tfld" data-svcname="'+i+'" value="'+esc(s.name)+'" placeholder="'+esc(tl('Name this service'))+'"></div>';
     body+=vrowHTML('s|'+i+'|price','Price per customer',s.price,
-      {hint:'what one customer pays', tip:tl('What one customer pays you in a month. For a retainer, the monthly fee.')});
+      {tip:tl('What one customer pays you in a month. For a retainer, the monthly fee.')});
     body+=vrowHTML('s|'+i+'|qty','Customers',s.qty,
-      {unit:'count', hint:'how many pay you', startLabel:'How many',
+      {unit:'count', startLabel:'How many',
        tip:tl('How many customers pay you in that month. For a retainer, your live client count.')});
-    var foot='<div class="bfoot"><span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">'+
-      esc(tl('Revenue = price × customers, worked out for all twelve months.'))+'</span></div>';
-    h+=blkHTML('s'+i, s.name, tl('Revenue'), CATCOL[i%6], body, foot, sum(d.rev), s.price.sm||s.qty.sm);
+    h+=blkHTML('s'+i, s.name, tl('Revenue'), CATCOL[i%6], body, '', sum(d.rev), s.price.sm||s.qty.sm);
   });
-  h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add another thing you sell'))+'</button></div>';
+  h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add service / product'))+'</button></div>';
 
-  h+='<div class="secnote">'+esc(tl('What it costs'))+'</div>';
+  h+='<div class="secnote cost">'+esc(tl('Costs'))+'</div>';
   st.cat.forEach(function(cat,ci){
     var d=c.cat[ci], body='', foot='', sampled=false, n;
     if(cat.team){
@@ -1454,22 +1470,19 @@ function renderEditor(){
         if(ro.pay.sm||ro.n.sm) sampled=true;
         body+='<div style="padding-top:4px"></div>';
         body+=vrowHTML('t|'+ci+'|'+ri+'|pay', ro.name, ro.pay,
-          {rename:true, hint:'monthly salary each', startLabel:'Salary', pair:true,
+          {rename:true, startLabel:'Salary', pair:true,
            del:'t|'+ci+'|'+ri, tip:tl('What one person in this position is paid per month, all in.')});
         body+=vrowHTML('t|'+ci+'|'+ri+'|n','How many people',ro.n,
-          {unit:'count', sub:true, hint:'in this position', startLabel:'How many',
+          {unit:'count', sub:true, startLabel:'How many',
            tip:tl('How many people you have in this position. Type over a later month to add a hire.')});
       });
-      if(!cat.roles.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">'+esc(tl('No one on the payroll yet.'))+'</div>';
-      foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a position'))+'</button>'+
-           '<span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">'+esc(tl('Cost = salary × how many'))+'</span></div>';
+      foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a position'))+'</button></div>';
       n=tcount('position', cat.roles.length);
     } else {
       cat.items.forEach(function(item,ii){
         if(item.s.sm) sampled=true;
         body+=vrowHTML('c|'+ci+'|'+ii, item.name, item.s, {rename:true, del:'c|'+ci+'|'+ii});
       });
-      if(!cat.items.length) body+='<div style="padding:14px 0;font-size:12.5px;color:var(--ink-3);font-weight:600">'+esc(tl('Nothing here yet.'))+'</div>';
       foot='<div class="bfoot"><button class="addbtn" data-addcost="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a cost to'))+' '+esc(AR?cat.name:cat.name.toLowerCase())+'</button></div>';
       n=tcount('line', cat.items.length);
     }
@@ -1844,7 +1857,12 @@ function renderPlan(){
 }
 function syncVeil(){
   var v=document.getElementById('veil');
-  if(v) v.hidden = !anySample();
+  if(v) v.hidden = !(st && st.svc && st.svc.length && st.svc[0].price.sm);
+}
+/* the moment the first service has a price, the other services stop pretending: their
+   revenue drops to zero, which is what prompts the next entry */
+function firstPriceTyped(){
+  st.svc.forEach(function(sv,i){ if(i>0){ sv.price=S(0); sv.qty=S(0); } });
 }
 
 /* ═══════════ the coach ═══════════ */
@@ -1968,7 +1986,7 @@ function markNav(v){
 function egChips(){
   var have={};
   st.names.forEach(function(x){ if(x.trim()) have[x.trim().toLowerCase()]=1; });
-  var h='<span class="lb">'+esc(tl('Common for agencies'))+'</span>';
+  var h='<span class="lb">'+esc(tl('Suggestions'))+'</span>';
   AGENCY.map(tl).forEach(function(x){
     h+='<button class="eg'+(have[x.toLowerCase()]?' on':'')+'" type="button" data-eg="'+esc(x)+'">'+esc(x)+'</button>';
   });
@@ -2082,7 +2100,7 @@ document.getElementById('stage-start').addEventListener('click',function(e){
       st.nameIds=st.svc.map(function(s){ return s.id; });
       st.openBlk={s0:true};
       save(); setStage('plan'); setView('build');
-      toast(tl('Updated — your numbers are still here'));
+      toast(tl('Updated'));
     } else {
       setPID(null);   /* a brand-new plan never inherits an old link */
       st=build(biz, st.cur, st.sm, st.sy, picked.map(function(p){ return p.n; }));
@@ -2121,6 +2139,7 @@ main.addEventListener('input',function(e){
     s=getSeries(path);
     v=num(t.value);
     if(which==='b'){
+      if(s.sm && path==='s|0|price') firstPriceTyped();
       s.sm=false;
       t.closest('.nf').classList.remove('sampled');
       t.placeholder='0';
@@ -2143,6 +2162,7 @@ main.addEventListener('input',function(e){
     s=getSeries(p2);
     v=num(t.value);
     if(m===0){
+      if(s.sm && p2==='s|0|price') firstPriceTyped();
       s.sm=false;
       s.b = v===null ? 0 : v; delete s.ov[0];
       var sf=document.querySelector('.vrow[data-row="'+p2+'"] input[data-num="b"]');
@@ -2301,7 +2321,6 @@ document.addEventListener('click',function(e){
     st.names = st.svc.map(function(s){ return s.name; });
     st.nameIds = st.svc.map(function(s){ return s.id; });
     initStart(); setStage('start');
-    toast(tl('Change what you need, then build again'));
     return;
   }
   if(!e.target.closest('#menu') && !e.target.closest('[data-addcost]') && !e.target.closest('[data-addrole]')) closeMenu();
@@ -2312,14 +2331,14 @@ function rerenderRow(path){
   var row=document.querySelector('.vrow[data-row="'+path+'"]'); if(!row) return;
   var a=path.split('|'), s=getSeries(path), label, cfg;
   if(a[0]==='s'){
-    if(a[2]==='price'){ label='Price per customer'; cfg={hint:'what one customer pays', tip:'What one customer pays you in a month. For a retainer, the monthly fee.'}; }
-    else { label='Customers'; cfg={unit:'count', hint:'how many pay you', startLabel:'How many', tip:'How many customers pay you in that month.'}; }
+    if(a[2]==='price'){ label='Price per customer'; cfg={tip:'What one customer pays you in a month. For a retainer, the monthly fee.'}; }
+    else { label='Customers'; cfg={unit:'count', startLabel:'How many', tip:'How many customers pay you in that month.'}; }
   } else if(a[0]==='c'){
     label=st.cat[+a[1]].items[+a[2]].name; cfg={rename:true, del:'c|'+a[1]+'|'+a[2]};
   } else {
     var ro=st.cat[+a[1]].roles[+a[2]];
-    if(a[3]==='pay'){ label=ro.name; cfg={rename:true, hint:'monthly salary each', startLabel:'Salary', pair:true, del:'t|'+a[1]+'|'+a[2], tip:'What one person in this position is paid per month, all in.'}; }
-    else { label='How many people'; cfg={unit:'count', sub:true, hint:'in this position', startLabel:'How many', tip:'Type over a later month to add a hire.'}; }
+    if(a[3]==='pay'){ label=ro.name; cfg={rename:true, startLabel:'Salary', pair:true, del:'t|'+a[1]+'|'+a[2], tip:'What one person in this position is paid per month, all in.'}; }
+    else { label='How many people'; cfg={unit:'count', sub:true, startLabel:'How many', tip:'Type over a later month to add a hire.'}; }
   }
   row.outerHTML = vrowHTML(path, label, s, cfg);
 }
@@ -2421,7 +2440,7 @@ function doShare(){
     /* the plan never reached the server (offline, say): fall back to the self-contained link */
     try{ u=shareURL(); }catch(e){ toast(tl('Could not build the link')); return; }
   }
-  var ok=function(){ toast(tl(PID ? 'Link copied — anyone with it can open and edit this plan' : 'Link copied — it opens this exact plan')); };
+  var ok=function(){ toast(tl('Link copied')); };
   if(navigator.clipboard && navigator.clipboard.writeText)
     navigator.clipboard.writeText(u).then(ok, function(){ prompt(tl('Copy this link'), u); });
   else prompt(tl('Copy this link'), u);
@@ -2541,11 +2560,12 @@ function localiseChrome(){
   q('label[for="q-sm"]').textContent = tl('Year starts');
   q('label[for="q-sy"]').textContent = tl('Year');
   var qs=document.querySelectorAll('#stage-start .q'), qss=document.querySelectorAll('#stage-start .qs');
-  qs[0].textContent = tl('What is the business called?');
-  qss[0].textContent = tl('Required. This is the name that goes on the plan.');
-  qs[1].textContent = tl('What do you sell?');
-  qss[1].textContent = tl('Add at least one. One line per thing you charge for. Tap a common one or type your own.');
+  qs[0].textContent = tl('Business name');
+  qss[0].textContent = tl('Required');
+  qs[1].textContent = tl('Products/Services');
+  qss[1].textContent = tl('Add at least one');
   q('#opening').textContent = tl('Opening your plan…');
+  q('#veil span').innerHTML = '<b>'+tl('Sample figures')+'</b>'+tl('Enter your price to see your plan');
   q('#q-biz').placeholder = tl('e.g. Northline Studio');
   tailText(q('#q-add'), tl('Add product / service'));
   q('#btn-setup').setAttribute('data-tt', tl('Change the business name or your list of products and services'));
@@ -2600,7 +2620,7 @@ if(linkId && !shared){
   setStage('plan'); setView('build');
   try{ history.replaceState(null,'',location.pathname); }catch(e){}
   save(true);
-  toast(tl('Opened a shared plan — change anything and it becomes yours'));
+  toast(tl('Plan opened'));
 } else if(st){
   /* a returning visitor on the tool's own address carries on with their own plan link */
   if(PID) syncURL();
