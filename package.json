@@ -1,8 +1,0 @@
-{
-  "name": "personal-website",
-  "private": true,
-  "description": "Static site. The only dependency is @vercel/og, which draws the plan-link preview image (api/plan-image.js).",
-  "dependencies": {
-    "@vercel/og": "^0.6.2"
-  }
-}

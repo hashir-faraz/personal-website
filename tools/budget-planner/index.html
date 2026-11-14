@@ -13,15 +13,15 @@
 <meta property="og:title" content="12-Month Budget Planner">
 <meta property="og:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
 <meta property="og:url" content="https://hashirfaraz.com/tools/budget-planner/">
-<meta property="og:image" content="https://hashirfaraz.com/api/plan-image?mode=tool">
-<meta property="og:image:type" content="image/png">
+<meta property="og:image" content="https://hashirfaraz.com/assets/previews/tool-en.jpg?v=2">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:alt" content="A full year of profit &amp; loss, without the spreadsheet — the 12-Month Budget Planner">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="12-Month Budget Planner">
 <meta name="twitter:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
-<meta name="twitter:image" content="https://hashirfaraz.com/api/plan-image?mode=tool">
+<meta name="twitter:image" content="https://hashirfaraz.com/assets/previews/tool-en.jpg?v=2">
 <link rel="icon" href="/assets/favicon.png">
 <link rel="apple-touch-icon" href="/assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,6 +226,9 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .bh .chev{flex:none;width:18px;height:18px;display:grid;place-items:center;color:var(--ink-4)}
 .bh .chev svg{width:11px;height:11px;transition:transform .18s}
 .blk.open .bh .chev svg{transform:rotate(90deg)}
+/* in Arabic a closed block points left, an open one down */
+html[dir="rtl"] .bh .chev svg{transform:scaleX(-1)}
+html[dir="rtl"] .blk.open .bh .chev svg{transform:scaleX(-1) rotate(90deg)}
 .bh .sw3{flex:none;width:9px;height:9px;border-radius:3px}
 .bh .bt{font-size:14px;font-weight:800;letter-spacing:-.015em;flex:1;min-width:0;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap}
@@ -1211,20 +1214,8 @@ var LOCAL=/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 var PID=null, cloudT, cloudDirty=false, creating=null;
 try{ PID=localStorage.getItem(PKEY)||null; }catch(e){}
 
-/* what goes to the database: the plan, plus its year totals (the link-preview picture is drawn
-   from these). Totals are left out while the first price is still a sample. */
-function cloudData(){
-  var d=packState();
-  try{
-    if(st.svc.length && !st.svc[0].price.sm){
-      var c=calc(), r=function(a){ return a.map(function(v){ return Math.round(v); }); };
-      d.sum={ c:st.cur, r:r(c.rev), x:r(c.opex), n:r(c.net), l:[0,1,2,3,4,5,6,7,8,9,10,11].map(function(m){ return mlab(m); }),
-        s:c.svc.slice(0,4).map(function(d){ return [String(d.ref.name||'').slice(0,20), r(d.rev)]; }),
-        k:c.cat.slice(0,6).map(function(d){ return [String(d.ref.name||'').slice(0,20), r(d.v)]; }) };
-    }
-  }catch(e){}
-  return d;
-}
+/* what goes to the database: the plan itself */
+function cloudData(){ return packState(); }
 function rpc(fn, body, keep){
   return fetch(SB_URL+'/rest/v1/rpc/'+fn, { method:'POST', keepalive:!!keep,
     headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY, 'Content-Type':'application/json' },
