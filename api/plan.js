@@ -76,8 +76,8 @@ module.exports = async function handler(req, res) {
   }
 
   if (toolAr) {
-    const title = 'مخطّط ميزانية 12 شهر مجاني — هاشر فراز';
-    const desc = 'أجب عن سؤالين واحصل على سنة كاملة من الإيرادات والتكاليف والأرباح — جدول أرباح وخسائر تقدر تطبعه. مجاني وبدون تسجيل.';
+    const title = 'مخطّط ميزانية 12 شهر — هاشر فراز';
+    const desc = 'أجب عن سؤالين واحصل على سنة كاملة من الإيرادات والتكاليف والأرباح — جدول أرباح وخسائر تقدر تطبعه.';
     const img = 'https://hashirfaraz.com/api/plan-image?mode=tool&lang=ar';
     html = html.replace(/<title>[^<]*<\/title>/, () => '<title>' + title + '</title>');
     html = setMeta(html, 'name', 'description', desc);

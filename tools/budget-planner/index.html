@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Free 12-Month Budget Planner — Hashir Faraz</title>
-<meta name="description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print. Free, no sign-up.">
+<title>12-Month Budget Planner — Hashir Faraz</title>
+<meta name="description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
 <link rel="canonical" href="https://hashirfaraz.com/tools/budget-planner/">
 <meta name="theme-color" content="#3533CD">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Hashir Faraz">
 <meta property="og:locale" content="en_GB">
-<meta property="og:title" content="Free 12-Month Budget Planner">
-<meta property="og:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print. No sign-up.">
+<meta property="og:title" content="12-Month Budget Planner">
+<meta property="og:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
 <meta property="og:url" content="https://hashirfaraz.com/tools/budget-planner/">
 <meta property="og:image" content="https://hashirfaraz.com/api/plan-image?mode=tool">
 <meta property="og:image:type" content="image/png">
-<meta property="og:image:alt" content="A full year of profit &amp; loss, without the spreadsheet — the free 12-Month Budget Planner">
+<meta property="og:image:alt" content="A full year of profit &amp; loss, without the spreadsheet — the 12-Month Budget Planner">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Free 12-Month Budget Planner">
+<meta name="twitter:title" content="12-Month Budget Planner">
 <meta name="twitter:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
 <meta name="twitter:image" content="https://hashirfaraz.com/api/plan-image?mode=tool">
 <link rel="icon" href="/assets/favicon.png">
@@ -1218,7 +1218,9 @@ function cloudData(){
   try{
     if(st.svc.length && !st.svc[0].price.sm){
       var c=calc(), r=function(a){ return a.map(function(v){ return Math.round(v); }); };
-      d.sum={ c:st.cur, r:r(c.rev), x:r(c.opex), n:r(c.net), l:[0,1,2,3,4,5,6,7,8,9,10,11].map(function(m){ return mlab(m); }) };
+      d.sum={ c:st.cur, r:r(c.rev), x:r(c.opex), n:r(c.net), l:[0,1,2,3,4,5,6,7,8,9,10,11].map(function(m){ return mlab(m); }),
+        s:c.svc.slice(0,4).map(function(d){ return [String(d.ref.name||'').slice(0,20), r(d.rev)]; }),
+        k:c.cat.slice(0,6).map(function(d){ return [String(d.ref.name||'').slice(0,20), r(d.v)]; }) };
     }
   }catch(e){}
   return d;
@@ -2048,7 +2050,7 @@ function syncSettings(){
   document.title = st.built && st.biz
     ? st.biz+' — '+tl('Financial Plan')
     : (AR ? 'مخطّط ميزانية 12 شهر — هاشر فراز'
-          : 'Free 12-Month Budget Planner — Hashir Faraz');
+          : '12-Month Budget Planner — Hashir Faraz');
   /* with real months off the start date means nothing, so it steps out of the way */
   document.getElementById('q-sm').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';
   document.getElementById('q-sy').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';

@@ -1,18 +1,18 @@
 /* The picture shown when a link is pasted into WhatsApp, Slack, LinkedIn and so on.
 
-   Three versions, all drawn on the fly with @vercel/og:
-     /api/plan-image?id=<plan>      a shared plan: the company's name, a sheet carrying its real
-                                    year totals, and the P&L table peeking out from behind it
-     /api/plan-image?mode=tool      the planner page itself (before anyone has a plan): a headline,
-                                    an example sheet and a call to action
+   Two versions, drawn on the fly with @vercel/og:
+     /api/plan-image?id=<plan>      a shared plan: the company's name, a card with its real year
+                                    totals, and its P&L sheet showing behind the card
+     /api/plan-image?mode=tool      the planner page itself, before anyone has a plan: the logo, the
+                                    name of the tool and an example year
      ...&lang=ar                    the tool version in Arabic (a plan follows its own language)
 
-   Arabic is mirrored: text on the right, cards on the left, table columns reversed, no letter
+   Arabic is mirrored: text on the right, cards on the left, table columns reversed, and no letter
    spacing (it breaks the joins). Fonts and the logo are embedded so nothing is fetched. */
 
 import { ImageResponse } from '@vercel/og';
 import { MANROPE_800, MANROPE_500, CAIRO_700 } from './_fonts.js';
-import { LOGO } from './_logo.js';
+import { LOGO, LOGO_RATIO } from './_logo.js';
 
 export const config = { runtime: 'edge' };
 
@@ -21,20 +21,19 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 
 const INDIGO = '#3533CD', DEEP = '#28279B', INK = '#101014', GREY = '#85858F', LINE = '#E7E6E1';
 const GREEN = '#0A8754', RED = '#C8374B';
-const LOGO_RATIO = 420 / 259;
 
 const T = {
   en: {
     eyebrow: '12-MONTH FINANCIAL PLAN', built: 'Built with', yearOne: 'YEAR 1', revenue: 'REVENUE',
-    costs: 'COSTS', net: 'NET PROFIT', months: '12 MONTHS', example: 'EXAMPLE', pl: 'PROFIT & LOSS',
-    year: 'YEAR', toDate: 'PROFIT TO DATE', toolEyebrow: 'FREE · NO SIGN-UP',
-    toolTitle: '12-Month Budget Planner', cta: 'Build your plan free', fallbackName: 'Your business'
+    costs: 'COSTS', net: 'NET PROFIT', months: '12 MONTHS', example: 'EXAMPLE', year: 'YEAR',
+    secRev: 'Revenue', totRev: 'Total revenue', secCost: 'Costs', totCost: 'Total costs', netRow: 'Net profit',
+    toolTitle: '12-Month Budget Planner', toolSub: 'Revenue, costs and profit, month by month', fallbackName: 'Your business'
   },
   ar: {
     eyebrow: 'الخطة المالية · 12 شهر', built: 'مبني بـ', yearOne: 'السنة الأولى', revenue: 'الإيراد',
-    costs: 'التكاليف', net: 'صافي الربح', months: '12 شهر', example: 'مثال', pl: 'الأرباح والخسائر',
-    year: 'السنة', toDate: 'الربح المتراكم', toolEyebrow: 'مجاني · بدون تسجيل',
-    toolTitle: 'مخطّط ميزانية 12 شهر', cta: 'ابنِ خطتك مجانًا', fallbackName: 'شغلك'
+    costs: 'التكاليف', net: 'صافي الربح', months: '12 شهر', example: 'مثال', year: 'السنة',
+    secRev: 'الإيراد', totRev: 'إجمالي الإيراد', secCost: 'التكاليف', totCost: 'إجمالي التكاليف', netRow: 'صافي الربح',
+    toolTitle: 'مخطّط ميزانية 12 شهر', toolSub: 'الإيرادات والتكاليف والأرباح، شهرًا بشهر', fallbackName: 'شغلك'
   }
 };
 
@@ -47,7 +46,16 @@ const MONTHS = {
 function sample(lang) {
   const r = [60000, 68000, 76000, 86000, 96000, 108000, 120000, 132000, 146000, 160000, 174000, 190000];
   const x = [78000, 78000, 80000, 82000, 84000, 88000, 92000, 96000, 100000, 104000, 108000, 112000];
-  return { c: 'QAR', r, x, n: r.map((v, i) => v - x[i]), l: MONTHS[lang] };
+  const part = (arr, f) => arr.map((v) => Math.round(v * f));
+  const rest = (arr, ...others) => arr.map((v, i) => v - others.reduce((a, o) => a + o[i], 0));
+  const ar = lang === 'ar';
+  const r1 = part(r, 0.6), r2 = part(r, 0.3), r3 = rest(r, r1, r2);
+  const x1 = part(x, 0.55), x2 = part(x, 0.15), x3 = part(x, 0.2), x4 = rest(x, x1, x2, x3);
+  return {
+    c: 'QAR', r, x, n: r.map((v, i) => v - x[i]), l: MONTHS[lang],
+    s: [[ar ? 'عقود شهرية' : 'Retainers', r1], [ar ? 'مشاريع' : 'Projects', r2], [ar ? 'استشارات' : 'Consulting', r3]],
+    k: [[ar ? 'الفريق' : 'Team', x1], [ar ? 'المكتب' : 'Workspace', x2], [ar ? 'التسويق' : 'Marketing', x3], [ar ? 'الإدارة' : 'Admin', x4]]
+  };
 }
 
 function font(b64) {
@@ -98,56 +106,72 @@ function skeletonBars() {
     pattern.map((p) => h('div', { width: 24, height: p, background: '#E3E2F7', borderRadius: 6 })));
 }
 
-/* the P&L table behind the main card. Only its top strip and its last column and a half show,
-   so it carries column heads and figures, not row labels you could never read */
-function backCard(sum, t, rtl, ar) {
-  const W = { label: 170, m: 92, year: 104 };
-  const ls = ar ? 0 : 1.5;
+/* The sheet behind the main card: the planner's Spreadsheet view, zoomed far out. Twelve month
+   columns and a year column, revenue lines, costs, totals, net profit. It is texture, not
+   content: small, light, nothing bold. Only its top strip and last columns show. */
+function sheetCard(sum, t, rtl, ar) {
+  const W = { label: 132, m: 34, year: 62 };
   const dir = rtl ? 'row-reverse' : 'row';
+  const ls = ar ? 0 : 1;
+  const SOFT = '#8A8A96';
   const l = sum && Array.isArray(sum.l) && sum.l.length === 12 ? sum.l : null;
   const lab = (i) => { const v = l ? String(l[i]) : 'M' + (i + 1); return ar ? v : v.toUpperCase(); };
-  const pill = () => h('div', { width: 44, height: 14, background: '#D9D8F2', borderRadius: 7 }, []);
+  const pill = (w) => h('div', { width: w, height: 8, background: '#E6E6F2', borderRadius: 4 }, []);
+  const lines = (a) => (Array.isArray(a) ? a : []).filter((x) => Array.isArray(x) && Array.isArray(x[1]) && x[1].length === 12);
 
-  const head = (txt, w, color) => h('div', { width: w, justifyContent: 'center', fontSize: 17, fontWeight: 800, color, letterSpacing: ls }, txt);
-  const header = h('div', { flexDirection: dir, height: 58, background: '#E4E3F8', alignItems: 'center' }, [
-    h('div', { width: W.label, padding: '0 14px', fontSize: 15, fontWeight: 800, color: INDIGO, letterSpacing: ls,
-      justifyContent: rtl ? 'flex-end' : 'flex-start' }, t.pl),
-    head(lab(9), W.m, '#6B6AA8'), head(lab(10), W.m, '#6B6AA8'), head(lab(11), W.m, '#6B6AA8'),
-    head(t.year, W.year, INDIGO)
+  /* the header */
+  const hcell = (txt, w) => h('div', { width: w, justifyContent: 'center', fontSize: 10, fontWeight: 500, color: '#8E8EA6', letterSpacing: ls }, txt);
+  const header = h('div', { flexDirection: dir, height: 38, background: '#EEEEF8', alignItems: 'center' }, [
+    h('div', { width: W.label, padding: '0 12px', justifyContent: rtl ? 'flex-end' : 'flex-start' }, []),
+    ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => hcell(lab(i), W.m)),
+    hcell(t.year, W.year)
   ]);
 
-  /* cells: [{t:'12K', c:colour}] or null for a grey placeholder */
-  const row = (label, cells, bg) => h('div', {
-    flexDirection: dir, height: 66, alignItems: 'center', background: bg || 'transparent', borderBottom: '1px solid #DDDCF0'
-  }, [
-    h('div', { width: W.label, padding: '0 18px', fontSize: 19, fontWeight: 800, color: INK,
-      justifyContent: rtl ? 'flex-end' : 'flex-start' }, label || []),
-    ...cells.map((c, i) => h('div', { width: i === 3 ? W.year : W.m, justifyContent: 'center', fontSize: 22, fontWeight: 800,
-      color: c ? c.c : INK }, c ? c.t : [pill()]))
-  ]);
+  /* kinds: sec (heading), line, tot, gap, net. vals is 12 numbers, or null for placeholders */
+  const row = (kind, label, vals) => {
+    const H = kind === 'gap' ? 10 : kind === 'net' ? 28 : kind === 'tot' ? 26 : 24;
+    const bg = kind === 'net' ? '#E9F5EF' : 'transparent';
+    const color = kind === 'tot' ? INK : SOFT;
+    const cell = (v, w) => h('div', { width: w, justifyContent: 'center', fontSize: 11, fontWeight: 500,
+      color: kind === 'net' ? (v >= 0 ? GREEN : RED) : color }, kind === 'net' ? signed(v) : (v === 0 ? '–' : compact(v)));
+    const cells = kind === 'sec' || kind === 'gap' ? [] : vals
+      ? [...vals.map((v) => cell(v, W.m)), cell(total(vals), W.year)]
+      : [...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(() => h('div', { width: W.m, justifyContent: 'center' }, [pill(16)])),
+         h('div', { width: W.year, justifyContent: 'center' }, [pill(24)])];
+    return h('div', { flexDirection: dir, height: H, alignItems: 'center', background: bg,
+      borderBottom: kind === 'line' ? '1px solid #F0F0F7' : '0 solid transparent' }, [
+      h('div', { width: W.label, padding: '0 12px', fontSize: 11, fontWeight: 500, color: kind === 'sec' ? INDIGO : color,
+        justifyContent: rtl ? 'flex-end' : 'flex-start', letterSpacing: kind === 'sec' ? ls : 0 },
+        label ? (kind === 'sec' ? (ar ? label : label.toUpperCase()) : label.slice(0, 20)) : []),
+      ...cells
+    ]);
+  };
 
-  let rows;
+  let rows = [];
   if (sum) {
-    const cum = (to) => total(sum.n.slice(0, to + 1));
-    const ink = (v) => ({ t: compact(v), c: INK });
-    const tone = (v) => ({ t: signed(v), c: v >= 0 ? GREEN : RED });
+    const rv = lines(sum.s).slice(0, 4), ct = lines(sum.k).slice(0, 6);
     rows = [
-      row(t.revenue, [ink(sum.r[9]), ink(sum.r[10]), ink(sum.r[11]), ink(total(sum.r))]),
-      row(t.costs, [ink(sum.x[9]), ink(sum.x[10]), ink(sum.x[11]), ink(total(sum.x))]),
-      row(t.net, [tone(sum.n[9]), tone(sum.n[10]), tone(sum.n[11]), tone(total(sum.n))], '#E9F5EF'),
-      row(t.toDate, [tone(cum(9)), tone(cum(10)), tone(cum(11)), tone(cum(11))]),
-      row('', [null, null, null, null]),
-      row('', [null, null, null, null])
+      row('sec', t.secRev),
+      ...rv.map(([n, v]) => row('line', String(n), v)),
+      row('tot', t.totRev, sum.r),
+      row('gap'),
+      row('sec', t.secCost),
+      ...ct.map(([n, v]) => row('line', String(n), v)),
+      row('tot', t.totCost, sum.x),
+      row('gap'),
+      row('net', t.netRow, sum.n)
     ];
   } else {
-    rows = [0, 1, 2, 3, 4, 5].map(() => row('', [null, null, null, null]));
+    rows = [row('sec', t.secRev), row('line', '', null), row('line', '', null), row('line', '', null), row('tot', '', null),
+      row('gap'), row('sec', t.secCost), row('line', '', null), row('line', '', null), row('line', '', null), row('line', '', null),
+      row('tot', '', null), row('gap'), row('net', '', null)];
   }
 
-  const side = rtl ? { right: 56 } : { left: 56 };
+  const side = rtl ? { right: -12 } : { left: -12 };
   return h('div', {
-    position: 'absolute', top: 22, ...side, width: 550, height: 480, flexDirection: 'column', background: '#F2F2FC',
-    borderRadius: 26, overflow: 'hidden', boxShadow: '0 24px 60px rgba(10,10,60,0.30)',
-    transform: 'rotate(' + (rtl ? -3 : 3) + 'deg)'
+    position: 'absolute', top: 30, ...side, width: W.label + W.m * 12 + W.year, flexDirection: 'column', background: '#FBFBFE',
+    borderRadius: 18, overflow: 'hidden', boxShadow: '0 24px 60px rgba(10,10,60,0.30)',
+    transform: 'rotate(' + (rtl ? -2 : 2) + 'deg)'
   }, [header, ...rows]);
 }
 
@@ -242,28 +266,28 @@ export default async function handler(req) {
 
   const align = rtl ? 'flex-end' : 'flex-start';
   const headline = tool ? t.toolTitle : (name || t.fallbackName);
-  const eyebrow = tool ? t.toolEyebrow : t.eyebrow;
   const hl = headline.length;
   const size = tool ? (ar ? 70 : 76) : hl <= 12 ? 84 : hl <= 20 ? 70 : hl <= 32 ? 56 : 46;
 
-  /* top of the text column: only the planner's own picture carries the logo up there */
-  const top = tool
-    ? h('div', { padding: '12px 24px', background: '#FFFFFF', borderRadius: 22 }, [logo(56)])
-    : h('div', { height: 1 }, []);
+  /* the planner's own picture carries the logo at the top; a shared plan carries none up there */
+  const top = tool ? logo(34) : h('div', { height: 1 }, []);
 
-  const middle = h('div', { flexDirection: 'column', alignItems: align }, [
-    h('div', { fontSize: 22, fontWeight: 800, color: '#C9C8F2', letterSpacing: ls, marginBottom: 18 }, eyebrow),
-    h('div', { fontSize: size, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.06, letterSpacing: ar ? 0 : -2,
-      maxWidth: 520, textAlign: rtl ? 'right' : 'left', lineClamp: 3 }, headline)
-  ]);
+  const headlineEl = h('div', { fontSize: size, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.06, letterSpacing: ar ? 0 : -2,
+    maxWidth: 520, textAlign: rtl ? 'right' : 'left', lineClamp: 3 }, headline);
+  const middle = tool
+    ? h('div', { flexDirection: 'column', alignItems: align }, [headlineEl])
+    : h('div', { flexDirection: 'column', alignItems: align }, [
+        h('div', { fontSize: 22, fontWeight: 800, color: '#C9C8F2', letterSpacing: ls, marginBottom: 18 }, t.eyebrow),
+        headlineEl
+      ]);
 
-  /* bottom: a shared plan carries a quiet credit (its reader was sent here, no need to sell);
-     the planner's own picture asks for the click */
+  /* bottom: the planner's picture says what the tool does, in one quiet line; a shared plan
+     carries only a small credit (whoever opens it was sent here, so there is nothing to sell) */
   const bottom = tool
-    ? h('div', { padding: '14px 30px', borderRadius: 40, background: '#FFFFFF', color: INDIGO, fontSize: 28, fontWeight: 800 }, t.cta)
-    : h('div', { flexDirection: rtl ? 'row-reverse' : 'row', alignItems: 'center', gap: 14, padding: '8px 22px', background: '#FFFFFF', borderRadius: 40 }, [
-        h('div', { fontSize: 20, fontWeight: 500, color: '#5A5A66' }, t.built),
-        logo(44)
+    ? h('div', { fontSize: 24, fontWeight: 500, color: '#DCDBF7', maxWidth: 480, textAlign: rtl ? 'right' : 'left' }, t.toolSub)
+    : h('div', { flexDirection: rtl ? 'row-reverse' : 'row', alignItems: 'center', gap: 12 }, [
+        h('div', { fontSize: 18, fontWeight: 500, color: '#C9C8F2' }, t.built),
+        logo(22)
       ]);
 
   const text = h('div', {
@@ -272,7 +296,7 @@ export default async function handler(req) {
   }, [top, middle, bottom]);
 
   const cards = h('div', { position: 'relative', width: 600, height: 630 }, [
-    backCard(sum, t, rtl, ar),
+    sheetCard(sum, t, rtl, ar),
     mainCard(sum, t, rtl, ar, tool)
   ]);
 
