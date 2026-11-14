@@ -27,13 +27,13 @@ const T = {
     eyebrow: '12-MONTH FINANCIAL PLAN', built: 'Built with', yearOne: 'YEAR 1', revenue: 'REVENUE',
     costs: 'COSTS', net: 'NET PROFIT', months: '12 MONTHS', example: 'EXAMPLE', year: 'YEAR',
     secRev: 'Revenue', totRev: 'Total revenue', secCost: 'Costs', totCost: 'Total costs', netRow: 'Net profit',
-    toolTitle: '12-Month Budget Planner', toolSub: 'Revenue, costs and profit, month by month', fallbackName: 'Your business'
+    toolTitle: '12-Month Budget Planner', toolSub: 'Revenue, costs and profit by month', fallbackName: 'Your business'
   },
   ar: {
     eyebrow: 'الخطة المالية · 12 شهر', built: 'مبني بـ', yearOne: 'السنة الأولى', revenue: 'الإيراد',
     costs: 'التكاليف', net: 'صافي الربح', months: '12 شهر', example: 'مثال', year: 'السنة',
     secRev: 'الإيراد', totRev: 'إجمالي الإيراد', secCost: 'التكاليف', totCost: 'إجمالي التكاليف', netRow: 'صافي الربح',
-    toolTitle: 'مخطّط ميزانية 12 شهر', toolSub: 'الإيرادات والتكاليف والأرباح، شهرًا بشهر', fallbackName: 'شغلك'
+    toolTitle: 'مخطّط ميزانية 12 شهر', toolSub: 'الإيرادات والتكاليف والأرباح شهرًا بشهر', fallbackName: 'شغلك'
   }
 };
 
@@ -66,7 +66,7 @@ function font(b64) {
 }
 
 function h(type, style, children) {
-  return { type, props: { style: { display: 'flex', ...style }, children } };
+  return { type, props: { style: { display: 'flex', lineHeight: 1.2, ...style }, children } };
 }
 function logo(height) {
   return { type: 'img', props: { src: LOGO, width: Math.round(height * LOGO_RATIO), height } };
@@ -167,7 +167,7 @@ function sheetCard(sum, t, rtl, ar) {
       row('tot', '', null), row('gap'), row('net', '', null)];
   }
 
-  const side = rtl ? { right: -12 } : { left: -12 };
+  const side = rtl ? { right: 6 } : { left: 6 };
   return h('div', {
     position: 'absolute', top: 30, ...side, width: W.label + W.m * 12 + W.year, flexDirection: 'column', background: '#FBFBFE',
     borderRadius: 18, overflow: 'hidden', boxShadow: '0 24px 60px rgba(10,10,60,0.30)',
@@ -284,7 +284,7 @@ export default async function handler(req) {
   /* bottom: the planner's picture says what the tool does, in one quiet line; a shared plan
      carries only a small credit (whoever opens it was sent here, so there is nothing to sell) */
   const bottom = tool
-    ? h('div', { fontSize: 24, fontWeight: 500, color: '#DCDBF7', maxWidth: 480, textAlign: rtl ? 'right' : 'left' }, t.toolSub)
+    ? h('div', { fontSize: 24, fontWeight: 500, color: '#DCDBF7', maxWidth: 520, textAlign: rtl ? 'right' : 'left' }, t.toolSub)
     : h('div', { flexDirection: rtl ? 'row-reverse' : 'row', alignItems: 'center', gap: 12 }, [
         h('div', { fontSize: 18, fontWeight: 500, color: '#C9C8F2' }, t.built),
         logo(22)
