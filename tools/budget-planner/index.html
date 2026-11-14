@@ -209,9 +209,9 @@ main{flex:1;min-height:0;overflow:auto;position:relative;scroll-behavior:smooth}
 .side{position:sticky;top:72px;min-width:0}
 /* the two halves of the page, services then costs: a colour bar and a heavy title so the break is
    seen from across the screen (green and red match the P&L shading) */
-.secnote{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;letter-spacing:-.015em;
+.secnote{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:800;letter-spacing:-.02em;
   color:var(--ink);padding:30px 2px 8px}
-.secnote::before{content:"";width:5px;height:22px;border-radius:3px;background:var(--accent);flex:none}
+.secnote::before{content:"";width:6px;height:26px;border-radius:3px;background:var(--accent);flex:none}
 .secnote::after{content:"";flex:1;height:1px;background:var(--line)}
 .secnote.rev::before{background:var(--pos)}
 .secnote.cost::before{background:var(--neg)}
@@ -237,6 +237,13 @@ html[dir="rtl"] .blk.open .bh .chev svg{transform:scaleX(-1) rotate(90deg)}
   padding-left:10px;border-left:1px solid var(--line);text-align:right;min-width:88px}
 .bh .bv.sampled{color:var(--ink-4)}
 .bb{padding:4px 14px 13px}
+.blk{position:relative}
+.blk.hasdel .bh{padding-right:50px}
+.bdel{position:absolute;top:7px;right:10px;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:var(--ink-4);transition:.14s}
+.bdel svg{width:16px;height:16px}
+.bdel:hover,.bdel:focus-visible{background:var(--neg-soft);color:var(--neg);outline:none}
+html[dir="rtl"] .bdel{right:auto;left:10px}
+html[dir="rtl"] .blk.hasdel .bh{padding-right:14px;padding-left:50px}
 
 /* value row — the field block that replaced the spreadsheet */
 .vrow{padding:13px 0 11px;border-bottom:1px dashed var(--line)}
@@ -246,11 +253,17 @@ html[dir="rtl"] .blk.open .bh .chev svg{transform:scaleX(-1) rotate(90deg)}
 .vrow.vsub{padding-top:4px}
 .vrow.vsub .vname{font-size:12px;font-weight:600;color:var(--ink-2)}
 /* the service name, editable inside the block it belongs to */
-.namerow{padding:12px 0 13px;border-bottom:1px dashed var(--line)}
-.tfld{width:100%;height:40px;border:1px solid var(--line);border-radius:11px;background:var(--paper);
-  padding:0 12px;font-size:14px;font-weight:700;outline:none;transition:.14s}
-.tfld:focus{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
-.vtop{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.namerow{padding:13px 0 12px;border-bottom:1px dashed var(--line)}
+.tfwrap{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #CDCCC4;
+  border-radius:12px;padding:0 12px;min-height:46px;transition:.14s}
+.tfwrap:hover{border-color:var(--accent-line)}
+.tfwrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px rgba(53,51,205,.11)}
+.tfld{flex:1;min-width:0;height:42px;border:0;background:none;outline:none;padding:0;font-size:16px;font-weight:700}
+/* three things to fill in, in order: name, price, customers */
+.stepn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11.5px;
+  font-weight:800;display:grid;place-items:center;line-height:1}
+.vtop{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.vrow.iscustom .vtop{margin-bottom:8px}
 .vname{font-size:13px;font-weight:700;color:var(--ink);flex:none}
 .rin{border:0;background:none;outline:none;font-family:inherit;font-size:13px;font-weight:700;color:var(--ink);
   padding:3px 6px;border-radius:7px;margin-left:-6px;min-width:0;flex:1}
@@ -265,64 +278,67 @@ html[dir="rtl"] .blk.open .bh .chev svg{transform:scaleX(-1) rotate(90deg)}
 .vtop .xb svg{width:13px;height:13px}
 
 .ctrl{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:stretch}
+.ctrl.one{grid-template-columns:1fr}
 .lblr{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-hint);
   display:block;margin-bottom:3px}
 
-/* one rail carries all four choices — three ways the number moves, plus the custom drawer */
-.mgrp{display:flex;align-items:stretch;background:var(--line-2);border-radius:11px;padding:3px;margin-top:9px}
-.mbtns{display:grid;grid-template-columns:repeat(3,1fr);flex:1;min-width:0}
-.mdiv{flex:none;width:1px;background:var(--line);margin:6px 5px}
-.mb{border-radius:8px;padding:7px 4px;display:flex;align-items:center;justify-content:center;gap:6px;
-  transition:.15s;text-align:center;min-width:0}
-.mb .ic{font-size:12px;font-weight:800;color:var(--ink-4);line-height:1;transition:.15s;flex:none}
-.mb .ic svg{width:12px;height:12px;display:block}
-.mb .tx{font-size:11.5px;font-weight:700;color:var(--ink-3);line-height:1.15;transition:.15s;white-space:nowrap}
-.mb:hover .tx,.mb:hover .ic{color:var(--ink-2)}
-.mb.on{background:#fff;box-shadow:0 1px 3px rgba(16,16,20,.13)}
-.mb.on .ic{color:var(--accent)}
-.mb.on .tx{color:var(--ink)}
-.mb.mcustom{flex:none;padding:7px 12px}
-.mb.mcustom.has .tx,.mb.mcustom.has .ic{color:var(--accent)}
-.mb.mcustom.open{background:var(--accent);box-shadow:none}
-.mb.mcustom.open .tx,.mb.mcustom.open .ic{color:#fff}
+/* the four ways a number can move are pills you can see are pills: outlined, and the chosen one is filled */
+.mgrp{display:flex;margin-left:auto}
+.mbtns{display:flex;flex-wrap:wrap;gap:6px}
+.mb{border:1.5px solid #CDCCC4;border-radius:999px;background:#fff;padding:6px 13px;display:flex;align-items:center;
+  justify-content:center;transition:.14s;min-width:0}
+.mb .tx,.mb{font-size:12px;font-weight:700;color:var(--ink-2);line-height:1.15;white-space:nowrap}
+.mb:hover{border-color:var(--accent);color:var(--accent)}
+.mb.on{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(53,51,205,.25)}
 
-/* number field with its label inside the box */
+/* number fields: a white box with a real border, so it reads as somewhere to type */
 .nf{display:block}
-.nfb{display:flex;flex-direction:column;justify-content:center;gap:1px;background:var(--paper);
-  border:1px solid var(--line);border-radius:11px;padding:7px 11px 6px;transition:.14s;min-height:55px;height:100%}
-.nfb:hover{border-color:var(--ink-4)}
-/* the label sits inside the box, so the box itself reads as the question */
-.nfl{font-size:9.5px;font-weight:700;letter-spacing:.085em;text-transform:uppercase;color:var(--ink-hint);
-  line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nfb{display:flex;flex-direction:column;justify-content:center;gap:3px;background:#fff;
+  border:1.5px solid #CDCCC4;border-radius:12px;padding:6px 12px;transition:.14s;min-height:46px;height:100%;cursor:text}
+.nfb:hover{border-color:var(--accent-line)}
+.nfb:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px rgba(53,51,205,.11)}
+.nfl{font-size:11.5px;font-weight:700;color:var(--ink-hint);line-height:1.2;transition:color .14s}
 .nfv{display:flex;align-items:center;gap:6px;min-width:0}
-/* up or down is a decision, not decoration: two buttons far enough apart to aim at */
-.sgn{display:inline-flex;gap:4px;flex:none;margin-right:3px}
-.sgn button{width:27px;height:27px;border-radius:8px;background:var(--line-2);color:var(--ink-3);
-  font-size:15px;font-weight:800;display:grid;place-items:center;line-height:1;transition:.14s;
-  font-family:var(--font)}
-.sgn button:hover{background:#E4E3DE;color:var(--ink)}
-.sgn button.on{background:var(--accent);color:#fff;box-shadow:0 2px 7px rgba(53,51,205,.3)}
-.sgn button.on.dn{background:var(--neg);box-shadow:0 2px 7px rgba(200,55,75,.3)}
-.nfb:focus-within{background:#fff;border-color:var(--accent-line);box-shadow:0 0 0 4px rgba(53,51,205,.09)}
-.nfb:focus-within .nfl{color:var(--accent)}
-.nfb .pre,.nfb .suf{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-4);flex:none;
-  font-style:normal;margin-top:1px}
-.nfb input{width:100%;border:0;background:none;outline:none;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px;
-  font-weight:600;padding:0;min-width:0;font-variant-numeric:tabular-nums}
+.nfin{display:flex;align-items:center;gap:5px;flex:1;min-width:0}
+.nfb .pre,.nfb .suf{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-4);flex:none;font-style:normal}
+.nfb input{width:100%;border:0;background:none;outline:none;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:16px;
+  font-weight:600;padding:0;min-width:0}
 .nfb input::placeholder{color:var(--ink-4);font-weight:500}
-.nostep{display:flex;flex-direction:column;justify-content:center;gap:1px;border:1px dashed var(--line);
-  border-radius:11px;padding:7px 11px 6px;min-height:55px;line-height:1.2}
-.nostep .nfl{color:var(--ink-4)}
-.nostep .ns{font-size:13px;font-weight:600;color:var(--ink-4)}
+/* the change field: minus and plus either side of the number. More is green, less is red. */
+.nfstep .nfin{justify-content:center}
+.nfstep input{width:7ch;text-align:center}
+.nfstep .nfin{gap:3px}
+.nfin.hs input{text-align:right}
+.nfin.hp input{text-align:left}
+.nfl.cap{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.nfb input.nm{font-family:var(--font);font-weight:700;font-size:15px}
+/* a position: who, what they are paid, how many */
+.rolerow{display:grid;grid-template-columns:1.7fr 1.1fr .7fr 26px;gap:9px;align-items:stretch;padding:12px 0;border-bottom:1px dashed var(--line)}
+.rolerow:last-child{border-bottom:0}
+.rolerow .xb{align-self:center;flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:var(--ink-4);opacity:0;transition:.14s}
+.rolerow:hover .xb,.rolerow .xb:focus{opacity:1}
+.rolerow .xb:hover{background:var(--neg-soft);color:var(--neg)}
+.rolerow .xb svg{width:13px;height:13px}
+.nfstep.up .nfl,.nfstep.up input{color:var(--pos)}
+.nfstep.dn .nfl,.nfstep.dn input{color:var(--neg)}
+.nfstep.up .nfb{border-color:rgba(10,135,84,.45)}
+.nfstep.dn .nfb{border-color:rgba(200,55,75,.5)}
+.stp{flex:none;width:30px;height:30px;border-radius:50%;background:var(--line-2);color:var(--ink-2);font-size:18px;
+  font-weight:700;display:grid;place-items:center;line-height:1;transition:.14s;font-family:var(--font);padding:0 0 2px}
+.stp:hover{background:var(--ink);color:#fff}
+.nostep{display:flex;align-items:center;border:1.5px dashed var(--line);border-radius:12px;padding:6px 12px;min-height:46px;
+  font-size:13px;font-weight:600;color:var(--ink-4)}
 
-/* month-by-month drawer */
-.vfoot{display:flex;align-items:center;gap:10px;margin-top:8px}
-.vtot{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;color:var(--ink-2);white-space:nowrap}
-.vtot em{font-style:normal;color:var(--ink-4);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
-  font-family:var(--font);font-weight:700;margin-right:5px}
+/* month-by-month table */
 .mstrip{display:none;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:6px;margin-top:10px;
   padding:10px;background:var(--paper);border:1px solid var(--line-2);border-radius:11px}
 .mstrip.on{display:grid}
+.mstrip.custom{margin-top:0}
+.mstrip.custom .un{display:none!important}
+.mstrip.custom .mc,.mstrip.custom .mc.ov{background:#fff;border-color:#CDCCC4}
+.mstrip.custom .mc.ov::after{display:none}
+.mstrip.custom .mc input{color:var(--ink);font-size:13px}
+.mstrip.custom .mc:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(53,51,205,.11)}
 .mc{position:relative;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 7px 3px}
 .mc label{display:block;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-hint)}
 .mc input{width:100%;border:0;background:none;outline:none;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;
@@ -388,6 +404,8 @@ table.pl thead th{font-size:10px;font-weight:700;letter-spacing:.05em;text-trans
 table.pl thead th:first-child{text-align:left;padding-left:2px}
 table.pl thead th.tc{color:var(--ink);border-left:1px solid var(--line)}
 table.pl td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11.5px;text-align:right;padding:4.5px 6px;color:var(--ink-2)}
+table.pl td:first-child .lc{display:flex;align-items:center;justify-content:space-between;gap:10px}
+table.pl td:first-child .lc .ib{margin-left:0}
 table.pl td:first-child{font-family:var(--font);text-align:left;font-size:12.5px;font-weight:600;color:var(--ink);
   padding-left:2px;white-space:nowrap}
 table.pl td.tc{border-left:1px solid var(--line);font-weight:600;color:var(--ink)}
@@ -405,21 +423,21 @@ table.pl tr.pct td:first-child{font-size:11px;font-weight:500;color:var(--ink-3)
 table.pl tr.gap td{padding:0;height:13px;border:0}
 /* the bottom line is the point of the sheet, so it is marked out in the brand rather than
    blacked out - a black bar reads as a header, not as an answer */
-table.pl tr.net td{background:var(--accent-soft);border-top:2px solid var(--accent);
-  border-bottom:2px solid var(--accent);padding-top:9px;padding-bottom:9px;font-weight:700;font-size:12.5px;color:var(--ink)}
-table.pl tr.net td:first-child{color:var(--accent-deep);font-weight:800;font-size:13.5px;padding-left:10px}
-table.pl tr.net td.tc{border-left-color:var(--accent-line);color:var(--accent-deep);font-weight:800}
+table.pl tr.net td{background:#fff;border-top:2px solid var(--ink);
+  border-bottom:2px solid var(--ink);padding-top:9px;padding-bottom:9px;font-weight:700;font-size:12.5px;color:var(--ink)}
+table.pl tr.net td:first-child{color:var(--ink);font-weight:800;font-size:13.5px;padding-left:10px}
+table.pl tr.net td.tc{border-left-color:var(--line);color:var(--ink);font-weight:800}
 table.pl td.neg{color:var(--neg)}
-table.pl tr.net td.neg,table.pl tr.net td.tc.neg{color:var(--neg)}
+table.pl tr.net td.neg,table.pl tr.net td.tc.neg{color:#9A1F33}
 
 /* a line still running on sample figures sits right back; the moment one of the numbers
    feeding it is the user's own it comes forward to full ink — that jump is the point */
 table.pl tr.samp td{color:#C4C3CC;transition:color .18s}
 table.pl tr.samp td:first-child{color:#AEADB7}
 table.pl tr.samp td.neg{color:#DDBAC0}
-table.pl tr.net.samp td{background:#F3F3F6;border-color:#DCDBE3;color:#A9A8B2}
+table.pl tr.net.samp td{border-color:#B9B8C2;color:#A9A8B2}
 table.pl tr.net.samp td:first-child,table.pl tr.net.samp td.tc{color:#A9A8B2}
-table.pl tr.net.samp td.neg{color:#CFB2B8}
+table.pl tr.net.samp td.neg{color:#CFA9B0}
 table.pl td{transition:color .18s}
 /* the twelve months of a total are ranked against each other and tinted by rank, so the
    shape of the year is visible in the sheet without reading a single figure */
@@ -430,11 +448,12 @@ table.pl td.ht{transition:color .18s,background-color .25s}
   vertical-align:1px;background:var(--line-2);color:var(--ink-4);font-size:9.5px;font-weight:800;
   font-style:italic;line-height:1;transition:.14s;flex:none}
 .ib:hover{background:var(--accent);color:#fff}
-table.pl tr.net .ib{background:var(--accent-line);color:var(--accent-deep)}
+table.pl tr.net .ib{background:var(--line-2);color:var(--ink-3)}
 table.pl tr.net .ib:hover{background:var(--accent);color:#fff}
-.sh-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:11px;
-  border-top:1px solid var(--line);font-size:10.5px;color:var(--ink-4);font-weight:600}
-.sh-foot b{color:var(--accent);font-weight:700}
+.sh-foot{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-top:16px;padding-top:11px;
+  border-top:1px solid var(--line);font-size:11px;color:var(--ink-4);font-weight:600}
+.blogo{display:inline-flex}
+.blogo img{height:26px;width:auto;display:block}
 
 /* the compact copy that sits beside the editor */
 .mini{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 14px 14px;
@@ -457,12 +476,15 @@ table.pl tr.net .ib:hover{background:var(--accent);color:#fff}
 .statlet.good .v{color:var(--pos)}
 .statlet.bad .v{color:var(--neg)}
 
+
 /* dashboard */
-.dash{width:1120px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:0 26px 24px;
+.dash{width:1120px}
+.dpane{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:0 26px 24px;
   box-shadow:0 10px 36px rgba(16,16,20,.06);overflow:hidden}
+.dpane.on{display:block}
 /* a brand band across the top, and the header sitting on a brand rule */
-.dash::before{content:"";display:block;height:5px;background:var(--accent);margin:0 -26px 20px}
-/* the header carries the name, who built it and the window it covers - nothing else */
+.dpane::before{content:"";display:block;height:5px;background:var(--accent);margin:0 -26px 20px}
+/* the header carries the plan's own name and the window it covers - nothing else */
 .dash .dh{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:16px;
   padding-bottom:13px;border-bottom:2px solid var(--ink)}
 .dash .dh h3{font-size:25px;font-weight:800;letter-spacing:-.028em;line-height:1.1}
@@ -482,9 +504,36 @@ table.pl tr.net .ib:hover{background:var(--accent);color:#fff}
 .kpi .k{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-hint)}
 .kpi .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:22px;font-weight:600;letter-spacing:-.03em;margin-top:4px;line-height:1.1}
 .kpi .d{font-size:11.5px;color:var(--ink-hint);font-weight:600;margin-top:3px}
+.kpi.txt .v{font-family:var(--font);font-size:17px;font-weight:700;letter-spacing:-.01em;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi.good .v{color:var(--pos)}
 .kpi.bad .v{color:var(--neg)}
 .dgrid{display:grid;grid-template-columns:1.55fr 1fr;gap:12px}
+.dgrid.one{grid-template-columns:1fr}
+.piewrap{display:flex;align-items:center;gap:18px;margin-top:10px}
+svg.pie{flex:none;width:158px;height:158px;display:block}
+.plegend{list-style:none;flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.plegend li{display:grid;grid-template-columns:10px 1fr auto auto;gap:8px;align-items:center;font-size:11.5px;font-weight:600;color:var(--ink-2)}
+.plegend i{width:10px;height:10px;border-radius:3px;display:block}
+.plegend .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plegend b{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+.plegend em{font-style:normal;font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink-4);min-width:44px;text-align:right}
+.dcard .empty{margin-top:14px;font-size:12px;color:var(--ink-4);font-weight:600}
+/* the three views of the dashboard */
+/* Revenue, Net profit and Net margin cards open their own view */
+.kpib{display:block;text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%;transition:border-color .14s,background .14s,transform .14s,box-shadow .14s}
+.kpib .k,.kpib .v,.kpib .d{display:block}
+.kpib:hover{border-color:var(--accent);transform:translateY(-1px)}
+.kpib.on{background:var(--accent-soft);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);cursor:default;transform:none}
+.kpib.on .k{color:var(--accent)}
+.ghost.done{background:var(--accent);border-color:var(--accent);color:#fff}
+/* a page being drawn into the PDF sits off-screen at its design width */
+.pdfhost{position:fixed;left:-12000px;top:0;width:1120px;background:#fff;z-index:-1}
+.pdfhost .dpane{display:block;border:0;border-radius:0;box-shadow:none}
+.pdfhost .sheet{border:0;border-radius:0;box-shadow:none}
+.pdfhost table.pl tr.samp td,.pdfhost table.pl tr.samp td:first-child{color:var(--ink-2)}
+.pdfhost table.pl tr.net.samp td{border-color:var(--ink);color:var(--ink)}
+.pdfhost table.pl tr.net.samp td.neg{color:#9A1F33}
+.pdfhost .ib{display:none}
 .dcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 15px 10px}
 .dcard h4{font-size:12.5px;font-weight:800;letter-spacing:-.01em}
 .dcard{border-top:2px solid var(--accent-line)}
@@ -558,7 +607,7 @@ html[dir="rtl"] button{text-align:right}
 /* the figures themselves are left-to-right inside a right-to-left page */
 html[dir="rtl"] table.pl td,html[dir="rtl"] table.pl th,
 html[dir="rtl"] .nfb input,html[dir="rtl"] .mc input,html[dir="rtl"] .kpi .v,
-html[dir="rtl"] .vtot,html[dir="rtl"] .bh .bv,html[dir="rtl"] .statlet .v,
+html[dir="rtl"] .bh .bv,html[dir="rtl"] .statlet .v,
 html[dir="rtl"] .bl .vv,html[dir="rtl"] .chip b{direction:ltr}
 html[dir="rtl"] table.pl td:first-child,html[dir="rtl"] table.pl th:first-child{direction:rtl;text-align:right}
 html[dir="rtl"] table.pl td,html[dir="rtl"] table.pl th{text-align:left}
@@ -569,8 +618,6 @@ html[dir="rtl"] table.pl tr.det td:first-child{padding-left:0;padding-right:26px
 html[dir="rtl"] table.pl tr.net td:first-child{padding-left:0;padding-right:10px}
 html[dir="rtl"] .bh .bv{padding-left:0;padding-right:10px;border-left:0;border-right:1px solid var(--line);text-align:left}
 html[dir="rtl"] .ib{margin-left:0;margin-right:5px}
-html[dir="rtl"] .vtot{margin-left:0;margin-right:auto}
-html[dir="rtl"] .vtot em{margin-right:0;margin-left:5px}
 html[dir="rtl"] .rin{margin-left:0;margin-right:-6px}
 html[dir="rtl"] .note{border-left:0;border-right:3px solid var(--accent-line)}
 html[dir="rtl"] .dash .dh .pip{margin-right:0;margin-left:10px}
@@ -629,7 +676,6 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
   .view.printing{display:block!important}
   /* a sheet still on sample figures should print as ink, not as the on-screen grey */
   table.pl tr.samp td,table.pl tr.samp td:first-child{color:var(--ink-2)!important}
-  table.pl tr.net.samp td{background:var(--ink)!important;color:#fff!important}
   .screen{min-height:0;padding:0;display:block}
   /* the scroll padding under the last section would spill a blank second page */
   #v-dash{padding-bottom:0}
@@ -640,11 +686,14 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
      (widening it makes the charts taller, so the gains cancel) and keeps its design width */
   .fitbox>.sheet,.fitbox>.dash{transform-origin:top left}
   .sheet,.mini{border:0;box-shadow:none;border-radius:0;padding:0}
-  .dash{border:0;box-shadow:none;border-radius:0}
+  .dpane{border:0;box-shadow:none;border-radius:0}
+  .kpib{cursor:default;transform:none!important}
+  .dash.allpanes .dpane{display:block!important;break-after:page;page-break-after:always}
+  .dash.allpanes .dpane:last-child{break-after:auto;page-break-after:auto}
   table.pl tr.net td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  table.pl tr.net.samp td{background:var(--accent-soft)!important;border-color:var(--accent)!important;color:var(--ink)!important}
-  table.pl tr.net.samp td:first-child,table.pl tr.net.samp td.tc{color:var(--accent-deep)!important}
-  .kpi,.dcard,.note,.bl .tr i,.dash::before,.dash .dh{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.pl tr.net.samp td{border-color:var(--ink)!important;color:var(--ink)!important}
+  table.pl tr.net.samp td.neg{color:#9A1F33!important}
+  .kpi,.dcard,.note,.bl .tr i,.dpane::before,.dash .dh,svg.pie{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   table.pl td.ht{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   /* the links stay real links in the saved PDF, and keep their colour so they look it */
   a{text-decoration:none}
@@ -817,7 +866,20 @@ var DICT = {
   'monthly salary each':'راتب شهري للواحد','Salary':'الراتب',
   'Starts at':'يبدأ عند','Each month by':'كل شهر بـ','Each month':'كل شهر',
   'No change':'بدون تغيير',
-  'Constant':'ثابت','Percent':'نسبة','Amount':'مبلغ','Custom':'مخصص',
+  'Constant':'ثابت','Percent':'نسبة','Amount':'مبلغ','Custom':'مخصص','Fixed amount':'مبلغ ثابت',
+  'Position':'المنصب','Monthly salary':'الراتب الشهري',
+  'Average a month':'المتوسط بالشهر','across twelve months':'على اثني عشر شهر','Top stream':'أكبر مصدر','of revenue':'من الإيراد',
+  'Revenue by month':'الإيراد بالشهر','Revenue by stream':'الإيراد حسب المصدر','Cumulative revenue':'الإيراد التراكمي','Running total':'المجموع التراكمي',
+  'Costs by month':'التكاليف بالشهر','Costs by category':'التكاليف حسب الفئة','Cumulative costs':'التكاليف التراكمية','Costliest month':'أغلى شهر','of all costs':'من كل التكاليف','Costs':'التكاليف',
+  'Weakest month':'أضعف شهر','Costs share':'حصة التكاليف','of revenue goes on costs':'من الإيراد يروح للتكاليف',
+  'Margin by month':'الهامش بالشهر','Where every 100 goes':'وين تروح كل 100','Left as profit':'يبقى ربح','Margin to date':'الهامش حتى الآن',
+  'so far':'حتى الآن','Profit':'الربح','Revenue':'الإيراد',
+  'Preparing your PDF…':'جاري تجهيز الـPDF…','PDF downloaded':'تم تنزيل الـPDF',
+  'Price':'السعر','Constant Price':'سعر ثابت','Constant Customers':'عدد عملاء ثابت','Constant Salary':'راتب ثابت','Constant Headcount':'عدد ثابت',
+  'Increases each month by':'يزيد كل شهر بـ','Decreases each month by':'ينقص كل شهر بـ','(for new clients)':'(للعملاء الجدد)',
+  'No change to':'بدون تغيير في','price':'السعر','customers':'العملاء','salary':'الراتب','headcount':'العدد',
+  'Increase':'زِد','Decrease':'انقص','Type each of the twelve months yourself':'اكتب الاثني عشر شهر بنفسك',
+  'Remove this service':'احذف هالخدمة','Remove this service and its numbers?':'تحذف هالخدمة وأرقامها؟',
   'Average':'المتوسط',
   'Add service / product':'ضف خدمة / منتج',
   'Add a position':'ضف منصب',
@@ -990,7 +1052,7 @@ function build(biz, cur, smo, syr, names){
   });
   /* the sample costs are sized against the sample revenue, so the first sheet someone
      sees lands on a believable margin instead of a fantasy one */
-  function sh(f){ return Math.max(100, Math.round(rev*f/100)*100); }
+  function sh(f){ return 0; }
   s.cat = [
     /* seeded for an agency: people you buy in, and media you buy on a client's behalf.
        Stock and materials belong to a retail model, which the questionnaire will ask for later. */
@@ -1293,55 +1355,57 @@ function getSeries(p){
 }
 
 /* ═══════════ the value row — three buttons, then the numbers ═══════════ */
-function modeRail(path, s){
-  function b(mode, ic, tx, tip){
+function modeRail(path, s, cfg){
+  cfg=cfg||{};
+  function b(mode, tx, tip){
     return '<button class="mb'+(s.m===mode?' on':'')+'" type="button" role="radio" aria-checked="'+
-           (s.m===mode?'true':'false')+'" data-mode="'+mode+'" data-p="'+path+'" data-tt="'+attr(tip)+'">'+
-           '<span class="ic">'+ic+'</span><span class="tx">'+tx+'</span></button>';
+           (s.m===mode?'true':'false')+'" data-mode="'+mode+'" data-p="'+path+'">'+tx+'</button>';
   }
-  var nOv=overrideCount(s), open=!!openRows[path];
-  /* the label that used to sit over these buttons is gone: the box beside them already
-     says what the step is, and it changes as you pick */
-  return '<div class="mgrp">'+
-    '<div class="mbtns" role="radiogroup" aria-label="How this number changes each month">'+
-      b('flat','=',tl('Constant'),tl('Stays the same in all twelve months'))+
-      b('pct','%',tl('Percent'),tl('Each month is the one before it, up or down by a percentage'))+
-      b('amt','±',tl('Amount'),tl('Each month is the one before it, up or down by a fixed amount'))+
-    '</div><span class="mdiv"></span>'+
-    '<button class="mb mcustom'+(nOv?' has':'')+(open?' open':'')+'" type="button" aria-expanded="'+
-      (open?'true':'false')+'" data-months="'+path+'" data-tt="'+
-      attr(tl('Set any single month by hand. The months after it pick the trend back up.'))+'">'+
-      '<span class="ic">'+PENCIL+'</span><span class="tx">'+(nOv?tl('Custom')+' · '+nOv:tl('Custom'))+'</span></button>'+
-  '</div>';
+  return '<div class="mgrp"><div class="mbtns" role="radiogroup" aria-label="'+attr(tl('How this number changes each month'))+'">'+
+      b('flat',tl(cfg.constLabel||'Constant'),tl('Stays the same in all twelve months'))+
+      b('pct',tl('Percent'),tl('Each month is the one before it, up or down by a percentage'))+
+      b('amt',tl('Fixed amount'),tl('Each month is the one before it, up or down by a fixed amount'))+
+      b('custom',tl('Custom'),tl('Type each of the twelve months yourself'))+
+    '</div></div>';
 }
-/* the sign is kept on the series so a step of zero still remembers which way it points */
-function isDown(x){ return x.r<0 || (x.r===0 && x.dn===true); }
-function signBtns(path, x){
-  var dn=isDown(x);
-  return '<span class="sgn" role="radiogroup" aria-label="'+attr(tl('Up or down'))+'">'+
-    '<button type="button" role="radio" aria-checked="'+(!dn?'true':'false')+'" aria-label="'+attr(tl('Goes up'))+'"'+
-      ' class="'+(!dn?'on':'')+'" data-sign="up" data-p="'+path+'" data-tt="'+attr(tl('Each month is higher than the one before'))+'">+</button>'+
-    '<button type="button" role="radio" aria-checked="'+(dn?'true':'false')+'" aria-label="'+attr(tl('Goes down'))+'"'+
-      ' class="'+(dn?'on dn':'')+'" data-sign="dn" data-p="'+path+'" data-tt="'+attr(tl('Each month is lower than the one before'))+'">−</button>'+
-  '</span>';
+/* direction follows the number: a minus in front, or the minus button, and "increases" becomes "decreases" */
+function rLabel(s, sfx){ return tl(s.r<0 ? 'Decreases each month by' : 'Increases each month by')+(sfx?' '+tl(sfx):''); }
+function stepBtn(path, d){
+  return '<button type="button" class="stp" data-step="'+d+'" data-p="'+path+'" aria-label="'+attr(tl(d>0?'Increase':'Decrease'))+'">'+(d>0?'+':'−')+'</button>';
 }
 function numField(path, which, s, cfg){
   var sampled = s.sm && which==='b';
   var v = which==='b' ? s.b : s.r;
-  /* the field holds the size of the step; the two buttons beside it hold the direction */
-  var shown = which==='b' ? (sampled ? '' : (v?fmt(v):'')) : (v?String(+Math.abs(v).toFixed(2)):'');
-  var ph = which==='b' ? (sampled ? fmt(v) : '0') : (s.m==='pct'?'1':'100');
-  return '<label class="nf'+(sampled?' sampled':'')+'"><span class="nfb">'+
-    '<span class="nfl">'+esc(cfg.label)+'</span><span class="nfv">'+
-    (which==='r' ? signBtns(path, s) : '')+
-    (cfg.pre?'<em class="pre">'+esc(cfg.pre)+'</em>':'')+
+  var shown = which==='b' ? (sampled ? '' : (v?fmt(v):'')) : (v?String(+v.toFixed(2)):'');
+  var ph = which==='b' ? (sampled ? fmt(v) : '0') : '0';
+  var step = which==='r';
+  var cls = 'nf'+(sampled?' sampled':'')+(step?' nfstep'+(s.r>0?' up':(s.r<0?' dn':'')):'');
+  return '<div class="'+cls+'"><div class="nfb">'+
+    (cfg.cap?'<span class="nfl cap">'+esc(tl(cfg.cap))+'</span>':'')+
+    (step?'<span class="nfl" data-sfx="'+attr(cfg.sfx||'')+'">'+esc(rLabel(s,cfg.sfx))+'</span>':'')+
+    '<div class="nfv">'+(step?stepBtn(path,-1):'')+
+    '<span class="nfin'+(cfg.suf?' hs':'')+(cfg.pre?' hp':'')+'">'+(cfg.pre?'<em class="pre">'+esc(cfg.pre)+'</em>':'')+
     '<input inputmode="decimal" data-num="'+which+'" data-p="'+path+'" value="'+shown+'" placeholder="'+esc(ph)+'"'+
-    ' aria-label="'+esc(cfg.label)+'"'+(cfg.tip?' data-tt="'+attr(cfg.tip)+'"':'')+'>'+
-    (cfg.suf?'<em class="suf">'+esc(cfg.suf)+'</em>':'')+'</span></span></label>';
+    ' aria-label="'+esc(cfg.aria||cfg.label||'')+'">'+
+    (cfg.suf?'<em class="suf">'+esc(cfg.suf)+'</em>':'')+'</span>'+
+    (step?stepBtn(path,1):'')+'</div></div></div>';
 }
-var PENCIL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+var PENCIL='';
 function overrideCount(s){ var n=0; for(var k in s.ov){ if(+k>0) n++; } return n; }
-/* typing "12k" beats typing "12000" twenty times over; "1.2m" works too */
+/* a plan saved before Custom was its own choice: typed-over months move into the twelve-month table */
+function toCustom(s){
+  var v=run(s); s.m='custom'; s.b=v[0]; s.ov={};
+  for(var m=1;m<12;m++) s.ov[m]=v[m];
+}
+function eachSeries(fn){
+  st.svc.forEach(function(x){ fn(x.price); fn(x.qty); });
+  st.cat.forEach(function(c){
+    (c.items||[]).forEach(function(i){ fn(i.s); });
+    (c.roles||[]).forEach(function(r){ fn(r.pay); fn(r.n); });
+  });
+}
+function migrateSeries(){ eachSeries(function(x){ if(x.m!=='custom' && overrideCount(x)>0) toCustom(x); }); }
+/* typing "12k" beats typing/* typing "12k" beats typing "12000" twenty times over; "1.2m" works too */
 function num(raw){
   var t=String(raw).trim().toLowerCase().replace(/[, ]/g,'');
   var mult=1;
@@ -1353,62 +1417,52 @@ function num(raw){
 }
 /* customers and headcount are counts, not money — no currency prefix, no year total */
 function isCount(path){ return /\|qty$|\|n$/.test(path); }
-/* adding up twelve months of headcount or customer counts means nothing —
-   a count row reports its average instead of a total */
-function totText(s, vals, money){
-  if(money) return '<em>'+esc(tl('Year'))+'</em>'+fmt(sum(vals));
-  var a=sum(vals)/12;
-  return '<em>'+esc(tl('Average'))+'</em>'+(Math.abs(a-Math.round(a))<0.05 ? fmt(a) : a.toFixed(1));
-}
-
 function vrowHTML(path, label, s, cfg){
   cfg=cfg||{};
-  var vals=run(s), money=cfg.unit!=='count';
-  var nOv=overrideCount(s), open=!!openRows[path];
-  var h='<div class="vrow'+(s.sm?' sampled':'')+(cfg.pair?' pairtop':'')+(cfg.sub?' vsub':'')+'" data-row="'+path+'">';
+  var vals=run(s), money=cfg.unit!=='count', custom=s.m==='custom';
+  var h='<div class="vrow'+(s.sm?' sampled':'')+(cfg.pair?' pairtop':'')+(cfg.sub?' vsub':'')+(custom?' iscustom':'')+'" data-row="'+path+'">';
 
   h+='<div class="vtop">'+
+     (cfg.step ? '<span class="stepn">'+cfg.step+'</span>' : '')+
      (cfg.rename ? '<input class="rin" data-rename="'+path+'" value="'+esc(label)+'" placeholder="'+esc(tl('Name this line'))+'">'
                  : '<span class="vname">'+esc(tl(label))+'</span>')+
-     (cfg.hint ? '<span class="vhint">'+esc(tl(cfg.hint))+'</span>' : '<span class="vhint"></span>')+
-     (cfg.del ? '<button class="xb" data-del="'+cfg.del+'" aria-label="'+attr(tl('Remove'))+'" data-tt="'+attr(tl('Remove this line'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>':'')+
+     (cfg.rename ? '' : '<span class="vhint"></span>')+
+     (cfg.del ? '<button class="xb" data-del="'+cfg.del+'" aria-label="'+attr(tl('Remove'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>':'')+
+     modeRail(path,s,cfg)+
      '</div>';
 
-  h+='<div class="ctrl">';
-  h+=numField(path,'b',s,{ label: tl(cfg.startLabel || 'Starts at')+' · '+mlab(0),
-                           pre: money?st.cur:'', tip: cfg.tip||'' });
-  if(s.m==='flat'){
-    h+='<div class="nostep"><span class="nfl">'+esc(tl('Each month'))+'</span><span class="ns">'+esc(tl('No change'))+'</span></div>';
-  } else if(s.m==='pct'){
-    h+=numField(path,'r',s,{ label:tl('Each month by'), suf:'%',
-          tip:tl('How much it moves each month, as a percentage of the month before') });
-  } else {
-    h+=numField(path,'r',s,{ label:tl('Each month by'), pre: money ? st.cur : '',
-          tip:tl('How much it moves each month, as a fixed amount') });
+  if(!custom){
+    h+='<div class="ctrl'+(s.m==='flat'?' one':'')+'">';
+    h+=numField(path,'b',s,{ pre: money?st.cur:'', tip: cfg.tip||'', aria: tl(label) });
+    if(s.m==='flat'){
+      /* constant: the one number, the whole width */
+    } else if(s.m==='pct'){
+      h+=numField(path,'r',s,{ suf:'%', sfx:cfg.sfx, aria:rLabel(s,cfg.sfx),
+            tip:tl('How much it moves each month, as a percentage of the month before') });
+    } else {
+      h+=numField(path,'r',s,{ pre: money ? st.cur : '', sfx:cfg.sfx, aria:rLabel(s,cfg.sfx),
+            tip:tl('How much it moves each month, as a fixed amount') });
+    }
+    h+='</div>';
   }
-  h+='</div>';
-  h+=modeRail(path,s);
-  h+='<div class="vfoot"><span class="vtot" data-tot="'+path+'">'+totText(s,vals,money)+'</span></div>';
-
-  h+=mstripHTML(path, s, vals, open, money);
+  h+=mstripHTML(path, s, vals, custom, money);
   h+='</div>';
   return h;
 }
-function mstripHTML(path, s, vals, open, money){
-  var h='<div class="mstrip'+(open?' on':'')+'" data-strip="'+path+'">';
+function mstripHTML(path, s, vals, custom, money){
+  var h='<div class="mstrip'+(custom?' on custom':'')+'" data-strip="'+path+'">';
   for(var m=0;m<12;m++){
     var isOv = m>0 && s.ov[m]!==undefined;
     h+='<div class="mc'+(m===0?' seed':'')+(isOv?' ov':'')+'" data-k="'+path+'" data-m="'+m+'">'+
        '<label>'+mlab(m)+'</label>'+
-       '<input inputmode="decimal" aria-label="'+esc(mfull(m))+'" value="'+(vals[m]?fmt(vals[m]):'')+'" data-tt="'+attr(explain(s,vals,m,money))+'">'+
-       /* the reset button sits in every month after the first and CSS reveals it only on an
-          overridden one, so a month just typed over gets it without rebuilding the strip */
-       (m>0?'<button class="un" type="button" data-undo="1" tabindex="-1" aria-label="'+attr(tl('Clear this month'))+'" data-tt="'+attr(tl('Clear this and follow the trend again'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h11a5 5 0 1 1 0 10H9"/><path d="M3 10l5-5M3 10l5 5"/></svg></button>':'')+
+       '<input inputmode="decimal" aria-label="'+esc(mfull(m))+'" value="'+(vals[m]?fmt(vals[m]):'')+'">'+
+       (m>0?'<button class="un" type="button" data-undo="1" tabindex="-1" aria-label="'+attr(tl('Clear this month'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h11a5 5 0 1 1 0 10H9"/><path d="M3 10l5-5M3 10l5 5"/></svg></button>':'')+
        '</div>';
   }
   return h+'</div>';
 }
 function explain(s, vals, m, money){
+  if(s.m==='custom') return '<b>'+fmtP(vals[m])+'</b><span class="eq">Type any figure for this month</span>';
   if(m===0) return '<b>'+fmtP(vals[0])+'</b> — your starting figure<span class="eq">Every month after this follows the trend</span>';
   if(s.ov[m]!==undefined){
     var tail = m<11 ? '<span class="eq">'+mlab(m+1)+' onward picks the trend back up ('+trendWord(s)+')</span>' : '';
@@ -1425,17 +1479,50 @@ function trendWord(s){
   return 'the same every month';
 }
 
+/* what each kind of row is called, and what it says about itself */
+function rowCfg(path){
+  var a=path.split('|');
+  if(a[0]==='s'){
+    if(a[2]==='price') return {label:'Price', cfg:{step:2, constLabel:'Constant Price', noun:'price', sfx:'(for new clients)',
+      tip:tl('What one customer pays you in a month. For a retainer, the monthly fee.')}};
+    return {label:'Customers', cfg:{step:3, unit:'count', constLabel:'Constant Customers', noun:'customers',
+      tip:tl('How many customers pay you in that month. For a retainer, your live client count.')}};
+  }
+  if(a[0]==='c'){
+    return {label:st.cat[+a[1]].items[+a[2]].name, cfg:{rename:true, del:'c|'+a[1]+'|'+a[2]}};
+  }
+  var ro=st.cat[+a[1]].roles[+a[2]];
+  if(a[3]==='pay') return {label:ro.name, cfg:{rename:true, pair:true, constLabel:'Constant Salary', noun:'salary',
+      del:'t|'+a[1]+'|'+a[2], tip:tl('What one person in this position is paid per month, all in.')}};
+  return {label:'How many people', cfg:{unit:'count', sub:true, constLabel:'Constant Headcount', noun:'headcount',
+      tip:tl('How many people you have in this position. Type over a later month to add a hire.')}};
+}
+function rowHTML(path){ var rc=rowCfg(path); return vrowHTML(path, rc.label, getSeries(path), rc.cfg); }
+
+/* a position is three plain boxes: who, what they are paid, how many. Salaries do not move in year one. */
+function teamRowHTML(ci, ri){
+  var ro=st.cat[ci].roles[ri], pp='t|'+ci+'|'+ri+'|pay', pn='t|'+ci+'|'+ri+'|n';
+  if(ro.pay.m!=='flat' || ro.n.m!=='flat') return rowHTML(pp)+rowHTML(pn);
+  return '<div class="rolerow">'+
+    '<div class="nf"><div class="nfb"><span class="nfl cap">'+esc(tl('Position'))+'</span><div class="nfv"><span class="nfin">'+
+      '<input class="nm" data-rename="'+pp+'" value="'+esc(ro.name)+'" placeholder="'+esc(tl('Name this line'))+'"></span></div></div></div>'+
+    numField(pp,'b',ro.pay,{pre:st.cur, cap:'Monthly salary', aria:tl('Salary')})+
+    numField(pn,'b',ro.n,{cap:'How many', aria:tl('How many people')})+
+    '<button class="xb" data-del="t|'+ci+'|'+ri+'" aria-label="'+attr(tl('Remove'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'+
+  '</div>';
+}
 /* ═══════════ the editor ═══════════ */
-function blkHTML(key, title, sub, colour, bodyHTML, footHTML, total, sampled){
+function blkHTML(key, title, sub, colour, bodyHTML, footHTML, total, sampled, delSvc){
   var open = !!st.openBlk && st.openBlk[key];
-  return '<section class="blk'+(open?' open':'')+'" data-blk="'+key+'">'+
+  return '<section class="blk'+(open?' open':'')+(delSvc!==undefined?' hasdel':'')+'" data-blk="'+key+'">'+
     '<button class="bh" type="button" aria-expanded="'+(open?'true':'false')+'" data-togg="'+key+'">'+
       '<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>'+
       (colour?'<span class="sw3" style="background:'+colour+'"></span>':'')+
       '<span class="bt">'+esc(title)+'</span>'+
-      '<span class="bs">'+esc(sub)+'</span>'+
-      '<span class="bv'+(sampled?' sampled':'')+'" data-blkv="'+key+'">'+fmt(total)+'</span>'+
+      (delSvc!==undefined ? '' : '<span class="bs">'+esc(sub)+'</span>'+
+      '<span class="bv'+(sampled?' sampled':'')+'" data-blkv="'+key+'">'+fmt(total)+'</span>')+
     '</button>'+
+    (delSvc!==undefined ? '<button class="bdel" type="button" data-delsvc="'+delSvc+'" aria-label="'+attr(tl('Remove this service'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>' : '')+
     (open ? '<div class="bb">'+bodyHTML+'</div>'+(footHTML||'') : '')+
   '</section>';
 }
@@ -1445,14 +1532,11 @@ function renderEditor(){
   h+='<div class="secnote rev">'+esc(tl('Products/Services'))+'</div>';
   st.svc.forEach(function(s,i){
     var d=c.svc[i], body='';
-    body+='<div class="namerow"><span class="lblr">'+esc(tl('Name'))+'</span>'+
-          '<input class="tfld" data-svcname="'+i+'" value="'+esc(s.name)+'" placeholder="'+esc(tl('Name this service'))+'"></div>';
-    body+=vrowHTML('s|'+i+'|price','Price per customer',s.price,
-      {tip:tl('What one customer pays you in a month. For a retainer, the monthly fee.')});
-    body+=vrowHTML('s|'+i+'|qty','Customers',s.qty,
-      {unit:'count', startLabel:'How many',
-       tip:tl('How many customers pay you in that month. For a retainer, your live client count.')});
-    h+=blkHTML('s'+i, s.name, tl('Revenue'), CATCOL[i%6], body, '', sum(d.rev), s.price.sm||s.qty.sm);
+    body+='<div class="namerow"><div class="vtop"><span class="stepn">1</span><span class="vname">'+esc(tl('Name'))+'</span></div><div class="tfwrap">'+
+          '<input class="tfld" data-svcname="'+i+'" value="'+esc(s.name)+'" placeholder="'+esc(tl('Name this service'))+'"></div></div>';
+    body+=rowHTML('s|'+i+'|price');
+    body+=rowHTML('s|'+i+'|qty');
+    h+=blkHTML('s'+i, s.name, tl('Revenue'), CATCOL[i%6], body, '', sum(d.rev), s.price.sm||s.qty.sm, i);
   });
   h+='<div><button class="addbtn" data-addsvc="1" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add service / product'))+'</button></div>';
 
@@ -1463,19 +1547,14 @@ function renderEditor(){
       cat.roles.forEach(function(ro,ri){
         if(ro.pay.sm||ro.n.sm) sampled=true;
         body+='<div style="padding-top:4px"></div>';
-        body+=vrowHTML('t|'+ci+'|'+ri+'|pay', ro.name, ro.pay,
-          {rename:true, startLabel:'Salary', pair:true,
-           del:'t|'+ci+'|'+ri, tip:tl('What one person in this position is paid per month, all in.')});
-        body+=vrowHTML('t|'+ci+'|'+ri+'|n','How many people',ro.n,
-          {unit:'count', sub:true, startLabel:'How many',
-           tip:tl('How many people you have in this position. Type over a later month to add a hire.')});
+        body+=teamRowHTML(ci,ri);
       });
       foot='<div class="bfoot"><button class="addbtn" data-addrole="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a position'))+'</button></div>';
       n=tcount('position', cat.roles.length);
     } else {
       cat.items.forEach(function(item,ii){
         if(item.s.sm) sampled=true;
-        body+=vrowHTML('c|'+ci+'|'+ii, item.name, item.s, {rename:true, del:'c|'+ci+'|'+ii});
+        body+=rowHTML('c|'+ci+'|'+ii);
       });
       foot='<div class="bfoot"><button class="addbtn" data-addcost="'+ci+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'+esc(tl('Add a cost to'))+' '+esc(AR?cat.name:cat.name.toLowerCase())+'</button></div>';
       n=tcount('line', cat.items.length);
@@ -1526,6 +1605,36 @@ function ranks(vals){
   var r=[]; idx.forEach(function(i,k){ r[i]=k; });
   return r;
 }
+function labelCell(label){
+  var ib=infoBtn(label);
+  return ib ? '<div class="lc"><span>'+esc(tl(label))+'</span>'+ib+'</div>' : esc(tl(label));
+}
+function heatColors(vals, kind){
+  var G='10,135,84,', R='200,55,75,', out=[], m;
+  function span(arr){
+    var lo=Math.min.apply(null,arr), hi=Math.max.apply(null,arr);
+    return { lo:lo, hi:hi, flat:(hi-lo)<=hi*0.005 };
+  }
+  if(kind==='net'){
+    var pos=vals.filter(function(v){ return v>0; }), ng=vals.filter(function(v){ return v<0; }).map(Math.abs);
+    var sp=pos.length?span(pos):null, sn=ng.length?span(ng):null;
+    for(m=0;m<12;m++){
+      var v=vals[m];
+      if(v>0){ var t=sp.flat?.5:(v-sp.lo)/(sp.hi-sp.lo); out.push(G+(0.12+0.30*t).toFixed(3)); }
+      else if(v<0){ var u=sn.flat?.5:(Math.abs(v)-sn.lo)/(sn.hi-sn.lo); out.push(R+(0.12+0.30*u).toFixed(3)); }
+      else out.push(null);
+    }
+    return out;
+  }
+  /* revenue is green and costs are red, the biggest month deepest. A flat year gets one
+     middle tint on every month rather than an invented shape. */
+  var av=vals.map(Math.abs), sa=span(av), base=kind==='pos'?G:R;
+  for(m=0;m<12;m++){
+    var k=sa.flat?.5:(av[m]-sa.lo)/(sa.hi-sa.lo);
+    out.push(base+(0.08+0.22*k).toFixed(3));
+  }
+  return out;
+}
 function plTable(c, f){
   var h='<table class="pl"><thead><tr><th class="cu">'+esc(st.cur)+(thou?' ’000':'')+'</th>';
   for(var m=0;m<12;m++) h+='<th>'+mlab(m)+'</th>';
@@ -1535,28 +1644,21 @@ function plTable(c, f){
   function tr(label, vals, cls, sm, totOverride, heat){
     /* a total earns a tint that follows its rank among the twelve months - the shape of the
        year becomes visible before a single figure is read. Samples stay flat and grey. */
-    var rk = null;
-    if(heat && !sm && sum(vals)){
-      /* a flat year has no shape to show - ranking twelve identical months would invent one */
-      var av=vals.map(function(v){ return Math.abs(v); });
-      var lo=Math.min.apply(null,av), hi=Math.max.apply(null,av);
-      if(hi-lo > hi*0.005) rk=ranks(vals);
-    }
-    var r='<tr class="'+(cls||'')+(sm?' samp':'')+'"><td>'+esc(tl(label))+infoBtn(label)+'</td>';
+    var hc = heat ? heatColors(vals, heat) : null;
+    var r='<tr class="'+(cls||'')+(sm?' samp':'')+'"><td>'+labelCell(label)+'</td>';
     for(var m=0;m<12;m++){
       var v=vals[m], cc=[], sty='';
       if(v<0) cc.push('neg');
-      if(rk){ cc.push('ht');
-        sty=' style="background:rgba('+(heat==='pos'?'10,135,84,':'200,55,75,')+
-            (0.05+0.17*rk[m]/11).toFixed(3)+')"'; }
+      if(hc && hc[m]){ cc.push('ht'); sty=' style="background:rgba('+hc[m]+')"'; }
       r+='<td'+(cc.length?' class="'+cc.join(' ')+'"':'')+sty+'>'+f(v)+'</td>';
     }
     var t = totOverride!==undefined ? totOverride : sum(vals);
-    r+='<td class="tc'+(t<0?' neg':'')+'">'+f(t)+'</td></tr>';
+    var tsty = heat==='net' && t ? ' style="background:rgba('+(t>0?'10,135,84,':'200,55,75,')+'.20)"' : '';
+    r+='<td class="tc'+(t<0?' neg':'')+'"'+tsty+'>'+f(t)+'</td></tr>';
     return r;
   }
   function trPct(label, nums, dens, sm){
-    var r='<tr class="pct'+(sm?' samp':'')+'"><td>'+esc(tl(label))+infoBtn(label)+'</td>';
+    var r='<tr class="pct'+(sm?' samp':'')+'"><td>'+labelCell(label)+'</td>';
     for(var m=0;m<12;m++) r+='<td>'+pct(nums[m],dens[m])+'</td>';
     return r+'<td class="tc">'+pct(sum(nums),sum(dens))+'</td></tr>';
   }
@@ -1579,7 +1681,7 @@ function plTable(c, f){
   h+=tr('Total costs', c.opex.map(neg), 'rule strong', c.opexSm, undefined, 'neg');
   h+=gap;
 
-  h+=tr('Net profit', c.net, 'net', c.netSm);
+  h+=tr('Net profit', c.net, 'net', c.netSm, undefined, 'net');
   h+=trPct('Net margin', c.net, c.rev, c.netSm);
   h+=tr('Profit to date', c.cum, 'rule', c.netSm, c.cum[11]);
   return h+'</tbody></table>';
@@ -1587,16 +1689,18 @@ function plTable(c, f){
 
 function bizName(){ return st.biz || tl('Your business'); }
 function planTitle(){ return esc(bizName())+' — '+esc(tl('Financial Plan')); }
-function builtWith(){ return esc(tl('Built with'))+' <a href="'+TOOL+(AR?'?lang=ar':'')+'">hashirfaraz.com</a>'; }
+/* the plan's own name stays on top; the only mark of the tool is this line at the foot */
+function footHTML(){
+  return '<div class="sh-foot"><span>'+esc(tl('Built with'))+'</span>'+
+    '<a class="blogo" href="https://hashirfaraz.com'+(AR?'/ar/':'/')+'" target="_blank" rel="noopener"><img src="/assets/logo-dark.png" alt="Hashir Faraz"></a></div>';
+}
 function renderSheet(c){
   c=c||calc();
   var h='<div class="sh-head"><div><h3>'+planTitle()+'</h3>'+
-    '<div class="meta">'+builtWith()+'</div></div>'+
+    '</div>'+
     '<div class="rt">'+mlab(0)+' – '+mlab(11)+'</div></div>';
   h+=plTable(c, fmtK);
-  h+='<div class="sh-foot"><span>'+esc(tl('Prepared'))+' '+
-     new Date().toLocaleDateString(AR?'ar-QA-u-nu-latn':'en-GB',{day:'numeric',month:'short',year:'numeric'})+
-     '</span><span>'+esc(tl('Make your own at'))+' <a href="'+TOOL+(AR?'?lang=ar':'')+'"><b>hashirfaraz.com</b></a></span></div>';
+  h+=footHTML();
   document.getElementById('sheet').innerHTML=h;
 }
 
@@ -1681,64 +1785,138 @@ function barList(rows, total, colorFn){
   return h+'</div>';
 }
 
-/* ═══════════ dashboard ═══════════ */
+/* ═══════════ dashboard: three views of the same year ═══════════ */
+var dashTab='profit';
+function setDashTab(k){
+  dashTab=k;
+  document.querySelectorAll('#dash .dpane').forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-pane')===k); });
+  fitAll();
+}
+function axPct(v){ return Math.round(v)+'%'; }
+function chartColumns(vals, o){
+  var W=690,H=o.H||196,L=46,R=6,T=12,B=22;
+  var pw=W-L-R, ph=H-T-B, gw=pw/12, bw=Math.min(20,gw-10);
+  var hi=Math.max.apply(null,vals.concat([0])), lo=Math.min.apply(null,vals.concat([0]));
+  var mx=niceMax(Math.max(hi,0.0001)), mn=lo<0?-niceMax(-lo):0, span=(mx-mn)||1;
+  var y=function(v){ return T+ph-((v-mn)/span)*ph; }, y0=y(0), ax=o.axis||axK;
+  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+attr(o.label||'')+'">';
+  for(var i=0;i<=3;i++){ var gv=mn+span*i/3;
+    s+='<line class="gl" x1="'+L+'" y1="'+y(gv)+'" x2="'+(W-R)+'" y2="'+y(gv)+'"/>'+
+       '<text class="ax" x="'+(L-7)+'" y="'+(y(gv)+3.2)+'" text-anchor="end">'+ax(gv)+'</text>'; }
+  if(mn<0) s+='<line class="zl" x1="'+L+'" y1="'+y0+'" x2="'+(W-R)+'" y2="'+y0+'"/>';
+  for(var m=0;m<12;m++){
+    var cx=L+gw*m+gw/2, v=vals[m], up=v>=0, yy=up?y(v):y0, hh=Math.abs(y(v)-y0);
+    var col = o.signed ? (up?'var(--pos)':'var(--neg)') : (o.color||'var(--s1)');
+    s+='<path d="'+barPath(cx-bw/2,yy,bw,hh,4,!up)+'" fill="'+col+'"/>';
+    s+='<rect class="hit" x="'+(L+gw*m)+'" y="'+T+'" width="'+gw+'" height="'+ph+'" data-tt="'+
+       attr('<b>'+mfull(m)+'</b><span class="eq">'+o.tip(m)+'</span>')+'"/>';
+    s+='<text class="ax" x="'+cx+'" y="'+(H-6)+'" text-anchor="middle">'+mlab(m).split(' ')[0]+'</text>';
+  }
+  return s+'</svg>';
+}
+/* a running total drawn as a line with a gradient wash under it */
+function chartArea(vals, o){
+  var W=690,H=o.H||170,L=46,R=10,T=12,B=22, pw=W-L-R, ph=H-T-B, id='g'+o.id;
+  var hi=Math.max.apply(null,vals.concat([0])), lo=Math.min.apply(null,vals.concat([0]));
+  var mx=niceMax(Math.max(hi,0.0001)), mn=lo<0?-niceMax(-lo):0, span=(mx-mn)||1, ax=o.axis||axK;
+  var x=function(m){ return L+pw*m/11; }, y=function(v){ return T+ph-((v-mn)/span)*ph; }, y0=y(0);
+  var line='', m;
+  for(m=0;m<12;m++) line+=(m?'L':'M')+x(m).toFixed(1)+','+y(vals[m]).toFixed(1);
+  var area=line+'L'+x(11).toFixed(1)+','+y0.toFixed(1)+'L'+x(0).toFixed(1)+','+y0.toFixed(1)+'Z';
+  var s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+attr(o.label||'')+'">'+
+    '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+o.color+'" stop-opacity=".38"/>'+
+    '<stop offset="1" stop-color="'+o.color+'" stop-opacity=".02"/></linearGradient></defs>';
+  for(var i=0;i<=3;i++){ var gv=mn+span*i/3;
+    s+='<line class="gl" x1="'+L+'" y1="'+y(gv)+'" x2="'+(W-R)+'" y2="'+y(gv)+'"/>'+
+       '<text class="ax" x="'+(L-7)+'" y="'+(y(gv)+3.2)+'" text-anchor="end">'+ax(gv)+'</text>'; }
+  s+='<path d="'+area+'" fill="url(#'+id+')"/><path d="'+line+'" fill="none" stroke="'+o.color+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+  for(m=0;m<12;m++){
+    s+='<circle cx="'+x(m).toFixed(1)+'" cy="'+y(vals[m]).toFixed(1)+'" r="2.6" fill="#fff" stroke="'+o.color+'" stroke-width="1.6"/>';
+    s+='<rect class="hit" x="'+(x(m)-pw/22)+'" y="'+T+'" width="'+(pw/11)+'" height="'+ph+'" data-tt="'+
+       attr('<b>'+mfull(m)+'</b><span class="eq">'+o.tip(m)+'</span>')+'"/>';
+    s+='<text class="ax" x="'+x(m).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle">'+mlab(m).split(' ')[0]+'</text>';
+  }
+  return s+'</svg>';
+}
+/* a solid pie: each slice is a thick stroke on a small circle, which also copes with one slice being 100% */
+function pieChart(rows, total, emptyMsg, label){
+  if(!rows.length || !total) return '<div class="empty">'+esc(emptyMsg||tl('No revenue entered yet.'))+'</div>';
+  var R=30, C=2*Math.PI*R, off=0, s='<svg class="pie" viewBox="0 0 120 120" role="img" aria-label="'+attr(label||tl('Revenue by stream'))+'"><g transform="rotate(-90 60 60)">';
+  rows.forEach(function(r){
+    var len=C*r.v/total;
+    s+='<circle cx="60" cy="60" r="'+R+'" fill="none" stroke="'+CATCOL[r.i%6]+'" stroke-width="60" stroke-dasharray="'+len.toFixed(3)+' '+(C-len).toFixed(3)+'" stroke-dashoffset="'+(-off).toFixed(3)+'"/>';
+    off+=len;
+  });
+  s+='</g><circle cx="60" cy="60" r="60" fill="none" stroke="#fff" stroke-width="1.5"/></svg>';
+  var l='<ul class="plegend">';
+  rows.forEach(function(r){
+    l+='<li><i style="background:'+CATCOL[r.i%6]+'"></i><span class="nm">'+esc(r.name)+'</span><b>'+pct(r.v,total)+'</b><em>'+fmtK(r.v)+'</em></li>';
+  });
+  return '<div class="piewrap">'+s+l+'</ul></div>';
+}
+function dashHead(){
+  return '<div class="dh"><div class="dl"><h3>'+planTitle()+'</h3></div><div class="rt">'+mlab(0)+' – '+mlab(11)+'</div></div>';
+}
+function dashPane(key, inner){
+  return '<div class="dpane'+(dashTab===key?' on':'')+'" data-pane="'+key+'">'+dashHead()+inner+footHTML()+'</div>';
+}
 function renderDash(c){
   c=c||calc();
   var el=document.getElementById('dash');
   var rev=sum(c.rev), cogs=sum(c.cogs), opex=sum(c.opex), net=sum(c.net), gp=sum(c.gp);
 
-  var best=0, worst=0, firstPos=-1, breakEven=-1, m;
+  var best=0, worst=0, bestRev=0, m;
   for(m=0;m<12;m++){
     if(c.net[m]>c.net[best]) best=m;
     if(c.net[m]<c.net[worst]) worst=m;
-    if(firstPos<0 && c.net[m]>0) firstPos=m;
+    if(c.rev[m]>c.rev[bestRev]) bestRev=m;
   }
-  /* the month it goes ahead and stays ahead, not the first blip above zero */
-  for(m=11;m>=0;m--){ if(c.cum[m]>0) breakEven=m; else break; }
-
   var cats=c.cat.map(function(d,i){ return {name:d.ref.name, v:sum(d.v), i:i}; })
                 .filter(function(r){ return r.v>0; }).sort(function(a,b){ return b.v-a.v; });
   var svcs=c.svc.map(function(d,i){ return {name:d.ref.name, v:sum(d.rev), i:i}; })
                 .filter(function(r){ return r.v>0; }).sort(function(a,b){ return b.v-a.v; });
   var spend=cogs+opex;
-
-  /* the single biggest line, not the category it sits in - a category called Team says
-     nothing, where the position inside it that costs the most says a great deal */
   var lines=[];
   c.cat.forEach(function(d){
     d.items.forEach(function(i){ var v=sum(i.v); if(v>0) lines.push({name:i.ref.name, cat:d.ref.name, v:v}); });
   });
   lines.sort(function(a,b){ return b.v-a.v; });
-
   var cu=function(v){ return '<em>'+esc(st.cur)+'</em>'+fmt(v); };
-  var h='<div class="dh"><div class="dl"><h3>'+planTitle()+'</h3>'+
-    '<div class="meta">'+builtWith()+'</div></div>'+
-    '<div class="rt">'+mlab(0)+' – '+mlab(11)+'</div></div>';
+  var topLine=lines[0], topSvc=svcs[0];
+  var mg=c.net.map(function(v,i){ return c.rev[i] ? v/c.rev[i]*100 : 0; });
+  var bestMg=0, worstMg=0;
+  for(m=0;m<12;m++){ if(mg[m]>mg[bestMg]) bestMg=m; if(mg[m]<mg[worstMg]) worstMg=m; }
+  var cumRev=[], cumMg=[], r1=0, n1=0;
+  for(m=0;m<12;m++){ r1+=c.rev[m]; n1+=c.net[m]; cumRev.push(r1); cumMg.push(r1 ? n1/r1*100 : 0); }
 
-  h+='<div class="kpis">'+
-     kpi(tl('Total Revenue'), cu(rev), AR ? (svcs.length+' '+tl(svcs.length===1?'revenue line':'revenue lines'))
-                                          : (svcs.length+' revenue line'+(svcs.length===1?'':'s')),'brand')+
-     kpi(tl('Total Costs'), cu(cogs+opex), st.cur+' '+fmt((cogs+opex)/12)+' '+tl('a month on average'),'')+
-     kpi(tl('Net Profit'), cu(net), st.cur+' '+fmt(net/12)+' '+tl('a month on average'), net>=0?'good':'bad')+
-     kpi(tl('Net Margin'), pct(net,rev), tl('of every')+' '+st.cur+' 100 '+tl('you invoice'), net>=0?'good':'bad')+
-     '</div>';
+  /* the four cards at the top are the same on every view; Revenue, Net profit and Net margin are buttons
+     that open their own view, and the one being shown is outlined */
+  var linesTxt = AR ? (svcs.length+' '+tl(svcs.length===1?'revenue line':'revenue lines'))
+                    : (svcs.length+' revenue line'+(svcs.length===1?'':'s'));
+  var cards=function(active){
+    return '<div class="kpis">'+
+      kpiBtn('profit', tl('Net Profit'), cu(net), st.cur+' '+fmt(net/12)+' '+tl('a month on average'), active, net>=0?'good':'bad')+
+      kpiBtn('revenue', tl('Total Revenue'), cu(rev), linesTxt, active)+
+      kpiBtn('costs', tl('Total Costs'), cu(cogs+opex), st.cur+' '+fmt((cogs+opex)/12)+' '+tl('a month on average'), active)+
+      kpi(tl('Net Margin'), pct(net,rev), tl('of every')+' '+st.cur+' 100 '+tl('you invoice'), net>=0?'good':'bad')+
+      '</div>';
+  };
 
-  h+='<div class="dgrid">'+
+  /* ── net profit: the view that was always here ── */
+  var prof=cards('profit')+
+     '<div class="dgrid">'+
      '<div class="dcard"><h4>'+esc(tl('Revenue vs Cost'))+'</h4>'+
      '<div class="legend"><span><i style="background:var(--s1)"></i>'+esc(tl('Revenue'))+'</span><span><i style="background:var(--s2)"></i>'+esc(tl('All costs'))+'</span></div>'+
      chartRevCost(c)+'</div>'+
      '<div class="dcard"><h4>'+esc(tl('Cost Distribution'))+'</h4>'+
      barList(cats, spend, function(i,r){ return CATCOL[r.i%6]; })+'</div>'+
-     '</div>';
-
-  h+='<div class="dgrid" style="margin-top:12px">'+
+     '</div>'+
+     '<div class="dgrid" style="margin-top:12px">'+
      '<div class="dcard"><h4>'+esc(tl('Monthly Net Profit'))+'</h4>'+chartProfit(c)+'</div>'+
      '<div class="dcard"><h4>'+esc(tl('Revenue Distribution'))+'</h4>'+
      barList(svcs, rev, function(i,r){ return CATCOL[r.i%6]; })+'</div>'+
-     '</div>';
-
-  var topLine=lines[0], topSvc=svcs[0];
-  h+='<div class="notes">'+
+     '</div>'+
+     '<div class="notes">'+
      note(tl('Best month'), AR
         ? '<strong>'+mfull(best)+'</strong> — ربح '+st.cur+' '+fmt(c.net[best])+' على إيراد '+st.cur+' '+fmt(c.rev[best])+'.'
         : '<strong>'+mfull(best)+'</strong> — '+st.cur+' '+fmt(c.net[best])+' of profit on '+st.cur+' '+fmt(c.rev[best])+' of revenue.')+
@@ -1750,9 +1928,44 @@ function renderDash(c){
         : '<strong>'+esc(topLine.name)+'</strong> is your single largest line — '+pct(topLine.v,spend)+' of everything you spend ('+st.cur+' '+fmt(topLine.v)+').'))+
      '</div>';
 
-  h+='<div class="sh-foot"><span>'+esc(bizName())+' · '+mlab(0)+' – '+mlab(11)+'</span>'+
-     '<span>'+esc(tl('Make your own at'))+' <a href="'+TOOL+(AR?'?lang=ar':'')+'"><b>hashirfaraz.com</b></a></span></div>';
-  el.innerHTML=h;
+  /* ── revenue ── */
+  var revp=cards('revenue')+
+     '<div class="dgrid">'+
+     '<div class="dcard"><h4>'+esc(tl('Revenue by month'))+'</h4>'+
+       chartColumns(c.rev,{color:'var(--s1)',label:tl('Revenue by month'),tip:function(i){ return esc(tl('Revenue'))+' '+fmt(c.rev[i]); }})+'</div>'+
+     '<div class="dcard"><h4>'+esc(tl('Revenue by stream'))+'</h4>'+pieChart(svcs, rev)+'</div>'+
+     '</div>'+
+     '<div class="dgrid one" style="margin-top:12px"><div class="dcard"><h4>'+esc(tl('Cumulative revenue'))+'</h4>'+
+       chartArea(cumRev,{id:'rev',H:132,color:'#3533CD',label:tl('Cumulative revenue'),tip:function(i){ return esc(tl('Running total'))+' '+fmt(cumRev[i]); }})+'</div></div>'+
+     '<div class="notes">'+
+     note(tl('Average a month'), '<strong>'+st.cur+' '+fmt(rev/12)+'</strong>')+
+     note(tl('Best month'), '<strong>'+esc(mfull(bestRev))+'</strong> — '+st.cur+' '+fmt(c.rev[bestRev]))+
+     note(tl('Top stream'), topSvc ? '<strong>'+esc(topSvc.name)+'</strong> — '+pct(topSvc.v,rev)+' '+tl('of revenue') : '—')+
+     '</div>';
+
+  /* ── costs ── */
+  var tot=c.opex.map(function(v,i){ return v+c.cogs[i]; }), cumCost=[], c1=0, worstCost=0;
+  for(m=0;m<12;m++){ c1+=tot[m]; cumCost.push(c1); if(tot[m]>tot[worstCost]) worstCost=m; }
+  var costp=cards('costs')+
+     '<div class="dgrid">'+
+     '<div class="dcard"><h4>'+esc(tl('Costs by month'))+'</h4>'+
+       chartColumns(tot,{color:'var(--s2)',label:tl('Costs by month'),tip:function(i){ return esc(tl('Costs'))+' '+fmt(tot[i]); }})+'</div>'+
+     '<div class="dcard"><h4>'+esc(tl('Costs by category'))+'</h4>'+pieChart(cats, spend, tl('No costs entered yet.'), tl('Costs by category'))+'</div>'+
+     '</div>'+
+     '<div class="dgrid one" style="margin-top:12px"><div class="dcard"><h4>'+esc(tl('Cumulative costs'))+'</h4>'+
+       chartArea(cumCost,{id:'cost',H:132,color:'#EB6834',label:tl('Cumulative costs'),tip:function(i){ return esc(tl('Running total'))+' '+fmt(cumCost[i]); }})+'</div></div>'+
+     '<div class="notes">'+
+     note(tl('Average a month'), '<strong>'+st.cur+' '+fmt(spend/12)+'</strong>')+
+     note(tl('Costliest month'), '<strong>'+esc(mfull(worstCost))+'</strong> — '+st.cur+' '+fmt(tot[worstCost]))+
+     note(tl('Biggest cost'), !topLine ? tl('No costs entered yet.') : '<strong>'+esc(topLine.name)+'</strong> — '+pct(topLine.v,spend)+' '+tl('of all costs'))+
+     '</div>';
+
+  el.innerHTML = dashPane('profit',prof)+dashPane('revenue',revp)+dashPane('costs',costp);
+}
+function kpiBtn(key,k,v,d,active,cls){
+  var on=active===key;
+  return '<button type="button" class="kpi kpib '+(cls||'')+(on?' on':'')+'" data-dtab="'+key+'" aria-pressed="'+(on?'true':'false')+'">'+
+    '<span class="k">'+k+'</span><span class="v">'+v+'</span><span class="d">'+d+'</span></button>';
 }
 function kpi(k,v,d,cls){ return '<div class="kpi '+(cls||'')+'"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="d">'+d+'</div></div>'; }
 function note(t,b){ return '<div class="note"><b>'+t+'</b>'+b+'</div>'; }
@@ -1798,25 +2011,14 @@ function paintRow(path, skipEl){
       var isOv = m>0 && s.ov[m]!==undefined;
       mc.classList.toggle('ov', isOv);
       if(inp!==skipEl) inp.value = vals[m]?fmt(vals[m]):'';
-      inp.setAttribute('data-tt', explain(s,vals,m,money));
     });
   }
-  var tot=row.querySelector('[data-tot]');
-  if(tot) tot.innerHTML=totText(s, vals, money);
-  var sg=row.querySelector('.sgn');
-  if(sg){
-    var dn=isDown(s);
-    sg.querySelectorAll('button').forEach(function(b){
-      var on=(b.getAttribute('data-sign')==='dn')===dn;
-      b.className = on ? (dn?'on dn':'on') : '';
-      b.setAttribute('aria-checked', on?'true':'false');
-    });
-  }
-  var mt=row.querySelector('.mcustom');
-  if(mt){
-    var n=overrideCount(s), tx=mt.querySelector('.tx');
-    mt.classList.toggle('has', n>0);
-    if(tx) tx.textContent = n ? tl('Custom')+' · '+n : tl('Custom');
+  var rf=row.querySelector('.nfstep');
+  if(rf){
+    var ri=rf.querySelector('input'), lb=rf.querySelector('.nfl');
+    if(ri!==skipEl) ri.value = s.r ? String(+s.r.toFixed(2)) : '';
+    rf.classList.toggle('up', s.r>0); rf.classList.toggle('dn', s.r<0);
+    if(lb) lb.textContent=rLabel(s, lb.getAttribute('data-sfx'));
   }
 }
 /* every keystroke redraws all three, coalesced to one pass per animation frame so
@@ -1845,6 +2047,7 @@ function renderChip(){}
 
 /* ═══════════ full render ═══════════ */
 function renderPlan(){
+  migrateSeries();
   var c=calc();
   renderEditor(); renderMini(c); renderSheet(c); renderDash(c); renderChip(c); syncVeil();
   requestAnimationFrame(fitAll);
@@ -2141,13 +2344,10 @@ main.addEventListener('input',function(e){
       delete s.ov[0];
       if(coachStep===1 && t.value.trim()) coachShow(2);
     } else {
-      /* a typed minus flips the buttons rather than fighting them */
-      var mag = v===null ? 0 : Math.abs(v);
-      var down = (v!==null && v<0) ? true : isDown(s);
-      s.dn = down;
-      s.r = down ? -mag : mag;
+      /* the sign is simply the number's own: a minus in front makes it a decrease */
+      s.r = v===null ? 0 : v;
     }
-    paintRow(path); repaint(); save(); return;
+    paintRow(path, t); repaint(); save(); return;
   }
 
   /* a single month typed by hand */
@@ -2155,9 +2355,9 @@ main.addEventListener('input',function(e){
     var mc=t.closest('.mc'), p2=mc.getAttribute('data-k'), m=+mc.getAttribute('data-m');
     s=getSeries(p2);
     v=num(t.value);
+    if(s.sm && p2==='s|0|price') firstPriceTyped();
+    s.sm=false;
     if(m===0){
-      if(s.sm && p2==='s|0|price') firstPriceTyped();
-      s.sm=false;
       s.b = v===null ? 0 : v; delete s.ov[0];
       var sf=document.querySelector('.vrow[data-row="'+p2+'"] input[data-num="b"]');
       if(sf){ sf.value = s.b?fmt(s.b):''; var nf2=sf.closest('.nf'); nf2.classList.remove('sampled'); sf.placeholder='0'; }
@@ -2208,50 +2408,37 @@ main.addEventListener('keydown',function(e){
 document.addEventListener('click',function(e){
   var t;
 
+  if((t=e.target.closest('.nfb')) && !e.target.closest('button,input')){
+    var nfi=t.querySelector('input'); if(nfi) nfi.focus();
+  }
   if((t=e.target.closest('[data-undo]'))){
     var mc=t.closest('.mc'), p=mc.getAttribute('data-k'), m=+mc.getAttribute('data-m');
     delete getSeries(p).ov[m];
     hideTT();
     rerenderRow(p); repaint(); save(); return;
   }
-  if((t=e.target.closest('[data-sign]'))){
-    var sp=t.getAttribute('data-p'), ss=getSeries(sp), down=t.getAttribute('data-sign')==='dn';
-    if(isDown(ss)===down) return;
-    ss.dn=down; ss.r = down ? -Math.abs(ss.r) : Math.abs(ss.r);
-    var grp=t.parentNode;
-    grp.querySelectorAll('button').forEach(function(b){
-      var on = (b.getAttribute('data-sign')==='dn')===down;
-      b.className = on ? (down?'on dn':'on') : '';
-      b.setAttribute('aria-checked', on?'true':'false');
-    });
+  if((t=e.target.closest('[data-step]'))){
+    var sp=t.getAttribute('data-p'), ss=getSeries(sp), dd=+t.getAttribute('data-step');
+    ss.r=Math.round(((ss.r||0)+dd)*100)/100;
     paintRow(sp); repaint(); save();
-    var fx=grp.parentNode.querySelector('input');
-    if(fx){ fx.focus(); try{ fx.select(); }catch(err){} }
     return;
   }
   if((t=e.target.closest('.mb[data-mode]'))){
     var pp=t.getAttribute('data-p'), s=getSeries(pp), mode=t.getAttribute('data-mode');
     if(s.m===mode) return;
-    s.m=mode;
-    /* a sensible first step: 5% either way, or +1 a month on a headcount, +1,000 on money */
-    if(mode!=='flat' && !s.r){
-      s.r = mode==='pct' ? 5 : (isCount(pp) ? 1 : 1000);
-      if(s.dn) s.r = -s.r;
+    if(mode==='custom'){ toCustom(s); }
+    else {
+      /* leaving the twelve-month table: the first month becomes the starting figure again */
+      if(s.m==='custom'){ var v0=run(s); s.b=v0[0]; s.ov={}; }
+      s.m=mode;
+      /* a sensible first step: 5% a month, or +1 a month on a headcount, +1,000 on money */
+      if(mode!=='flat' && !s.r) s.r = mode==='pct' ? 5 : (isCount(pp) ? 1 : 1000);
     }
     rerenderRow(pp); repaint(); save();
     var f=document.querySelector('.vrow[data-row="'+pp+'"] input[data-num="r"]');
     if(f){ f.focus(); try{ f.select(); }catch(err){} }
     if(coachStep===2) coachShow(3); else coachPos();
     return;
-  }
-  if((t=e.target.closest('[data-months]'))){
-    var mp=t.getAttribute('data-months');
-    openRows[mp]=!openRows[mp];
-    t.classList.toggle('open', openRows[mp]);
-    t.setAttribute('aria-expanded', openRows[mp]?'true':'false');
-    var strip=document.querySelector('.mstrip[data-strip="'+mp+'"]');
-    if(strip) strip.classList.toggle('on', openRows[mp]);
-    coachPos(); return;
   }
   if((t=e.target.closest('[data-togg]'))){
     var k=t.getAttribute('data-togg'), was=!!st.openBlk[k];
@@ -2270,6 +2457,14 @@ document.addEventListener('click',function(e){
     var a=t.getAttribute('data-del').split('|');
     if(a[0]==='c') st.cat[+a[1]].items.splice(+a[2],1);
     else st.cat[+a[1]].roles.splice(+a[2],1);
+    hideTT(); save(); renderEditor(); repaint(); return;
+  }
+  if((t=e.target.closest('[data-delsvc]'))){
+    var di=+t.getAttribute('data-delsvc'), dsv=st.svc[di];
+    if(!dsv) return;
+    if((!dsv.price.sm || !dsv.qty.sm) && !confirm(tl('Remove this service and its numbers?'))) return;
+    st.svc.splice(di,1);
+    st.openBlk={}; for(var ok in openRows){ if(/^s\|/.test(ok)) delete openRows[ok]; }
     hideTT(); save(); renderEditor(); repaint(); return;
   }
   if(e.target.closest('[data-addsvc]')){
@@ -2301,16 +2496,17 @@ document.addEventListener('click',function(e){
       save(); syncSettings(); renderPlan(); }
     else if(act==='detail'){ detail=!detail; press(t,detail); repaint(); }
     else if(act==='thou'){ thou=!thou; press(t,thou); repaint(); }
-    else if(act==='share'){ doShare(); }
+    else if(act==='share'){ doShare(t); }
     else if(act==='csv'){ exportCSV(); }
     else if(act==='print-sheet'){ printOne('v-sheet','fit-sheet'); }
     else if(act==='print-dash'){ printOne('v-dash','fit-dash'); }
     /* a browser cannot write a PDF on its own: Save as PDF is the print dialog with the
        destination set to a file, so both buttons open the same dialog and this one says so */
-    else if(act==='pdf-sheet'){ toast(tl('Pick Save as PDF in the dialog')); printOne('v-sheet','fit-sheet'); }
-    else if(act==='pdf-dash'){ toast(tl('Pick Save as PDF in the dialog')); printOne('v-dash','fit-dash'); }
+    else if(act==='pdf-sheet'){ savePDF('v-sheet','fit-sheet'); }
+    else if(act==='pdf-dash'){ savePDF('v-dash','fit-dash'); }
     return;
   }
+  if((t=e.target.closest('[data-dtab]'))){ setDashTab(t.getAttribute('data-dtab')); return; }
   if(e.target.closest('#btn-setup')){
     st.names = st.svc.map(function(s){ return s.name; });
     st.nameIds = st.svc.map(function(s){ return s.id; });
@@ -2323,18 +2519,7 @@ document.addEventListener('click',function(e){
 /* re-render exactly one value row (mode change, undo) without rebuilding the editor */
 function rerenderRow(path){
   var row=document.querySelector('.vrow[data-row="'+path+'"]'); if(!row) return;
-  var a=path.split('|'), s=getSeries(path), label, cfg;
-  if(a[0]==='s'){
-    if(a[2]==='price'){ label='Price per customer'; cfg={tip:'What one customer pays you in a month. For a retainer, the monthly fee.'}; }
-    else { label='Customers'; cfg={unit:'count', startLabel:'How many', tip:'How many customers pay you in that month.'}; }
-  } else if(a[0]==='c'){
-    label=st.cat[+a[1]].items[+a[2]].name; cfg={rename:true, del:'c|'+a[1]+'|'+a[2]};
-  } else {
-    var ro=st.cat[+a[1]].roles[+a[2]];
-    if(a[3]==='pay'){ label=ro.name; cfg={rename:true, startLabel:'Salary', pair:true, del:'t|'+a[1]+'|'+a[2], tip:'What one person in this position is paid per month, all in.'}; }
-    else { label='How many people'; cfg={unit:'count', sub:true, startLabel:'How many', tip:'Type over a later month to add a hire.'}; }
-  }
-  row.outerHTML = vrowHTML(path, label, s, cfg);
+  row.outerHTML = rowHTML(path);
 }
 
 /* ═══════════ add menu ═══════════ */
@@ -2377,16 +2562,15 @@ menu.addEventListener('click',function(e){
 /* the whole plan is squeezed into the link itself, so sharing needs no account and no
    server: whoever opens it gets the figures, and can carry on editing their own copy */
 function packS(x){
-  var o=[Math.round(x.b*100)/100, x.m==='pct'?1:(x.m==='amt'?2:0), (x.r||0)===0 && x.dn ? -0.0001 : (x.r||0)], ov=[];
+  var o=[Math.round(x.b*100)/100, x.m==='pct'?1:(x.m==='amt'?2:(x.m==='custom'?3:0)), (x.r||0)], ov=[];
   for(var k in x.ov){ if(x.ov.hasOwnProperty(k)) ov.push([+k, x.ov[k]]); }
   if(ov.length) o.push(ov);
   return o;
 }
 function unpackS(a){
   a=a||[];
-  var r0=a[2]||0;
-  var x=S(a[0]||0, a[1]===1?'pct':(a[1]===2?'amt':'flat'), r0===-0.0001?0:r0, false);
-  if(r0<0) x.dn=true;
+  var r0=a[2]===-0.0001?0:(a[2]||0);
+  var x=S(a[0]||0, a[1]===1?'pct':(a[1]===2?'amt':(a[1]===3?'custom':'flat')), r0, false);
   (a[3]||[]).forEach(function(p){ x.ov[p[0]]=p[1]; });
   return x;
 }
@@ -2423,7 +2607,15 @@ function b64d(str){
 function shareURL(){
   return location.origin+location.pathname+'#p='+b64e(JSON.stringify(packState()));
 }
-function doShare(){
+function shareDone(btn){
+  if(!btn || !btn.lastChild){ toast(tl('Link copied')); return; }
+  var tx=btn.lastChild;
+  if(btn.getAttribute('data-l0')===null) btn.setAttribute('data-l0', tx.nodeValue);
+  btn.classList.add('done'); tx.nodeValue=tl('Link copied');
+  clearTimeout(btn._t);
+  btn._t=setTimeout(function(){ btn.classList.remove('done'); tx.nodeValue=btn.getAttribute('data-l0'); },2400);
+}
+function doShare(btn){
   var u;
   if(PID){
     u=planURL(PID);
@@ -2434,7 +2626,7 @@ function doShare(){
     /* the plan never reached the server (offline, say): fall back to the self-contained link */
     try{ u=shareURL(); }catch(e){ toast(tl('Could not build the link')); return; }
   }
-  var ok=function(){ toast(tl('Link copied')); };
+  var ok=function(){ shareDone(btn); };
   if(navigator.clipboard && navigator.clipboard.writeText)
     navigator.clipboard.writeText(u).then(ok, function(){ prompt(tl('Copy this link'), u); });
   else prompt(tl('Copy this link'), u);
@@ -2474,6 +2666,58 @@ function exportCSV(){
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
   toast(tl('Spreadsheet downloaded'));
 }
+/* ═══════════ Save as PDF: a real file, not the print dialog ═══════════
+   Each page is drawn to an image off-screen and placed on an A4 landscape sheet. The two small
+   libraries that do it load the first time somebody asks for a PDF, not before. */
+var H2C='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+var JSPDF='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+var pdfLibs=null;
+function loadScript(src){
+  return new Promise(function(res,rej){
+    var el=document.createElement('script'); el.src=src; el.onload=res; el.onerror=function(){ rej(new Error(src)); };
+    document.head.appendChild(el);
+  });
+}
+function pdfReady(){
+  if(window.html2canvas && window.jspdf) return Promise.resolve();
+  if(!pdfLibs) pdfLibs=Promise.all([ window.html2canvas?0:loadScript(H2C), window.jspdf?0:loadScript(JSPDF) ]);
+  return pdfLibs.catch(function(e){ pdfLibs=null; throw e; });
+}
+function makePDF(viewId){
+  return pdfReady().then(function(){
+    var host=document.createElement('div'); host.className='pdfhost'; document.body.appendChild(host);
+    var nodes=[];
+    if(viewId==='v-sheet'){
+      var c1=document.getElementById('sheet').cloneNode(true); c1.removeAttribute('id'); host.appendChild(c1); nodes.push(c1);
+    } else {
+      [].forEach.call(document.querySelectorAll('#dash .dpane'),function(p){
+        var c=p.cloneNode(true); c.classList.add('on'); host.appendChild(c); nodes.push(c);
+      });
+    }
+    var doc=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    var chain=Promise.resolve();
+    nodes.forEach(function(n,i){
+      chain=chain.then(function(){
+        return window.html2canvas(n,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false}).then(function(cv){
+          var W=297,H=210,M=8, r=Math.min((W-2*M)/cv.width,(H-2*M)/cv.height), w=cv.width*r, h=cv.height*r;
+          if(i>0) doc.addPage();
+          doc.addImage(cv.toDataURL('image/jpeg',0.92),'JPEG',(W-w)/2,M,w,h);
+        });
+      });
+    });
+    return chain.then(function(){ host.remove(); return doc; }, function(e){ host.remove(); throw e; });
+  });
+}
+function savePDF(viewId, boxId){
+  toast(tl('Preparing your PDF…'));
+  makePDF(viewId).then(function(doc){
+    doc.save(tl('Financial Plan')+' - '+bizName()+'.pdf');
+    toast(tl('PDF downloaded'));
+  }).catch(function(){
+    /* no connection to fetch the two libraries, say: the print dialog still gets the file out */
+    toast(tl('Pick Save as PDF in the dialog')); printOne(viewId, boxId);
+  });
+}
 function printOne(viewId, boxId){
   /* only the section being printed is shown; the fit scaling is lifted for the printer
      and put back afterwards, so the page on screen does not end up stretched */
@@ -2493,9 +2737,22 @@ function printOne(viewId, boxId){
   var PW=1054, PH=725;
   /* the sheet is measured at the width it will actually print at */
   if(viewId==='v-sheet') inner.style.width=PW+'px';
+  var panes=null, paneStyles=null;
+  if(viewId==='v-dash'){
+    /* the dashboard prints as three pages, one per tab, each fitted to its own page */
+    inner.classList.add('allpanes'); inner.style.width='1120px';
+    panes=[].slice.call(inner.querySelectorAll('.dpane'));
+    paneStyles=panes.map(function(p){ return p.getAttribute('style'); });
+    panes.forEach(function(p){
+      var pw=p.offsetWidth, ph=p.offsetHeight, pk=Math.min(PW/pw, PH/ph, 1)*0.97;
+      p.style.transformOrigin='top left'; p.style.transform='scale('+pk+')';
+      p.style.height=Math.ceil(ph*pk)+'px'; p.style.width=pw+'px';
+      p.style.marginLeft=Math.max(0,(PW-pw*pk)/2)+'px'; p.style.marginRight=(-(pw-pw*pk))+'px';
+    });
+  }
   var w=inner.offsetWidth, h=inner.offsetHeight;
   var k=Math.min(PW/w, PH/h, 1)*0.97;
-  if(k<0.999){
+  if(viewId!=='v-dash' && k<0.999){
     inner.style.transformOrigin='top left';
     inner.style.transform='scale('+k+')';
     box.style.height=Math.ceil(h*k)+'px';
@@ -2506,6 +2763,8 @@ function printOne(viewId, boxId){
   var done=function(){
     if(restored) return; restored=true;
     el.classList.remove('printing');
+    if(panes){ inner.classList.remove('allpanes');
+      panes.forEach(function(p,i){ if(paneStyles[i]===null) p.removeAttribute('style'); else p.setAttribute('style',paneStyles[i]); }); }
     document.title=keepTitle;
     inner.style.width=keepW;
     inner.style.transform=keepT; box.style.height=keepH;
