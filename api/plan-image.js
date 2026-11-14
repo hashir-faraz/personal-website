@@ -247,7 +247,7 @@ export default async function handler(req) {
   const m800 = font(MANROPE_800), m500 = font(MANROPE_500), c700 = font(CAIRO_700);
 
   const headline = tool ? t.toolTitle : t.planTitle;
-  const size = ar ? 70 : 76;
+  const size = ar ? (tool ? 70 : 58) : 76;
 
   /* the planner's own picture carries the logo at the top and says what the tool does; a shared
      plan's picture carries a small credit at the bottom (whoever opens it was sent here) */
