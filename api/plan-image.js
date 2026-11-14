@@ -1,11 +1,12 @@
-/* The picture shown when a link is pasted into WhatsApp, Slack, LinkedIn and so on.
+/* Draws the four preview pictures used when a link is pasted into WhatsApp, Slack, LinkedIn and so on:
 
-   Two versions, drawn on the fly with @vercel/og:
-     /api/plan-image?id=<plan>      a shared plan: the company's name, a card with its real year
-                                    totals, and its P&L sheet showing behind the card
-     /api/plan-image?mode=tool      the planner page itself, before anyone has a plan: the logo, the
-                                    name of the tool and an example year
-     ...&lang=ar                    the tool version in Arabic (a plan follows its own language)
+     /api/plan-image?mode=tool&lang=en|ar   the planner page itself
+     /api/plan-image?mode=plan&lang=en|ar   any shared plan (the company name goes in the link's title)
+
+   This function is only a generator. Drawing takes a few seconds, far too slow for a chat app that
+   gives up waiting, so the results are saved as ordinary files in /assets/previews and those are
+   what the links point at. To change the design: edit this file, run the four URLs on a preview
+   deployment, save the results over the files in /assets/previews, commit.
 
    Arabic is mirrored: text on the right, cards on the left, table columns reversed, and no letter
    spacing (it breaks the joins). Fonts and the logo are embedded so nothing is fetched. */
@@ -16,9 +17,6 @@ import { LOGO, LOGO_RATIO } from './_logo.js';
 
 export const config = { runtime: 'edge' };
 
-const SB_URL = 'https://zybfmjymfnlgnxkzxqka.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YmZtanltZm5sZ254a3p4cWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1NjY1NzEsImV4cCI6MjExMDE0MjU3MX0.pSdR7SXq6rcE84S7n8LGWXdqB52ITFcf1nDRb8baTh8';
-
 const INDIGO = '#3533CD', DEEP = '#28279B', INK = '#101014', GREY = '#85858F', LINE = '#E7E6E1';
 const GREEN = '#0A8754', RED = '#C8374B';
 
@@ -27,13 +25,13 @@ const T = {
     eyebrow: '12-MONTH FINANCIAL PLAN', built: 'Built with', yearOne: 'YEAR 1', revenue: 'REVENUE',
     costs: 'COSTS', net: 'NET PROFIT', months: '12 MONTHS', example: 'EXAMPLE', year: 'YEAR',
     secRev: 'Revenue', totRev: 'Total revenue', secCost: 'Costs', totCost: 'Total costs', netRow: 'Net profit',
-    toolTitle: '12-Month Budget Planner', toolSub: 'Revenue, costs and profit by month', fallbackName: 'Your business'
+    planTitle: '12-Month Financial Plan', toolTitle: '12-Month Budget Planner', toolSub: 'Revenue, costs and profit by month', fallbackName: 'Your business'
   },
   ar: {
     eyebrow: 'الخطة المالية · 12 شهر', built: 'مبني بـ', yearOne: 'السنة الأولى', revenue: 'الإيراد',
     costs: 'التكاليف', net: 'صافي الربح', months: '12 شهر', example: 'مثال', year: 'السنة',
     secRev: 'الإيراد', totRev: 'إجمالي الإيراد', secCost: 'التكاليف', totCost: 'إجمالي التكاليف', netRow: 'صافي الربح',
-    toolTitle: 'مخطّط ميزانية 12 شهر', toolSub: 'الإيرادات والتكاليف والأرباح شهرًا بشهر', fallbackName: 'شغلك'
+    planTitle: 'الخطة المالية لـ 12 شهر', toolTitle: 'مخطّط ميزانية 12 شهر', toolSub: 'الإيرادات والتكاليف والأرباح شهرًا بشهر', fallbackName: 'شغلك'
   }
 };
 
@@ -236,53 +234,27 @@ function mainCard(sum, t, rtl, ar, tool) {
 
 export default async function handler(req) {
   const u = new URL(req.url);
-  const id = u.searchParams.get('id') || '';
-  const tool = u.searchParams.get('mode') === 'tool';
-
-  let info = null;
-  if (!tool && /^[A-Za-z0-9-]{3,80}$/.test(id)) {
-    try {
-      const r = await fetch(SB_URL + '/rest/v1/rpc/plan_preview', {
-        method: 'POST',
-        headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p_id: id })
-      });
-      if (r.ok) info = await r.json();
-    } catch (e) { /* draw the generic card */ }
-  }
-
-  const name = String((info && info.company) || '').trim();
-  const lang = tool ? (u.searchParams.get('lang') === 'ar' ? 'ar' : 'en')
-                    : (info && info.lang === 'ar') || /[؀-ۿ]/.test(name) ? 'ar' : 'en';
+  const tool = u.searchParams.get('mode') !== 'plan';
+  const lang = u.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
   const ar = lang === 'ar', rtl = ar;
   const t = T[lang];
   const family = ar ? 'Cairo, Manrope' : 'Manrope, Cairo';
-  const ls = ar ? 0 : 4;
+  const align = rtl ? 'flex-end' : 'flex-start';
 
-  const sum = tool ? sample(lang)
-    : info && info.sum && Array.isArray(info.sum.r) && info.sum.r.length === 12 ? info.sum : null;
+  /* both pictures show an example year: a shared plan's own figures stay out of the picture */
+  const sum = sample(lang);
 
   const m800 = font(MANROPE_800), m500 = font(MANROPE_500), c700 = font(CAIRO_700);
 
-  const align = rtl ? 'flex-end' : 'flex-start';
-  const headline = tool ? t.toolTitle : (name || t.fallbackName);
-  const hl = headline.length;
-  const size = tool ? (ar ? 70 : 76) : hl <= 12 ? 84 : hl <= 20 ? 70 : hl <= 32 ? 56 : 46;
+  const headline = tool ? t.toolTitle : t.planTitle;
+  const size = ar ? 70 : 76;
 
-  /* the planner's own picture carries the logo at the top; a shared plan carries none up there */
+  /* the planner's own picture carries the logo at the top and says what the tool does; a shared
+     plan's picture carries a small credit at the bottom (whoever opens it was sent here) */
   const top = tool ? logo(34) : h('div', { height: 1 }, []);
-
   const headlineEl = h('div', { fontSize: size, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.06, letterSpacing: ar ? 0 : -2,
     maxWidth: 520, textAlign: rtl ? 'right' : 'left', lineClamp: 3 }, headline);
-  const middle = tool
-    ? h('div', { flexDirection: 'column', alignItems: align }, [headlineEl])
-    : h('div', { flexDirection: 'column', alignItems: align }, [
-        h('div', { fontSize: 22, fontWeight: 800, color: '#C9C8F2', letterSpacing: ls, marginBottom: 18 }, t.eyebrow),
-        headlineEl
-      ]);
-
-  /* bottom: the planner's picture says what the tool does, in one quiet line; a shared plan
-     carries only a small credit (whoever opens it was sent here, so there is nothing to sell) */
+  const middle = h('div', { flexDirection: 'column', alignItems: align }, [headlineEl]);
   const bottom = tool
     ? h('div', { fontSize: 24, fontWeight: 500, color: '#DCDBF7', maxWidth: 520, textAlign: rtl ? 'right' : 'left' }, t.toolSub)
     : h('div', { flexDirection: rtl ? 'row-reverse' : 'row', alignItems: 'center', gap: 12 }, [
@@ -297,7 +269,7 @@ export default async function handler(req) {
 
   const cards = h('div', { position: 'relative', width: 600, height: 630 }, [
     sheetCard(sum, t, rtl, ar),
-    mainCard(sum, t, rtl, ar, tool)
+    mainCard(sum, t, rtl, ar, true)
   ]);
 
   const tree = h('div', {
@@ -313,7 +285,6 @@ export default async function handler(req) {
       { name: 'Manrope', data: m500, weight: 500, style: 'normal' },
       { name: 'Cairo', data: c700, weight: 700, style: 'normal' }
     ],
-    headers: { 'Cache-Control': tool ? 'public, max-age=0, s-maxage=86400, stale-while-revalidate=86400'
-                                      : 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' }
+    headers: { 'Cache-Control': 'public, max-age=0, s-maxage=86400, stale-while-revalidate=86400' }
   });
 }
