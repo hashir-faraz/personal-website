@@ -3,9 +3,9 @@
 Plain static site hosted on GitHub Pages from `main`. No build step, no framework. Owner is a non-coder: explain simply, keep replies short.
 
 ## Files
-- `index.html` — homepage content only (the 8 sections below)
+- `index.html` — homepage content only (the 7 sections below)
 - `styles.css` — all homepage styling
-- `script.js` — all homepage behaviour (scroll settling, service tabs, demos)
+- `script.js` — all homepage behaviour (scroll settling, service tabs, the contact form, the credentials tip)
 - `free-resources/` — the resources library page (linked from the nav and section 7)
 - `tools/budget-planner/` — 12-month budget planner, the one tool listed in the library. Self-contained single file; saves to localStorage under `hf_budget_v2`. Two screens: a setup questionnaire (business name + what it sells, with tap-to-add agency presets) then the plan, where Build, Sheet and Dashboard sit stacked under one another and the segmented control scrolls between them. The plan opens seeded with sample figures, which render light grey until the user types over them. Currency, start date and a Real-months switch (off = M1–M12) sit above the editor, not in the questionnaire. Every figure is a series: a starting-number box and a change box side by side, with one rail of four buttons under them (constant, percent, amount, custom — custom opens the per-month override drawer). Costs are grouped categories, one of which (Team) is positions with salary × headcount. Only one section is open at a time. A three-step coach (`hf_budget_coach`) points at the first field, then the rail, on a first visit. Share copies a link with the whole plan packed into the hash (`#p=`), so no server is involved
 - `tools/` — older tools. `agency-pricing-planner/` and `revenue-analysis/` are archived: the URLs still work but they are no longer linked from anywhere
@@ -17,12 +17,13 @@ Plain static site hosted on GitHub Pages from `main`. No build step, no framewor
 ## Homepage sections (in order, id in index.html)
 1. Problem — `p-problem` (dark hero with nav)
 2. Services — `p-services`
-3. Demos — `p-demos`
-4. Analyst — `p-analyst`
+3. Free Resources — `p-resources` (a preview card of the tools, with the plain tick-tags)
+4. Analyst — `p-analyst` (credentials line has an info tip: hover, tap or focus)
 5. Hassle — `p-hassle`
-6. Pricing — `p-pricing`
-7. Resources — `p-resources`
-8. Final — `p-final` (dark closing call to action)
+6. Pricing — `p-pricing` (three cards: Free Resources at QAR 0, Performance Management Setup at QAR 1,299, Setup + Business Analyst at QAR 699/month)
+7. Final — `p-final` (dark closing call to action)
+
+The end of the services track (section 2) is a contact form, not a link: phone/email plus what they need. Submit stays soft until a phone number or email is in; WhatsApp always works and carries the typed message. Submissions go to the `leads` table in Supabase through `submit_lead` (`supabase/leads.sql` must be run once). The Effortless Visibility demos were removed.
 
 ## Working rules
 - Read only the section/file relevant to the request.

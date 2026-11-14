@@ -654,7 +654,7 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
 <body>
 
 <header class="top">
-  <a class="home" href="/free-resources/" aria-label="Back to free resources">
+  <a class="home" id="home-link" href="/" aria-label="Hashir Faraz, home">
     <img src="/assets/logo-dark.png" alt="Hashir Faraz">
     <span class="bar"></span>
   </a>
@@ -740,7 +740,7 @@ html[dir="rtl"] .mc .un{right:auto;left:3px}
         <span class="bn">2</span>
         <div class="bl2"><h3 data-th="Spreadsheet">Spreadsheet</h3></div>
         <div class="brkb">
-          <button class="ghost" data-act="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg><span data-th="CSV">CSV</span></button>
+          <button class="ghost" data-act="csv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg><span data-th="Spreadsheet">Spreadsheet</span></button>
           <button class="ghost" data-act="print-sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg><span data-th="Print">Print</span></button>
           <button class="solid" data-act="pdf-sheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg><span data-th="Save as PDF">Save as PDF</span></button>
         </div>
@@ -785,13 +785,14 @@ var LANG=(function(){
 })();
 var AR = LANG==='ar';
 if(AR){ document.documentElement.lang='ar'; document.documentElement.dir='rtl'; }
+(function(){ var h=document.getElementById('home-link'); if(h&&AR){ h.href='/ar/'; h.setAttribute('aria-label','هاشر فراز، الرئيسية'); } })();
 var DICT = {
   /* chrome */
   'Budget Planner':'مخطّط الميزانية','12 months':'12 شهر',
   'Setup':'الإعداد','Start over':'ابدأ من جديد',
   'Build':'البناء','Sheet':'الجدول','Dashboard':'لوحة المتابعة',
   'Cost detail':'تفاصيل التكاليف','Thousands':'بالآلاف',
-  'Share':'مشاركة','CSV':'CSV',
+  'Share':'مشاركة','Spreadsheet':'جدول بيانات',
   'Print the sheet':'اطبع الجدول','Print the dashboard':'اطبع اللوحة',
   'Currency':'العملة','Year starts':'السنة تبدأ','Year':'السنة',
   'Real months':'أشهر حقيقية',
@@ -895,7 +896,7 @@ var DICT = {
     'Link copied':'تم نسخ الرابط',
     'Copy this link':'انسخ هالرابط',
     'Could not build the link':'ما قدرنا نسوي الرابط',
-    'CSV downloaded':'تم تنزيل ملف CSV',
+    'Spreadsheet downloaded':'تم تنزيل جدول البيانات',
     'Cleared':'تم المسح',
     'Updated':'تم التحديث',
     'Plan opened':'تم فتح الخطة',
@@ -2471,7 +2472,7 @@ function exportCSV(){
   a.download=((st.biz||'budget').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'budget')+'-12-month-budget.csv';
   document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
-  toast(tl('CSV downloaded'));
+  toast(tl('Spreadsheet downloaded'));
 }
 function printOne(viewId, boxId){
   /* only the section being printed is shown; the fit scaling is lifted for the printer

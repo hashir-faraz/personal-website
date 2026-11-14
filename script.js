@@ -175,201 +175,52 @@
   },{threshold:.25}).observe(hero);
 })();
 
-/* ---------- demo tabs: switch after-demo AND before-scene together ---------- */
-document.querySelectorAll('.seg').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.seg').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.demo').forEach(d=>d.classList.remove('active'));
-    document.querySelectorAll('.bscene').forEach(s=>s.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.demo).classList.add('active');
-    const scene=document.getElementById(btn.dataset.before);
-    void scene.offsetWidth; // reflow so entrance animations restart
-    scene.classList.add('active');
+/* ---------- services card: "tell me what you're looking for" ----------
+   Submit stays soft until there is a phone number or an email in. WhatsApp always works, and carries
+   whatever has been typed. The message is stored through one database function (supabase/leads.sql). */
+(function(){
+  const form=document.querySelector('.svc-form'); if(!form) return;
+  const contact=form.elements.contact, need=form.elements.need, send=form.querySelector('.ff-send');
+  const wa=form.querySelector('.ff-wa'), note=form.querySelector('.ff-note');
+  const SB_URL='https://zybfmjymfnlgnxkzxqka.supabase.co';
+  const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YmZtanltZm5sZ254a3p4cWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1NjY1NzEsImV4cCI6MjExMDE0MjU3MX0.pSdR7SXq6rcE84S7n8LGWXdqB52ITFcf1nDRb8baTh8';
+  const lang=document.documentElement.lang==='ar'?'ar':'en';
+  const base=wa.getAttribute('href').split('?')[0], pre=wa.dataset.pre, fallback=wa.dataset.default;
+  const hint=note.innerHTML;
+  const valid=v=>{ v=v.trim(); return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || v.replace(/\D/g,'').length>=7; };
+  function sync(){
+    send.disabled=!valid(contact.value);
+    const t=need.value.trim();
+    wa.href=base+'?text='+encodeURIComponent(t?pre+t:fallback);
+    if(note.classList.contains('ok')||note.classList.contains('err')){ note.className='ff-note'; note.innerHTML=hint; }
+  }
+  contact.addEventListener('input',sync); need.addEventListener('input',sync);
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    if(send.disabled||form.elements.company.value) return;
+    send.disabled=true;
+    fetch(SB_URL+'/rest/v1/rpc/submit_lead',{method:'POST',
+      headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({p_contact:contact.value.trim(),p_need:need.value.trim(),p_lang:lang,p_source:'services_end'})})
+    .then(r=>{ if(!r.ok) throw new Error(r.status);
+      note.className='ff-note ok'; note.textContent=note.dataset.ok;
+      if(window.gtag) gtag('event','lead_submit',{form:'services_end'});
+      if(window.fbq) fbq('track','Lead');
+      contact.value=''; need.value=''; wa.href=base+'?text='+encodeURIComponent(fallback);
+    })
+    .catch(()=>{ note.className='ff-note err'; note.textContent=note.dataset.err; send.disabled=!valid(contact.value); });
   });
-});
-
-/* ---------- sales pipeline demo ---------- */
-(function(){
-  const stages=['Contacted','Meeting','Quote','Closed'];
-  const leads=[
-    {n:'Lead A',v:18000,lc:'12 Mar',s:3},
-    {n:'Lead B',v:26000,lc:'28 Mar',s:2},
-    {n:'Lead C',v:15000,lc:'02 Mar',s:0},
-    {n:'Lead D',v:21000,lc:'25 Mar',s:2},
-  ];
-  // s = number of boxes ticked: 0 open, 1 cold, 2 warm, 3 hot, 4 closed
-  const names=['open','cold','warm','hot','closed'];
-  const labels=['Open','Cold','Warm','Hot','Closed'];
-  const weights=[0,0.25,0.5,0.95,1];
-  const box=document.getElementById('leads');
-  const fmt=n=>'QAR '+Math.round(n).toLocaleString();
-  function render(){
-    box.innerHTML='';
-    leads.forEach(l=>{
-      const row=document.createElement('div');row.className='lead';
-      row.innerHTML='<b>'+l.n+'</b><span class="num">'+fmt(l.v)+'</span><span class="date">'+l.lc+'</span>';
-      const ck=document.createElement('div');ck.className='checks';
-      stages.forEach((s,si)=>{
-        const lab=document.createElement('label');lab.className='chk';
-        const inp=document.createElement('input');inp.type='checkbox';inp.checked=si<l.s;
-        inp.onchange=()=>{ l.s = inp.checked ? si+1 : si; render(); };
-        lab.appendChild(inp);
-        ck.appendChild(lab);
-      });
-      row.appendChild(ck);
-      const chip=document.createElement('span');
-      chip.className='chip '+names[l.s];chip.textContent=labels[l.s];
-      row.appendChild(chip);
-      box.appendChild(row);
-    });
-    let hot=0,warm=0,cold=0,proj=0;
-    leads.forEach(l=>{
-      proj+=l.v*weights[l.s];
-      if(l.s>=3)hot+=l.v; else if(l.s===2)warm+=l.v; else if(l.s===1)cold+=l.v;
-    });
-    document.getElementById('k-hot').textContent=fmt(hot);
-    document.getElementById('k-warm').textContent=fmt(warm);
-    document.getElementById('k-cold').textContent=fmt(cold);
-    document.getElementById('k-proj').textContent=fmt(proj);
-  }
-  render();
+  sync();
 })();
 
-/* ---------- cashflow: diverging monthly column with category filters ---------- */
+/* ---------- analyst credentials: the little "i" opens on hover, focus and tap ---------- */
 (function(){
-  const revCats=[{n:'Retainers'},{n:'Products'}];
-  const expCats=[{n:'Payroll'},{n:'Rent'},{n:'Marketing'},{n:'Other'}];
-  const rev=[ [30,16],[32,15],[29,18],[34,18],[37,20],[35,18],
-              [38,21],[42,19],[41,23],[44,22],[46,25],[50,28] ];
-  const exp=[ [22,9,6,4],[22,9,7,3],[23,9,8,5],[23,9,6,4],[24,9,9,5],[24,9,7,4],
-              [24,10,8,6],[25,10,9,4],[25,10,11,5],[26,10,9,6],[26,10,12,5],[27,10,14,7] ];
-  const on={r:[true,true],e:[true,true,true,true]};
-  const upMax=Math.max(...rev.map(m=>m.reduce((a,b)=>a+b,0)));
-  const downMax=Math.max(...exp.map(m=>m.reduce((a,b)=>a+b,0)));
-  const span=upMax+downMax;
-  const basePct=downMax/span*100;
-  const bars=document.getElementById('finbars');
-  bars.style.setProperty('--base', basePct+'%');
-
-  function chips(holder,cats,key,color){
-    cats.forEach((c,i)=>{
-      const b=document.createElement('button');
-      b.className='cfc on';b.style.setProperty('--c',color);
-      b.textContent=c.n;
-      b.onclick=()=>{on[key][i]=!on[key][i];b.classList.toggle('on');b.classList.toggle('off');draw();};
-      holder.appendChild(b);
-    });
-  }
-  const revHolder=document.getElementById('cf-rev'), expHolder=document.getElementById('cf-exp');
-  if(!revHolder.querySelector('.cfc')){
-    chips(revHolder,revCats,'r','#0A8754');
-    chips(expHolder,expCats,'e','#2563EB');
-  }
-
-  function draw(){
-    bars.innerHTML='<span class="zero"></span>';
-    rev.forEach((rm,mi)=>{
-      const em=exp[mi];
-      const m=document.createElement('div');m.className='fin-m';
-      const rTot=rm.reduce((a,v,i)=>a+(on.r[i]?v:0),0);
-      const eTot=em.reduce((a,v,i)=>a+(on.e[i]?v:0),0);
-
-      const rs=document.createElement('div');rs.className='fin-stack rev';
-      rs.style.bottom=basePct+'%';rs.style.height=(rTot/span*100)+'%';
-      rm.forEach((v,i)=>{ if(!on.r[i])return;
-        const s=document.createElement('i');s.style.height='calc('+(v/(rTot||1)*100)+'% - 1px)';
-        s.dataset.tip=revCats[i].n+' · '+v+'k';rs.appendChild(s);});
-
-      const es=document.createElement('div');es.className='fin-stack exp';
-      es.style.bottom=((downMax-eTot)/span*100)+'%';es.style.height=(eTot/span*100)+'%';
-      em.forEach((v,i)=>{ if(!on.e[i])return;
-        const s=document.createElement('i');s.style.height='calc('+(v/(eTot||1)*100)+'% - 1px)';
-        s.dataset.tip=expCats[i].n+' · '+v+'k';es.appendChild(s);});
-
-      const tl=document.createElement('span');tl.className='fin-lab';
-      tl.textContent=rTot+'k';
-      tl.style.bottom='calc('+(basePct+rTot/span*100)+'% + 3px)';
-
-      const bl=document.createElement('span');bl.className='fin-lab';
-      bl.textContent=eTot+'k';
-      bl.style.bottom='calc('+((downMax-eTot)/span*100)+'% - 14px)';
-
-      const net=rTot-eTot;
-      const dot=document.createElement('span');dot.className='net-dot';
-      dot.style.bottom=(basePct+net/span*100)+'%';
-      dot.dataset.tip='Net '+(net>=0?'+':'')+net+'k';
-
-      m.append(rs,es,tl,bl,dot);
-      bars.appendChild(m);
-    });
-  }
-  draw();
-
-  // pretty tooltip
-  const tip=document.createElement('div');tip.className='cftip';document.body.appendChild(tip);
-  bars.addEventListener('mouseover',e=>{
-    const t=e.target.closest('[data-tip]'); if(!t)return;
-    const r=t.getBoundingClientRect();
-    tip.textContent=t.dataset.tip;
-    tip.style.left=(r.left+r.width/2)+'px';
-    tip.style.top=r.top+'px';
-    tip.classList.add('show');
-  });
-  bars.addEventListener('mouseout',()=>tip.classList.remove('show'));
-})();
-
-/* ---------- post comparison: head-to-head ---------- */
-(function(){
-  const posts=[
-    {n:'Reel A',t:'Reel',reach:48200,likes:2100,com:96,sh:310,sv:520},
-    {n:'Carousel A',t:'Carousel',reach:21400,likes:1350,com:150,sh:88,sv:940},
-    {n:'Static A',t:'Static',reach:9800,likes:610,com:42,sh:35,sv:120},
-    {n:'Reel B',t:'Reel',reach:62500,likes:3400,com:210,sh:640,sv:410},
-    {n:'Carousel B',t:'Carousel',reach:17800,likes:990,com:74,sh:120,sv:730},
-    {n:'Reel C',t:'Reel',reach:30100,likes:1500,com:180,sh:220,sv:260},
-  ];
-  posts.forEach(p=>p.er=((p.likes+p.com+p.sh+p.sv)/p.reach*100));
-  const selA=document.getElementById('pc-a'), selB=document.getElementById('pc-b');
-  posts.forEach((p,i)=>{selA.add(new Option(p.n,i));selB.add(new Option(p.n,i));});
-  selA.value=0; selB.value=1;
-  const fmt=n=>n>=1000?(n/1000).toFixed(1).replace('.0','')+'k':(''+ (Math.round(n*10)/10));
-  const metrics=[['Reach',p=>p.reach],['Comments',p=>p.com],['Shares',p=>p.sh],['Saves',p=>p.sv],['Engagement %',p=>p.er]];
-  function render(){
-    const a=posts[selA.value], b=posts[selB.value];
-    const box=document.getElementById('h2h');
-    box.innerHTML=metrics.map(([lab,f])=>{
-      const va=f(a), vb=f(b), max=Math.max(va,vb)||1;
-      const wa=(va/max*44).toFixed(1), wb=(vb/max*44).toFixed(1);
-      const aw=va>vb, bw=vb>va;
-      return '<div class="h2h-row"><div class="h2h-lab">'+lab+'</div>'+
-        '<div class="h2h-track">'+
-        '<span class="hbar a '+(aw?'glow':'dim')+'" style="width:'+wa+'%"></span>'+
-        '<span class="hbar b '+(bw?'glow':'dim')+'" style="width:'+wb+'%"></span>'+
-        '<span class="hval a" style="--w:'+wa+'%">'+fmt(va)+'</span>'+
-        '<span class="hval b" style="--w:'+wb+'%">'+fmt(vb)+'</span>'+
-        '</div></div>';
-    }).join('');
-  }
-  selA.onchange=render; selB.onchange=render; render();
-})();
-
-/* ---------- team kpis: single member, score ring ---------- */
-(function(){
-  const m={n:'Team Member',k:[['Deals touched',32,30,0],['Follow-ups',28,35,0],['On-time %',92,90,0],['Quality /10',7.5,8,0],['Response time (hrs)',4.9,4,1],['Attendance %',96,95,0]]};
-  document.getElementById('tk-name').textContent=m.n;
-  document.getElementById('tk-meters').innerHTML=m.k.map(([lab,v,t,inv])=>{
-    const hit = inv ? v<=t : v>=t;
-    const span = t*1.4;
-    const fill = Math.min(100, v/span*100);
-    const tick = Math.min(96, t/span*100);
-    return '<div class="meter"><div class="mrow"><span>'+lab+'</span><b>'+v+' <em>/ '+t+'</em></b></div>'+
-      '<div class="mtrack"><i class="'+(hit?'hit':'')+'" style="width:'+fill+'%"></i><span class="tick" style="left:'+tick+'%"></span></div></div>';
-  }).join('');
-  const score=Math.round(m.k.reduce((a,[l,v,t,inv])=>a+Math.min(100,inv?t/Math.max(v,.01)*100:v/t*100),0)/m.k.length);
-  document.getElementById('tk-score').textContent=score+'%';
-  const c=270.2;
-  document.getElementById('tk-ringfg').style.strokeDashoffset=c*(1-score/100);
+  const box=document.querySelector('.creds'); if(!box) return;
+  const btn=box.querySelector('.cred-i');
+  const set=on=>{ box.classList.toggle('open',on); btn.setAttribute('aria-expanded',on?'true':'false'); };
+  btn.addEventListener('click',e=>{ e.stopPropagation(); set(!box.classList.contains('open')); });
+  document.addEventListener('click',e=>{ if(!box.contains(e.target)) set(false); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') set(false); });
 })();
 
 /* ---------- analytics: GA4 + Meta Pixel (IDs added at deploy) ---------- */
