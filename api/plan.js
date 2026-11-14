@@ -1,17 +1,28 @@
-/* Serves the budget planner for a /plan/<id> link, with that company's name in the
-   link preview (the title WhatsApp, Slack, LinkedIn and Google Chat show).
+/* Serves the budget planner with the right link preview for whoever it is being shared with.
 
-   Chat apps read the raw HTML and never run JavaScript, so the name has to be in the HTML
-   the server sends. The planner itself still loads the plan in the browser as before.
+   Chat apps (WhatsApp, Slack, LinkedIn, Google Chat) read the raw HTML and never run JavaScript,
+   so the title and picture have to be in the HTML the server sends. The planner itself still runs
+   in the browser exactly as before.
 
-   Only the company name and language are looked up (plan_preview), which does not count as
-   an "open" in Supabase. The public key below is the same one the planner page already uses. */
+   Two kinds of address come through here (see vercel.json):
+     /plan/<id>               a shared plan. The company's name goes in the link's title; the
+                              picture is a generic pre-made one (a custom picture took too long).
+     /tools/budget-planner/   the planner itself.
+   Add ?lang=ar to either and the preview is Arabic.
+
+   The company name comes from one quick lookup (plan_preview). It does not count as an "open" in
+   Supabase, and if it is slow the preview simply carries no name. The public key below is the same
+   one the planner page already uses. */
 
 const fs = require('fs');
 const path = require('path');
 
 const SB_URL = 'https://zybfmjymfnlgnxkzxqka.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YmZtanltZm5sZ254a3p4cWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1NjY1NzEsImV4cCI6MjExMDE0MjU3MX0.pSdR7SXq6rcE84S7n8LGWXdqB52ITFcf1nDRb8baTh8';
+
+/* the four pictures in /assets/previews (made by api/plan-image.js). Change ?v= to make chat apps
+   fetch a new design. */
+const img = (kind, lang) => 'https://hashirfaraz.com/assets/previews/' + kind + '-' + lang + '.jpg?v=1';
 
 /* the company name is typed by a stranger: it must never reach the page as markup */
 function esc(s) {
@@ -25,17 +36,56 @@ function setMeta(html, attr, name, value) {
   return html.replace(re, (m, a, b) => a + value + b);
 }
 
+function apply(html, o) {
+  html = html.replace(/<title>[^<]*<\/title>/, () => '<title>' + o.title + '</title>');
+  html = setMeta(html, 'name', 'description', o.desc);
+  html = setMeta(html, 'property', 'og:title', o.title);
+  html = setMeta(html, 'property', 'og:description', o.desc);
+  html = setMeta(html, 'property', 'og:url', o.url);
+  html = setMeta(html, 'property', 'og:image', o.image);
+  html = setMeta(html, 'property', 'og:image:type', 'image/jpeg');
+  html = setMeta(html, 'property', 'og:image:alt', o.alt);
+  html = setMeta(html, 'property', 'og:locale', o.ar ? 'ar_AR' : 'en_GB');
+  html = setMeta(html, 'name', 'twitter:title', o.title);
+  html = setMeta(html, 'name', 'twitter:description', o.desc);
+  html = setMeta(html, 'name', 'twitter:image', o.image);
+  return html;
+}
+
 module.exports = async function handler(req, res) {
-  const id = String((req.query && req.query.id) || '');
-  const valid = /^[A-Za-z0-9-]{3,80}$/.test(id);
-  /* the planner's own page opened in Arabic (/tools/budget-planner/?lang=ar) comes through here too,
-     so its link preview can be in Arabic; the English page is plain static HTML */
-  const toolAr = !!(req.query && req.query.tool === 'ar');
+  const q = req.query || {};
+  const tool = q.tool === '1';
+  const id = String(q.id || '');
+  const valid = !tool && /^[A-Za-z0-9-]{3,80}$/.test(id);
+  const langParam = q.lang === 'ar' ? 'ar' : q.lang === 'en' ? 'en' : null;
 
   let html = fs.readFileSync(path.join(process.cwd(), 'tools/budget-planner/index.html'), 'utf8');
 
-  /* a plan link is a private-ish page: keep it out of search results (the tool page itself stays public) */
-  if (!toolAr) html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="robots" content="noindex">');
+  if (tool) {
+    const ar = langParam === 'ar';
+    html = apply(html, ar ? {
+      ar: true,
+      title: 'مخطّط ميزانية 12 شهر — هاشر فراز',
+      desc: 'أجب عن سؤالين واحصل على سنة كاملة من الإيرادات والتكاليف والأرباح — جدول أرباح وخسائر تقدر تطبعه.',
+      url: 'https://hashirfaraz.com/tools/budget-planner/?lang=ar',
+      image: img('tool', 'ar'),
+      alt: 'مخطّط ميزانية 12 شهر: جدول أرباح وخسائر لسنة كاملة'
+    } : {
+      ar: false,
+      title: '12-Month Budget Planner — Hashir Faraz',
+      desc: 'Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.',
+      url: 'https://hashirfaraz.com/tools/budget-planner/',
+      image: img('tool', 'en'),
+      alt: 'A full year of profit &amp; loss, without the spreadsheet — the 12-Month Budget Planner'
+    });
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    res.status(200).send(html);
+    return;
+  }
+
+  /* a plan link is a private-ish page: keep it out of search results */
+  html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<meta name="robots" content="noindex">');
 
   let info = null;
   if (valid) {
@@ -44,53 +94,28 @@ module.exports = async function handler(req, res) {
         method: 'POST',
         headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
         body: JSON.stringify({ p_id: id }),
-        signal: AbortSignal.timeout(2500)
+        signal: AbortSignal.timeout(1500)
       });
       if (r.ok) info = await r.json();
-    } catch (e) { /* no preview name: the normal planner preview stays */ }
+    } catch (e) { /* no company name in the title; the rest of the preview is unaffected */ }
   }
 
-  if (info && info.company) {
-    let name = String(info.company).trim();
-    if (name.length > 60) name = name.slice(0, 59) + '…';
-    const ar = info.lang === 'ar';
-    const title = esc(ar ? name + ' — خطة ميزانية 12 شهر' : name + ' — 12-Month Budget Plan');
-    const desc = esc(ar
-      ? 'سنة كاملة من الإيرادات والتكاليف والأرباح لـ ' + name + '. افتح الخطة وكمّل عليها.'
-      : 'A full year of revenue, costs and profit for ' + name + '. Open the plan and keep working on it.');
-    const url = 'https://hashirfaraz.com/plan/' + id;
-    const img = 'https://hashirfaraz.com/api/plan-image?id=' + id + '&v=' + (info.v || 0);
-    const alt = esc(ar ? 'الخطة المالية لـ ' + name : 'The 12-month financial plan for ' + name);
+  /* ?lang=ar on the link wins (it is what the Arabic Share button copies); otherwise the plan's own language */
+  const ar = langParam ? langParam === 'ar' : !!(info && info.lang === 'ar');
+  let name = info && info.company ? String(info.company).trim() : '';
+  if (name.length > 60) name = name.slice(0, 59) + '…';
+  const n = esc(name);
 
-    html = html.replace(/<title>[^<]*<\/title>/, () => '<title>' + title + '</title>');
-    html = setMeta(html, 'name', 'description', desc);
-    html = setMeta(html, 'property', 'og:title', title);
-    html = setMeta(html, 'property', 'og:description', desc);
-    html = setMeta(html, 'property', 'og:url', url);
-    html = setMeta(html, 'name', 'twitter:title', title);
-    html = setMeta(html, 'name', 'twitter:description', desc);
-    html = setMeta(html, 'property', 'og:image', img);
-    html = setMeta(html, 'property', 'og:image:alt', alt);
-    html = setMeta(html, 'name', 'twitter:image', img);
-    if (ar) html = setMeta(html, 'property', 'og:locale', 'ar_AR');
-  }
-
-  if (toolAr) {
-    const title = 'مخطّط ميزانية 12 شهر — هاشر فراز';
-    const desc = 'أجب عن سؤالين واحصل على سنة كاملة من الإيرادات والتكاليف والأرباح — جدول أرباح وخسائر تقدر تطبعه.';
-    const img = 'https://hashirfaraz.com/api/plan-image?mode=tool&lang=ar';
-    html = html.replace(/<title>[^<]*<\/title>/, () => '<title>' + title + '</title>');
-    html = setMeta(html, 'name', 'description', desc);
-    html = setMeta(html, 'property', 'og:title', title);
-    html = setMeta(html, 'property', 'og:description', desc);
-    html = setMeta(html, 'property', 'og:url', 'https://hashirfaraz.com/tools/budget-planner/?lang=ar');
-    html = setMeta(html, 'property', 'og:image', img);
-    html = setMeta(html, 'property', 'og:image:alt', 'مخطّط ميزانية 12 شهر: جدول أرباح وخسائر لسنة كاملة');
-    html = setMeta(html, 'property', 'og:locale', 'ar_AR');
-    html = setMeta(html, 'name', 'twitter:title', title);
-    html = setMeta(html, 'name', 'twitter:description', desc);
-    html = setMeta(html, 'name', 'twitter:image', img);
-  }
+  html = apply(html, {
+    ar,
+    title: ar ? (n ? n + ' — ' : '') + 'خطة ميزانية 12 شهر' : (n ? n + ' — ' : '') + '12-Month Budget Plan',
+    desc: ar
+      ? 'سنة كاملة من الإيرادات والتكاليف والأرباح' + (n ? ' لـ ' + n : '') + '.'
+      : 'A full year of revenue, costs and profit' + (n ? ' for ' + n : '') + '.',
+    url: 'https://hashirfaraz.com/plan/' + (valid ? id : ''),
+    image: img('plan', ar ? 'ar' : 'en'),
+    alt: ar ? 'خطة مالية لـ 12 شهر' : 'A 12-month financial plan'
+  });
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   /* short, so a renamed company shows up soon; the planner loads the live plan itself */
