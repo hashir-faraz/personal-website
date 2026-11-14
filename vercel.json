@@ -1,6 +1,8 @@
 {
   "rewrites": [
-    { "source": "/plan/:id", "destination": "/api/plan?id=:id" }
+    { "source": "/plan/:id", "destination": "/api/plan?id=:id" },
+    { "source": "/tools/budget-planner", "has": [{ "type": "query", "key": "lang", "value": "ar" }], "destination": "/api/plan?tool=ar" },
+    { "source": "/tools/budget-planner/", "has": [{ "type": "query", "key": "lang", "value": "ar" }], "destination": "/api/plan?tool=ar" }
   ],
   "functions": {
     "api/plan.js": { "includeFiles": "tools/budget-planner/index.html" }

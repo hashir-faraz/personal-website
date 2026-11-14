@@ -13,7 +13,7 @@
 <meta property="og:title" content="Free 12-Month Budget Planner">
 <meta property="og:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print. No sign-up.">
 <meta property="og:url" content="https://hashirfaraz.com/tools/budget-planner/">
-<meta property="og:image" content="https://hashirfaraz.com/assets/og-planner.png">
+<meta property="og:image" content="https://hashirfaraz.com/api/plan-image?mode=tool">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:alt" content="A full year of profit &amp; loss, without the spreadsheet — the free 12-Month Budget Planner">
 <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Free 12-Month Budget Planner">
 <meta name="twitter:description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
-<meta name="twitter:image" content="https://hashirfaraz.com/assets/og-planner.png">
+<meta name="twitter:image" content="https://hashirfaraz.com/api/plan-image?mode=tool">
 <link rel="icon" href="/assets/favicon.png">
 <link rel="apple-touch-icon" href="/assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1218,7 +1218,7 @@ function cloudData(){
   try{
     if(st.svc.length && !st.svc[0].price.sm){
       var c=calc(), r=function(a){ return a.map(function(v){ return Math.round(v); }); };
-      d.sum={ c:st.cur, r:r(c.rev), x:r(c.opex), n:r(c.net) };
+      d.sum={ c:st.cur, r:r(c.rev), x:r(c.opex), n:r(c.net), l:[0,1,2,3,4,5,6,7,8,9,10,11].map(function(m){ return mlab(m); }) };
     }
   }catch(e){}
   return d;
