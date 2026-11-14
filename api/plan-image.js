@@ -34,7 +34,7 @@ const T = {
     eyebrow: 'الخطة المالية · 12 شهر', built: 'مبني بـ', yearOne: 'السنة الأولى', revenue: 'الإيراد',
     costs: 'التكاليف', net: 'صافي الربح', months: '12 شهر', example: 'مثال', pl: 'الأرباح والخسائر',
     year: 'السنة', toDate: 'الربح المتراكم', toolEyebrow: 'مجاني · بدون تسجيل',
-    toolTitle: 'مخطّط ميزانية 12 شهر', cta: 'ابنِ خطتك مجانًا', fallbackName: 'شغلك'
+    toolTitle: 'مخطّط ميزانية 12 شهر', cta: 'ابنِ خطتك مجانًا', fallbackName: 'شغلك'
   }
 };
 
@@ -244,7 +244,7 @@ export default async function handler(req) {
   const headline = tool ? t.toolTitle : (name || t.fallbackName);
   const eyebrow = tool ? t.toolEyebrow : t.eyebrow;
   const hl = headline.length;
-  const size = tool ? 76 : hl <= 12 ? 84 : hl <= 20 ? 70 : hl <= 32 ? 56 : 46;
+  const size = tool ? (ar ? 70 : 76) : hl <= 12 ? 84 : hl <= 20 ? 70 : hl <= 32 ? 56 : 46;
 
   /* top of the text column: only the planner's own picture carries the logo up there */
   const top = tool
