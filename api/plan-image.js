@@ -115,7 +115,7 @@ function sheetCard(sum, t, rtl, ar) {
   const ls = ar ? 0 : 1;
   const SOFT = '#8A8A96';
   const l = sum && Array.isArray(sum.l) && sum.l.length === 12 ? sum.l : null;
-  const lab = (i) => { const v = l ? String(l[i]) : 'M' + (i + 1); return ar ? v : v.toUpperCase(); };
+  const lab = (i) => { const v = l ? String(l[i]).split(' ')[0] : 'M' + (i + 1); return ar ? v : v.toUpperCase(); };
   const pill = (w) => h('div', { width: w, height: 8, background: '#E6E6F2', borderRadius: 4 }, []);
   const lines = (a) => (Array.isArray(a) ? a : []).filter((x) => Array.isArray(x) && Array.isArray(x[1]) && x[1].length === 12);
 
