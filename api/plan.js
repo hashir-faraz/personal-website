@@ -20,9 +20,9 @@ const path = require('path');
 const SB_URL = 'https://zybfmjymfnlgnxkzxqka.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5YmZtanltZm5sZ254a3p4cWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1NjY1NzEsImV4cCI6MjExMDE0MjU3MX0.pSdR7SXq6rcE84S7n8LGWXdqB52ITFcf1nDRb8baTh8';
 
-/* the four pictures in /assets/previews (made by api/plan-image.js). Change ?v= to make chat apps
-   fetch a new design. */
-const img = (kind, lang) => 'https://hashirfaraz.com/assets/previews/' + kind + '-' + lang + '.jpg?v=1';
+/* the four pictures in /assets/previews (made by scripts/preview-images/render.html). Change ?v= to
+   make chat apps fetch a new design. */
+const img = (kind, lang) => 'https://hashirfaraz.com/assets/previews/' + kind + '-' + lang + '.jpg?v=2';
 
 /* the company name is typed by a stranger: it must never reach the page as markup */
 function esc(s) {
