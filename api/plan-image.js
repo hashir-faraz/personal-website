@@ -7,6 +7,7 @@
    skeleton sheet. Fonts are the site's own, kept in /assets/fonts. */
 
 import { ImageResponse } from '@vercel/og';
+import { MANROPE_800, MANROPE_500, CAIRO_700 } from './_fonts.js';
 
 export const config = { runtime: 'edge' };
 
@@ -16,12 +17,12 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const INDIGO = '#3533CD', DEEP = '#28279B', INK = '#101014', GREY = '#85858F', LINE = '#E7E6E1';
 const GREEN = '#0A8754', RED = '#C8374B';
 
-/* fonts: bundled with the function; if that is not possible, fetched from the site itself */
-function loadFont(file, origin) {
-  let url;
-  try { url = new URL('../assets/fonts/' + file, import.meta.url); } catch (e) { url = null; }
-  const own = url ? fetch(url).then((r) => { if (!r.ok) throw new Error('font'); return r.arrayBuffer(); }) : Promise.reject(new Error('nourl'));
-  return own.catch(() => fetch(origin + '/assets/fonts/' + file).then((r) => r.arrayBuffer()));
+/* the fonts are embedded in _fonts.js (base64), so there is nothing to download at run time */
+function font(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
 }
 
 function h(type, style, children) {
@@ -70,7 +71,6 @@ function stat(label, value) {
 export default async function handler(req) {
   const u = new URL(req.url);
   const id = u.searchParams.get('id') || '';
-  const origin = u.origin;
 
   let info = null;
   if (/^[A-Za-z0-9-]{3,80}$/.test(id)) {
@@ -89,11 +89,7 @@ export default async function handler(req) {
   const arabic = /[؀-ۿ]/.test(name) || (info && info.lang === 'ar');
   const family = arabic ? 'Cairo, Manrope' : 'Manrope, Cairo';
 
-  const [m800, m500, c700] = await Promise.all([
-    loadFont('Manrope-800.ttf', origin),
-    loadFont('Manrope-500.ttf', origin),
-    loadFont('Cairo-700.ttf', origin)
-  ]);
+  const m800 = font(MANROPE_800), m500 = font(MANROPE_500), c700 = font(CAIRO_700);
 
   const len = name.length;
   const size = len <= 12 ? 92 : len <= 20 ? 76 : len <= 32 ? 60 : 48;
