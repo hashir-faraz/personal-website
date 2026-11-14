@@ -1,6 +1,8 @@
 {
-  "rewrites": [
-    { "source": "/plan/:id", "destination": "/api/plan?id=:id" }
+  "routes": [
+    { "src": "/plan/([^/]+)", "dest": "/api/plan?id=$1" },
+    { "src": "/tools/budget-planner/?", "has": [{ "type": "query", "key": "lang", "value": "ar" }], "dest": "/api/plan?tool=ar" },
+    { "handle": "filesystem" }
   ],
   "functions": {
     "api/plan.js": { "includeFiles": "tools/budget-planner/index.html" }
