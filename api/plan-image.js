@@ -110,7 +110,7 @@ function backCard(sum, t, rtl, ar) {
 
   const head = (txt, w, color) => h('div', { width: w, justifyContent: 'center', fontSize: 17, fontWeight: 800, color, letterSpacing: ls }, txt);
   const header = h('div', { flexDirection: dir, height: 58, background: '#E4E3F8', alignItems: 'center' }, [
-    h('div', { width: W.label, padding: '0 18px', fontSize: 17, fontWeight: 800, color: INDIGO, letterSpacing: ls,
+    h('div', { width: W.label, padding: '0 14px', fontSize: 15, fontWeight: 800, color: INDIGO, letterSpacing: ls,
       justifyContent: rtl ? 'flex-end' : 'flex-start' }, t.pl),
     head(lab(9), W.m, '#6B6AA8'), head(lab(10), W.m, '#6B6AA8'), head(lab(11), W.m, '#6B6AA8'),
     head(t.year, W.year, INDIGO)
@@ -143,7 +143,7 @@ function backCard(sum, t, rtl, ar) {
     rows = [0, 1, 2, 3, 4, 5].map(() => row('', [null, null, null, null]));
   }
 
-  const side = rtl ? { right: 100 } : { left: 100 };
+  const side = rtl ? { right: 56 } : { left: 56 };
   return h('div', {
     position: 'absolute', top: 22, ...side, width: 550, height: 480, flexDirection: 'column', background: '#F2F2FC',
     borderRadius: 26, overflow: 'hidden', boxShadow: '0 24px 60px rgba(10,10,60,0.30)',
