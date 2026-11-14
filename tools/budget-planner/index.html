@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>12-Month Budget Planner — Hashir Faraz</title>
+<title>12-Month Budget Planner</title>
 <meta name="description" content="Answer two questions and get a full year of revenue, costs and profit — a real P&amp;L you can print.">
 <link rel="canonical" href="https://hashirfaraz.com/tools/budget-planner/">
 <meta name="theme-color" content="#3533CD">
@@ -2244,8 +2244,8 @@ function syncSettings(){
   if(ml) press(ml, st.mlabels!==false);
   document.title = st.built && st.biz
     ? st.biz+' — '+tl('Financial Plan')
-    : (AR ? 'مخطّط ميزانية 12 شهر — هاشر فراز'
-          : '12-Month Budget Planner — Hashir Faraz');
+    : (AR ? 'مخطّط ميزانية 12 شهر'
+          : '12-Month Budget Planner');
   /* with real months off the start date means nothing, so it steps out of the way */
   document.getElementById('q-sm').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';
   document.getElementById('q-sy').closest('.selfld').style.display = st.mlabels===false ? 'none' : '';
@@ -2794,7 +2794,7 @@ function localiseChrome(){
     lang.setAttribute('aria-label', AR ? 'Switch to English' : 'التبديل إلى العربية');
   }
   if(!AR) return;
-  document.title='مخطّط ميزانية 12 شهر — هاشر فراز';
+  document.title='مخطّط ميزانية 12 شهر';
   var q=function(sel){ return document.querySelector(sel); };
   q('#btn-setup').textContent = tl('Setup');
   tailText(q('#btn-reset'), tl('Start over'));
