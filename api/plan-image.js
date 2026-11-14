@@ -31,7 +31,7 @@ const T = {
     eyebrow: 'الخطة المالية · 12 شهر', built: 'مبني بـ', yearOne: 'السنة الأولى', revenue: 'الإيراد',
     costs: 'التكاليف', net: 'صافي الربح', months: '12 شهر', example: 'مثال', year: 'السنة',
     secRev: 'الإيراد', totRev: 'إجمالي الإيراد', secCost: 'التكاليف', totCost: 'إجمالي التكاليف', netRow: 'صافي الربح',
-    planTitle: 'الخطة المالية لـ 12 شهر', toolTitle: 'مخطّط ميزانية 12 شهر', toolSub: 'الإيرادات والتكاليف والأرباح شهرًا بشهر', fallbackName: 'شغلك'
+    planTitle: ['الخطة المالية', '12 شهر'], toolTitle: 'مخطّط ميزانية 12 شهر', toolSub: 'الإيرادات والتكاليف والأرباح شهرًا بشهر', fallbackName: 'شغلك'
   }
 };
 
@@ -252,8 +252,12 @@ export default async function handler(req) {
   /* the planner's own picture carries the logo at the top and says what the tool does; a shared
      plan's picture carries a small credit at the bottom (whoever opens it was sent here) */
   const top = tool ? logo(34) : h('div', { height: 1 }, []);
-  const headlineEl = h('div', { fontSize: size, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.06, letterSpacing: ar ? 0 : -2,
-    maxWidth: 520, textAlign: rtl ? 'right' : 'left', lineClamp: 3 }, headline);
+  /* a title given as a list of lines is set line by line (Arabic wraps badly on its own) */
+  const lineStyle = { fontSize: size, fontWeight: 800, color: '#FFFFFF', lineHeight: 1.06, letterSpacing: ar ? 0 : -2,
+    maxWidth: 520, textAlign: rtl ? 'right' : 'left', lineClamp: 3 };
+  const headlineEl = Array.isArray(headline)
+    ? h('div', { flexDirection: 'column', alignItems: align }, headline.map((ln) => h('div', lineStyle, ln)))
+    : h('div', lineStyle, headline);
   const middle = h('div', { flexDirection: 'column', alignItems: align }, [headlineEl]);
   const bottom = tool
     ? h('div', { fontSize: 24, fontWeight: 500, color: '#DCDBF7', maxWidth: 520, textAlign: rtl ? 'right' : 'left' }, t.toolSub)
